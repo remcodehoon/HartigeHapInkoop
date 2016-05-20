@@ -4,8 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Supplier;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SupplierDAO {
+    
+    private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
     
     public Supplier getSupplier(int a) {        
         Supplier sup = null;
@@ -25,7 +29,7 @@ public class SupplierDAO {
                 sup = fetchItem(resultset);
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            log.log( Level.SEVERE, e.toString(), e);
         } finally {
             // Close the connection to the database
             connection.closeConnection();
@@ -58,7 +62,7 @@ public class SupplierDAO {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            log.log( Level.SEVERE, e.toString(), e);
         } finally {
             connection.closeConnection();
         }
@@ -80,7 +84,7 @@ public class SupplierDAO {
             sup = new Supplier(id, name, address, postalCode, contactname, email, phoneNo);
 
         } catch (SQLException e) {
-            System.out.println(e);
+            log.log( Level.SEVERE, e.toString(), e);
         }
         return sup;
     }
