@@ -23,7 +23,6 @@ public class SupplierAddPanel extends JPanel {
         m = new Manager();
         setLayout(null);
 
-        //add(m.createLabel("ID: ", 25,100,200,30,"right"));
         add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));
         add(m.createLabel("Adres", 25, 180, 200, 30, "right"));
         add(m.createLabel("Postcode:", 25, 220, 200, 30, "right"));
@@ -43,10 +42,6 @@ public class SupplierAddPanel extends JPanel {
         label1.setBounds(200, 450, 600, 30);
         add(label1);
 
-        //field1 = new TextField();
-        //field1.setBounds(250,100,200,30);
-        //field1.setEditable(false);
-        //add(field1);
         field2 = new TextField();
         field2.setBounds(250, 140, 200, 30);
         add(field2);

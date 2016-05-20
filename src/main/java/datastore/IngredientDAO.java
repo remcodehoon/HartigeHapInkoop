@@ -88,7 +88,7 @@ public class IngredientDAO {
     public void addIngredient(Ingredient ingredient) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        //int valueID = ingredient.getId();
+        
         String valueName = ingredient.getName();
         int valueInStock = ingredient.getInStock();
         int valueMinstock = ingredient.getMinStock();
@@ -96,7 +96,7 @@ public class IngredientDAO {
 
         String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_ingredient` (`ingredientName`, `inStock`, `minStock`, `maxStock`) VALUES('"
                 + valueName + "','" + valueInStock + "','" + String.valueOf(valueMinstock) + "'," + String.valueOf(valueMaxstock) + ");";
-        //System.out.println(selectSQL);
+        
         // Execute query
         boolean resultset = connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
@@ -118,7 +118,7 @@ public class IngredientDAO {
                     + "', `minStock` = '" + String.valueOf(valueMinstock) + "', `maxStock` = '"
                     + String.valueOf(valueMaxstock) + "' WHERE `dhh_ingredient`.`id` = " + String.valueOf(id);
 
-            //System.out.println(selectSQL);
+            
             boolean resultset = connection.executeSQLInsertStatement(selectSQL);
         } else {
             System.out.println("ID's DONT match, query is NOT executed");
@@ -146,7 +146,7 @@ public class IngredientDAO {
 
         // Execute query
         ResultSet resultset2 = connection.executeSQLSelectStatement(selectSQL);
-        //System.out.println(resultset);
+        
         try {
             if (resultset2.first()) {
 

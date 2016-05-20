@@ -29,16 +29,11 @@ public class IngredientDeletePanel extends JPanel {
         label1.setBounds(200, 450, 600, 30);
         add(label1);
 
-        //add(m.createLabel("ID: ", 25,100,200,30,"right"));
         add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));
         add(m.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
         add(m.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
         add(m.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
 
-        //field1 = new TextField("");
-        //field1.setBounds(250,100,200,30);
-        //field1.setEditable(false);
-        //add(field1);
         field2 = new TextField("");
         field2.setBounds(250, 140, 200, 30);
         field2.setEditable(false);
@@ -76,7 +71,6 @@ public class IngredientDeletePanel extends JPanel {
         field4.setText(String.valueOf(selIng.getMinStock()));
         field5.setText(String.valueOf(selIng.getMaxStock()));
         id = selIng.getId();
-        //field1.setText(String.valueOf(selIng.getId()));
     }
 
     private class ButtonHandler implements ActionListener {

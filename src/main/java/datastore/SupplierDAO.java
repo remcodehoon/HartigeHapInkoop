@@ -20,8 +20,7 @@ public class SupplierDAO {
         // Query
 
         String selectSQL = "SELECT * FROM dhh_supplier WHERE id = " + String.valueOf(a);
-        //System.out.println(selectSQL);
-
+        
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
@@ -152,7 +151,7 @@ public class SupplierDAO {
 
         // Execute query
         ResultSet resultset2 = connection.executeSQLSelectStatement(selectSQL);
-        //System.out.println(resultset);
+        
         try {
             if (resultset2.first()) {
 
