@@ -1,11 +1,11 @@
-
 package domain;
 
 public class Supplier {
+
     private int id;
-    private String name,address,postalCode,contactName,email,phoneNo;
-    
-    public Supplier(int id, String name, String address, String postalCode, String contactName, String email, String phoneNo){
+    private String name, address, postalCode, contactName, email, phoneNo;
+
+    public Supplier(int id, String name, String address, String postalCode, String contactName, String email, String phoneNo) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -14,67 +14,67 @@ public class Supplier {
         this.email = email;
         this.phoneNo = phoneNo;
     }
-    
-    public int getId(){
+
+    public int getId() {
         return id;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    
-    public String getAddress(){
+
+    public String getAddress() {
         return address;
     }
-    
-    public String getPostalCode(){
+
+    public String getPostalCode() {
         return postalCode;
     }
-    
-    public String getContactName(){
+
+    public String getContactName() {
         return contactName;
     }
-    
-    public String getEmail(){
+
+    public String getEmail() {
         return email;
     }
-    
-    public String getPhoneNo(){
+
+    public String getPhoneNo() {
         return phoneNo;
     }
-    
-    public void setId(int newid){
+
+    public void setId(int newid) {
         id = newid;
     }
-    
-    public void setAttString(String what, String value){
-        switch(what){
+
+    public void setAttString(String what, String value) {
+        switch (what) {
             default:
                 break;
-                
+
             case "name":
                 name = value;
                 break;
-            
+
             case "address":
                 address = value;
                 break;
-            
+
             case "postalCode":
                 postalCode = value;
-                break;  
-                
+                break;
+
             case "contactName":
                 contactName = value;
-                break;    
-            
+                break;
+
             case "email":
                 email = value;
-                break;  
-                
+                break;
+
             case "phoneNo":
                 phoneNo = value;
-                break;      
+                break;
         }
     }
 }

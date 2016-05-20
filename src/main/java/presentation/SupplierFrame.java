@@ -11,12 +11,13 @@ import javax.swing.JFrame;
  *
  * @author Mart
  */
-public class SupplierFrame extends JFrame{
+public class SupplierFrame extends JFrame {
+
     Controller controller = null;
-    
+
     public SupplierFrame(Controller c) {
         controller = c;
-        setSize(1366,768);
+        setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Leveranciers overzicht");
     }

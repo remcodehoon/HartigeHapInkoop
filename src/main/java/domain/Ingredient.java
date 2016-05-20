@@ -1,63 +1,62 @@
-
 package domain;
 
 public class Ingredient {
-    private int id,inStock,minStock,maxStock;
+
+    private int id, inStock, minStock, maxStock;
     private String name;
-    
-    public Ingredient(int id, String name, int inStock, int minStock, int maxStock){
+
+    public Ingredient(int id, String name, int inStock, int minStock, int maxStock) {
         this.id = id;
         this.name = name;
         this.inStock = inStock;
         this.minStock = minStock;
         this.maxStock = maxStock;
     }
-    
-    public int getId(){
+
+    public int getId() {
         return id;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    
-    public int getInStock(){
+
+    public int getInStock() {
         return inStock;
     }
-    
-    public int getMinStock(){
+
+    public int getMinStock() {
         return minStock;
     }
 
-    
-    public int getMaxStock(){
+    public int getMaxStock() {
         return maxStock;
     }
 
-    public void setName(String newname){
+    public void setName(String newname) {
         name = newname;
     }
-    
-    public void setAttInt(String what, int value){
-        switch(what){
+
+    public void setAttInt(String what, int value) {
+        switch (what) {
             default:
                 break;
-                
+
             case "id":
                 id = value;
                 break;
-            
+
             case "inStock":
                 inStock = value;
                 break;
-                
+
             case "minStock":
                 minStock = value;
-                break;    
-            
+                break;
+
             case "maxStock":
                 maxStock = value;
-                break;    
+                break;
         }
     }
 }

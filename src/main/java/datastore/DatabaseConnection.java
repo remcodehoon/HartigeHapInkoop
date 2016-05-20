@@ -40,14 +40,14 @@ public class DatabaseConnection {
                     result = true;
                 }
             } catch (SQLException | IOException e) {
-                log.log( Level.SEVERE, e.toString(), e);
+                log.log(Level.SEVERE, e.toString(), e);
                 result = false;
             } finally {
                 if (input != null) {
                     try {
                         input.close();
                     } catch (IOException e) {
-                        log.log( Level.SEVERE, e.toString(), e);
+                        log.log(Level.SEVERE, e.toString(), e);
                         result = false;
                     }
                 }

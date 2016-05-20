@@ -8,17 +8,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SupplierDAO {
-    
+
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-    
-    public Supplier getSupplier(int a) {        
+
+    public Supplier getSupplier(int a) {
         Supplier sup = null;
         // Instantiate
         DatabaseConnection connection = new DatabaseConnection();
         // Open connection
         connection.openConnection();
         // Query
-        
+
         String selectSQL = "SELECT * FROM dhh_supplier WHERE id = " + String.valueOf(a);
         //System.out.println(selectSQL);
 
@@ -29,26 +29,26 @@ public class SupplierDAO {
                 sup = fetchItem(resultset);
             }
         } catch (SQLException e) {
-            log.log( Level.SEVERE, e.toString(), e);
+            log.log(Level.SEVERE, e.toString(), e);
         } finally {
             // Close the connection to the database
             connection.closeConnection();
         }
         return sup;
     }
-   
+
     public ArrayList<Supplier> getAllSuppliers() {
         ArrayList<Supplier> supplierList = new ArrayList<>();
-        Supplier sup = null;
+        Supplier sup;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        
+
         String selectSQL = "SELECT * FROM dhh_supplier";
-        
+
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
-        
+
         try {
-            while(resultset.next()) {
+            while (resultset.next()) {
                 int id = resultset.getInt("id");
                 String name = resultset.getString("Name");
                 String address = resultset.getString("address");
@@ -60,15 +60,15 @@ public class SupplierDAO {
                 sup = new Supplier(id, name, address, postalCode, contactname, email, phoneNo);
                 supplierList.add(sup);
             }
-        }
-        catch (SQLException e) {
-            log.log( Level.SEVERE, e.toString(), e);
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
         } finally {
             connection.closeConnection();
         }
         return supplierList;
     }
-    private Supplier fetchItem(ResultSet resultset) {        
+
+    private Supplier fetchItem(ResultSet resultset) {
         // Instantiate
         Supplier sup = null;
         try {
@@ -84,12 +84,12 @@ public class SupplierDAO {
             sup = new Supplier(id, name, address, postalCode, contactname, email, phoneNo);
 
         } catch (SQLException e) {
-            log.log( Level.SEVERE, e.toString(), e);
+            log.log(Level.SEVERE, e.toString(), e);
         }
         return sup;
     }
 
-    public void addSupplier(Supplier sup) {        
+    public void addSupplier(Supplier sup) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         //int valueID = sup.getId();
@@ -99,22 +99,21 @@ public class SupplierDAO {
         String valueContactName = sup.getContactName();
         String valueEmail = sup.getEmail();
         String valuePhoneNo = sup.getPhoneNo();
-        
+
         String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_supplier` (`name`, `address`, `postalCode`, `contactName`, `email`, `phoneNo`) VALUES('"
-                + valueName + "','" + valueAddress + "','" + valuePostalCode + "','" 
+                + valueName + "','" + valueAddress + "','" + valuePostalCode + "','"
                 + valueContactName + "','" + valueEmail + "','" + valuePhoneNo + "');";
         System.out.println(selectSQL);
         // Execute query
         boolean resultset = connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
-    
+
     public void updateSupplier(Supplier sup, int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         int valueID = sup.getId();
-        if(valueID == id)
-        {
+        if (valueID == id) {
             String valueName = sup.getName();
             String valueAddress = sup.getAddress();
             String valuePostalCode = sup.getPostalCode();
@@ -122,21 +121,21 @@ public class SupplierDAO {
             String valueEmail = sup.getEmail();
             String valuePhoneNo = sup.getPhoneNo();
 
-            String selectSQL = "UPDATE `martkic145_stunt`.`dhh_supplier` SET `id` =" + String.valueOf(valueID) 
-                    + ",`name` = '" + valueName + "', `address` = '" + valueAddress + "', `postalCode` = '" + valuePostalCode 
-                    + "', `contactName` = '" + valueContactName + "', `email` = '" + valueEmail + "', `phoneNo` = '" + valuePhoneNo 
+            String selectSQL = "UPDATE `martkic145_stunt`.`dhh_supplier` SET `id` =" + String.valueOf(valueID)
+                    + ",`name` = '" + valueName + "', `address` = '" + valueAddress + "', `postalCode` = '" + valuePostalCode
+                    + "', `contactName` = '" + valueContactName + "', `email` = '" + valueEmail + "', `phoneNo` = '" + valuePhoneNo
                     + "' WHERE `dhh_supplier`.`id` = " + String.valueOf(id);
             boolean resultset = connection.executeSQLInsertStatement(selectSQL);
-        }
-        else
+        } else {
             System.out.println("ID's DONT match, query is NOT executed");
+        }
         connection.closeConnection();
     }
-    
+
     public void deleteSupplier(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        
+
         String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_supplier` WHERE `id` = " + id;
         boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
         if (resultset) {
@@ -144,7 +143,8 @@ public class SupplierDAO {
         }
         connection.closeConnection();
     }
-    public int getMaxID() {        
+
+    public int getMaxID() {
         int ID = 0;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -155,7 +155,7 @@ public class SupplierDAO {
         //System.out.println(resultset);
         try {
             if (resultset2.first()) {
-                
+
                 ID = resultset2.getInt("id");
             }
         } catch (SQLException e) {
