@@ -67,6 +67,69 @@ public class SupplierDAO {
         return supplierList;
     }
 
+    public ArrayList<Supplier> getSearchedSuppliers(String what, String att) {
+        String selectSQL = "SELECT * FROM dhh_supplier WHERE ";
+        switch(att){
+            default:
+                selectSQL += att + "=" + what;
+                break;
+                
+            case "ID":
+                selectSQL += "id=" + what +";";
+                break;
+        
+            case "Naam":
+                selectSQL += "name LIKE '%" + what + "%';";
+                break;
+                
+            case "Postcode":
+                selectSQL += "postalCode LIKE '%" + what + "%';";
+                break;
+            
+            case "Adres":
+                selectSQL += "address LIKE " + what + "%';";
+                break;
+                
+            case "Tel Nummer":
+                selectSQL += "phoneNo LIKE '%" + what + "%';";
+                break;
+            
+            case "Contact Persoon":
+                selectSQL += "contactName LIKE '%" + what + "%';";
+                break;
+                
+            case "E-mail":
+                selectSQL += "email LIKE '%" + what + "%';";
+                break;
+        }
+        ArrayList<Supplier> supplierList = new ArrayList<>();
+        Supplier sup;
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+
+        try {
+            while (resultset.next()) {
+                int id = resultset.getInt("id");
+                String name = resultset.getString("Name");
+                String address = resultset.getString("address");
+                String postalCode = resultset.getString("postalCode");
+                String contactname = resultset.getString("contactName");
+                String email = resultset.getString("email");
+                String phoneNo = resultset.getString("phoneNo");
+                // Create product
+                sup = new Supplier(id, name, address, postalCode, contactname, email, phoneNo);
+                supplierList.add(sup);
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            connection.closeConnection();
+        }
+        return supplierList;
+    }
+    
     private Supplier fetchItem(ResultSet resultset) {
         // Instantiate
         Supplier sup = null;

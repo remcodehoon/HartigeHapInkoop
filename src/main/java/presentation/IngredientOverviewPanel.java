@@ -26,7 +26,7 @@ public class IngredientOverviewPanel extends JPanel {
     private final TextField field1;
     private final JComboBox box1;
     private JLabel label1;
-    Controller controller = null;
+    Controller controller;
     private final JTable table;
     private final JScrollPane spTable;
     private Manager m;
@@ -183,7 +183,19 @@ public class IngredientOverviewPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("test");
+            String what = field1.getText();
+            String attribute = (String) box1.getSelectedItem();
+
+            label1.setText("");
+            model.setRowCount(0);
+            IngredientDAO dao = new IngredientDAO();
+            ArrayList<Ingredient> ingredientList = dao.getSearchedIngredients(what, attribute);
+            // Per ingredient: stop de waarden in een rij (row) van het model.
+            for(Ingredient i : ingredientList) {
+                model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+            }
+            table.setModel(model);
+            model.fireTableDataChanged();
         }
     }
 

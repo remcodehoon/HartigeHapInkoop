@@ -57,7 +57,7 @@ public class SupplierOverviewPanel extends JPanel {
         ;
         };
         // Kolommen voor het model worden aangemaakt
-        String[] colName = {"ID", "Name", "Postal", "Address", "Phone Number", "Contact Person", "E-mail"};
+        String[] colName = {"ID", "Naam", "Postcode", "Adres", "Tel Nummer", "Contact Persoon", "E-mail"};
         model.setColumnIdentifiers(colName);
         // Breedte van de kolommen wordt gedefinieerd
         int[] colWidth = new int[7];
@@ -189,7 +189,19 @@ public class SupplierOverviewPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("test");
+            String what = field1.getText();
+            String attribute = (String) box1.getSelectedItem();
+
+            label1.setText("");
+            model.setRowCount(0);
+            SupplierDAO dao = new SupplierDAO();
+            ArrayList<Supplier> ingredientList = dao.getSearchedSuppliers(what, attribute);
+            // Per ingredient: stop de waarden in een rij (row) van het model.
+            for(Supplier s : ingredientList) {
+                model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
+            }
+            table.setModel(model);
+            model.fireTableDataChanged();
         }
     }
 }

@@ -160,4 +160,60 @@ public class IngredientDAO {
         }
         return id;
     }
+
+    public ArrayList<Ingredient> getSearchedIngredients(String what, String att) {
+        String selectSQL = "SELECT * FROM dhh_ingredient WHERE ";
+        switch(att){
+            default:
+                selectSQL += att + "=" + what;
+                break;
+                
+            case "ID":
+                selectSQL += "id=" + what +";";
+                break;
+        
+            case "Naam":
+                selectSQL += "ingredientName LIKE '%" + what + "%';";
+                break;
+                
+            case "Voorraad":
+                selectSQL += "inStock=" + what + ";";
+                break;
+            
+            case "Minimum Voorraad":
+                selectSQL += "minStock=" + what + ";";
+                break;
+                
+            case "Maximum Voorraad":
+                selectSQL += "maxStock=" + what + ";";
+                break;
+        }
+        ArrayList<Ingredient> ingredientList = new ArrayList<>();
+        Ingredient ingredient;
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        
+        
+        
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        
+        try {
+            while(resultset.next()) {
+                int id = resultset.getInt("id");
+                String name = resultset.getString("ingredientName");
+                int inStock = resultset.getInt("inStock");
+                int minStock = resultset.getInt("minStock");
+                int maxStock = resultset.getInt("maxStock");
+                // Create product
+                ingredient = new Ingredient(id, name, inStock, minStock, maxStock);
+                ingredientList.add(ingredient);
+            }
+        }
+        catch (SQLException e) {
+            log.log( Level.SEVERE, e.toString(), e);
+        } finally {
+            connection.closeConnection();
+        }
+        return ingredientList;
+    }
 }
