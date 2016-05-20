@@ -186,16 +186,20 @@ public class IngredientOverviewPanel extends JPanel {
             String what = field1.getText();
             String attribute = (String) box1.getSelectedItem();
 
-            label1.setText("");
-            model.setRowCount(0);
-            IngredientDAO dao = new IngredientDAO();
-            ArrayList<Ingredient> ingredientList = dao.getSearchedIngredients(what, attribute);
-            // Per ingredient: stop de waarden in een rij (row) van het model.
-            for(Ingredient i : ingredientList) {
-                model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+            if(what.equals("")) {
+                label1.setText("Vul een zoekwoord in!");
+            } else {
+                label1.setText("");
+                model.setRowCount(0);
+                IngredientDAO dao = new IngredientDAO();
+                ArrayList<Ingredient> ingredientList = dao.getSearchedIngredients(what, attribute);
+                // Per ingredient: stop de waarden in een rij (row) van het model.
+                for(Ingredient i : ingredientList) {
+                   model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+                }
+                table.setModel(model);
+                model.fireTableDataChanged();
             }
-            table.setModel(model);
-            model.fireTableDataChanged();
         }
     }
 
