@@ -19,6 +19,9 @@ public class Controller {
     IngredientAddPanel panel3_1;
     IngredientUpdatePanel panel3_2;
     IngredientDeletePanel panel3_3;
+    
+    LoginFrame frame4;
+    LoginPanel frame4_0;
 
 // Maakt de controller aan
     public Controller() {
@@ -35,6 +38,9 @@ public class Controller {
         panel3_1 = new IngredientAddPanel(this);
         panel3_2 = new IngredientUpdatePanel(this);
         panel3_3 = new IngredientDeletePanel(this);
+        
+        frame4 = new LoginFrame(this);
+        frame4_0 = new LoginPanel(this);
     }
 
 // Maakt een bepaald frame zichtbaar
@@ -48,12 +54,14 @@ public class Controller {
             case "Mainmenu":
                 frame2.setVisible(false);
                 frame3.setVisible(false);
+                frame4.setVisible(false);
                 frame1.setVisible(true);
                 break;
 
             case "Supplier_overview":
                 frame1.setVisible(false);
                 frame3.setVisible(false);
+                frame4.setVisible(false);
 
                 frame2.setContentPane(panel2_0);
                 panel2_0.refreshTable();
@@ -82,6 +90,7 @@ public class Controller {
             case "Ingredient_overview":
                 frame1.setVisible(false);
                 frame2.setVisible(false);
+                frame4.setVisible(false);
 
                 frame3.setContentPane(panel3_0);
                 panel3_0.refreshTable();
@@ -107,10 +116,18 @@ public class Controller {
                 frame3.setVisible(true);
                 break;
 
-            default:
-                frame1.setVisible(true);
+            case "Login":
+                frame1.setVisible(false);
                 frame2.setVisible(false);
                 frame3.setVisible(false);
+                frame4.setVisible(true);
+                frame4.setContentPane(frame4_0);
+                
+            default:
+                frame1.setVisible(false);
+                frame2.setVisible(false);
+                frame3.setVisible(false);
+                frame4.setVisible(true);
                 break;
         }
     }

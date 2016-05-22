@@ -9,17 +9,18 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author Mart
+ * @author Remco
  */
-public class IngredientFrame extends JFrame {
+public class LoginFrame extends JFrame {
 
     Controller controller;
 
-    public IngredientFrame(Controller c) {
+    public LoginFrame(Controller c) {
         controller = c;
-        setSize(1366, 768);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Leveranciers overzicht");
+        setTitle("Login");
         setLayout(null);
+        setLocationRelativeTo(null);
     }
 }

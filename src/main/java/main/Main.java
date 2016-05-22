@@ -7,6 +7,7 @@ public class Main {
 // Maakt het hoofdscherm zichtbaar bij opstarten en maakt Manager aan
     public static void main(String[] args) {
         Controller c = new Controller();
-        c.makeVisible("Mainmenu");
+//        c.makeVisible("Mainmenu");
+        c.makeVisible("Login");
     }
 }
