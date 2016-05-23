@@ -1,7 +1,6 @@
 package presentation;
 
 import businesslogic.Manager;
-import datastore.IngredientDAO;
 import domain.Ingredient;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -119,7 +118,6 @@ public class IngredientOverviewPanel extends JPanel {
         //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
         // Een lijst van ingredienten worden via een DAO opgehaald.
-        IngredientDAO dao = new IngredientDAO();
         ArrayList<Ingredient> ingredientList = m.updateTableIng();
         // Per ingredient: stop de waarden in een rij (row) van het model.
         for(Ingredient i : ingredientList) {

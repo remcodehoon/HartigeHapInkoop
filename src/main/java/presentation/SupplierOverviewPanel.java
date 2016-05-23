@@ -6,7 +6,6 @@
 package presentation;
 
 import businesslogic.Manager;
-import datastore.SupplierDAO;
 import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
