@@ -25,21 +25,25 @@ public class LoginPanel extends JPanel {
         
         usernameLabel = new JLabel("Gebruikersnaam:");
         passwordLabel = new JLabel("Wachtwoord:");
-        username = new TextField(25);
-        password = new JPasswordField(25);
+        username = new TextField(20);
+        password = new JPasswordField(20);
         password.setEchoChar('*');
+        username.setSize(50, 25);
+        password.setSize(50, 25);
         login = new JButton("Login");
-        
-        add(usernameLabel);
-        add(username);
-        add(passwordLabel);
-        add(password);
-        add(login);
         loginHandler = new LoginHandler();
         login.addActionListener(loginHandler);
 
     }
 
+    public void createButtons() {
+        add(usernameLabel);
+        add(username);
+        add(passwordLabel);
+        add(password);
+        add(login);
+    }
+    
     private class LoginHandler implements ActionListener {
 
         @Override
@@ -49,8 +53,13 @@ public class LoginPanel extends JPanel {
             String p = new String(passwordInput);
             String u = username.getText();
             
-            if(u.equals("naam") && p.equals("wachtwoord")) {
+//            if(u.equals("naam") && p.equals("wachtwoord")) {
+//                controller.makeVisible("Mainmenu");
+//            }
+            if(m.checkLoginInfo(u, p)) {
                 controller.makeVisible("Mainmenu");
+            } else {
+                System.out.println("Gebruiker niet gevonden");
             }
         }
     }

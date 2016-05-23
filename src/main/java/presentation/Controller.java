@@ -122,6 +122,7 @@ public class Controller {
                 frame3.setVisible(false);
                 frame4.setVisible(true);
                 frame4.setContentPane(frame4_0);
+                frame4_0.createButtons();
                 
             default:
                 frame1.setVisible(false);

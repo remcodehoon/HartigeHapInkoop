@@ -17,7 +17,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame(Controller c) {
         controller = c;
-        setSize(500, 300);
+        setSize(250, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Login");
         setLayout(null);

@@ -1,6 +1,7 @@
 package businesslogic;
 
 import datastore.IngredientDAO;
+import datastore.LoginDAO;
 import datastore.SupplierDAO;
 import domain.Ingredient;
 import domain.Supplier;
@@ -110,4 +111,10 @@ public class Manager {
         dao.deleteSupplier(id);
     }
 
+// ------------------------* Login Information *-----------------------
+   
+    public boolean checkLoginInfo(String username, String password) {
+        LoginDAO dao = new LoginDAO();
+        return dao.checkLoginInfo(username, password);
+    }
 }
