@@ -1,23 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package presentation;
 
+import businesslogic.Manager;
 import javax.swing.JFrame;
 
-/**
- *
- * @author Mart
- */
 public class IngredientFrame extends JFrame {
 
-    Controller controller;
+    Controller controller = null;
 
-    public IngredientFrame(Controller c) {
+    public IngredientFrame(Controller c, Manager m) {
         controller = c;
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Leveranciers overzicht");
         setLayout(null);

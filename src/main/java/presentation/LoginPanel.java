@@ -8,40 +8,47 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.SwingConstants;
 
 public class LoginPanel extends JPanel {
 
-    private final JLabel usernameLabel, passwordLabel;
+    private final JLabel usernameLabel, passwordLabel, notificationLabel;
     private final TextField username;
     private final JPasswordField password;
     private final JButton login;
     Controller controller;
-    private final Manager m;
+    final Manager m;
     private final LoginHandler loginHandler;
 
-    public LoginPanel(Controller c) {
+    public LoginPanel(Controller c, Manager m) {
         controller = c;
-        m = new Manager();
+	this.m = m;
         
-        usernameLabel = new JLabel("Gebruikersnaam:");
-        passwordLabel = new JLabel("Wachtwoord:");
+        usernameLabel = new JLabel("Gebruikersnaam:", SwingConstants.CENTER);
+        usernameLabel.setBounds(0,0,250,30);
         username = new TextField(20);
+        username.setBounds(50,30,150,30);
+        passwordLabel = new JLabel("Wachtwoord:", SwingConstants.CENTER);
+        passwordLabel.setBounds(0,60,250,30);
         password = new JPasswordField(20);
         password.setEchoChar('*');
-        username.setSize(50, 25);
-        password.setSize(50, 25);
+        password.setBounds(50,90,150,30);
         login = new JButton("Login");
         loginHandler = new LoginHandler();
         login.addActionListener(loginHandler);
-
+        login.setBounds(65,130,120,30);
+        notificationLabel = new JLabel("",SwingConstants.CENTER);
+        notificationLabel.setBounds(0,170,250,30);
     }
 
     public void createButtons() {
+        setLayout(null);
         add(usernameLabel);
         add(username);
         add(passwordLabel);
         add(password);
         add(login);
+        add(notificationLabel);
     }
     
     private class LoginHandler implements ActionListener {
@@ -59,7 +66,7 @@ public class LoginPanel extends JPanel {
             if(m.checkLoginInfo(u, p)) {
                 controller.makeVisible("Mainmenu");
             } else {
-                System.out.println("Gebruiker niet gevonden");
+                notificationLabel.setText("Gebruiker niet gevonden");
             }
         }
     }

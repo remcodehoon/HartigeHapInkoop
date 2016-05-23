@@ -10,7 +10,12 @@ import java.util.logging.Logger;
 public class SupplierDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-
+    private final ArrayList<Supplier> list;
+    
+    public SupplierDAO(){
+        list = new ArrayList<>();
+    }
+    
     public Supplier getSupplier(int a) {
         Supplier sup = null;
         // Instantiate
@@ -37,7 +42,11 @@ public class SupplierDAO {
     }
 
     public ArrayList<Supplier> getAllSuppliers() {
-        ArrayList<Supplier> supplierList = new ArrayList<>();
+         return list;
+    }
+    
+    public void updateSuppliers() {
+        list.clear();
         Supplier sup;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -57,14 +66,13 @@ public class SupplierDAO {
                 String phoneNo = resultset.getString("phoneNo");
                 // Create product
                 sup = new Supplier(id, name, address, postalCode, contactname, email, phoneNo);
-                supplierList.add(sup);
+                list.add(sup);
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, e.toString(), e);
         } finally {
             connection.closeConnection();
         }
-        return supplierList;
     }
 
     public ArrayList<Supplier> getSearchedSuppliers(String what, String att) {

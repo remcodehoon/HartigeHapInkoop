@@ -34,12 +34,12 @@ public class SupplierOverviewPanel extends JPanel {
     Controller controller;
     private final JTable table;
     private final JScrollPane spTable;
-    private Manager m;
+    Manager m;
     private final DefaultTableModel model;
 
-    public SupplierOverviewPanel(Controller c) {
+    public SupplierOverviewPanel(Controller c, Manager m) {
         controller = c;
-        m = new Manager();
+        this.m = m;
         setLayout(null);
 
         label1 = new JLabel("");
@@ -129,8 +129,7 @@ public class SupplierOverviewPanel extends JPanel {
         //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
         // Een lijst van leveranciers worden via een DAO opgehaald.
-        SupplierDAO dao = new SupplierDAO();
-        ArrayList<Supplier> supplierList = dao.getAllSuppliers();
+        ArrayList<Supplier> supplierList = m.updateTableSup();
         // Per leverancier: stop de waarden in een rij (row) van het model.
         for (Supplier s : supplierList) {
             model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
@@ -189,19 +188,24 @@ public class SupplierOverviewPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            
             String what = field1.getText();
             String attribute = (String) box1.getSelectedItem();
-
-            label1.setText("");
-            model.setRowCount(0);
-            SupplierDAO dao = new SupplierDAO();
-            ArrayList<Supplier> ingredientList = dao.getSearchedSuppliers(what, attribute);
-            // Per ingredient: stop de waarden in een rij (row) van het model.
-            for(Supplier s : ingredientList) {
-                model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
+            
+            if(what.equals("")){
+                label1.setText("Voer een waarde in");
+            } else {
+                label1.setText("");
+                model.setRowCount(0);
+                ArrayList<Supplier> ingredientList = m.getSearchedSup(what, attribute);
+                // Per ingredient: stop de waarden in een rij (row) van het model.
+                for(Supplier s : ingredientList) {
+                    model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
+                }
+                table.setModel(model);
+                model.fireTableDataChanged();
             }
-            table.setModel(model);
-            model.fireTableDataChanged();
+            
         }
     }
 }

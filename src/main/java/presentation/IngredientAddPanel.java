@@ -16,11 +16,11 @@ public class IngredientAddPanel extends JPanel {
     private final TextField /*field1,*/ field2, field3, field4, field5;
     private final JButton button1, button2;
     Controller controller;
-    private final Manager m;
+    Manager m;
 
-    public IngredientAddPanel(Controller c) {
+    public IngredientAddPanel(Controller c, Manager m) {
         controller = c;
-        m = new Manager();
+        this.m = m;
         setLayout(null);
 
         add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));

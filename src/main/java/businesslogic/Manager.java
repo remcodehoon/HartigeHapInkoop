@@ -5,13 +5,19 @@ import datastore.LoginDAO;
 import datastore.SupplierDAO;
 import domain.Ingredient;
 import domain.Supplier;
+import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 public class Manager {
-
+    SupplierDAO supDAO;
+    IngredientDAO ingDAO;
+    LoginDAO loginDAO;
+    
     public Manager() {
-
+        supDAO = new SupplierDAO();
+        ingDAO = new IngredientDAO();
+	loginDAO = new LoginDAO();
     }
 
     public Boolean checkNumbers(String invoer) {
@@ -38,8 +44,7 @@ public class Manager {
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
-        IngredientDAO dao = new IngredientDAO();
-        return dao.getIngredient(a);
+        return ingDAO.getIngredient(a);
     }
 
     /**
@@ -48,9 +53,7 @@ public class Manager {
      * @param newIngredient
      */
     public void addIngredient(Ingredient newIngredient) {
-        IngredientDAO dao = new IngredientDAO();
-        //int id = dao.getMaxID() + 1;
-        dao.addIngredient(newIngredient);
+        ingDAO.addIngredient(newIngredient);
     }
 
     /**
@@ -60,8 +63,7 @@ public class Manager {
      * @param updateIng
      */
     public void updateIngredient(int id, Ingredient updateIng) {
-        IngredientDAO dao = new IngredientDAO();
-        dao.updateIngredient(updateIng, id);
+        ingDAO.updateIngredient(updateIng, id);
     }
 
     /**
@@ -70,14 +72,21 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een ingredient te verwijderen.
      */
     public void deleteIngredient(int id) {
-        IngredientDAO dao = new IngredientDAO();
-        dao.deleteIngredient(id);
+        ingDAO.deleteIngredient(id);
+    }
+    
+    public ArrayList<Ingredient> updateTableIng(){
+        ingDAO.updateIngredients();
+        return ingDAO.getAllIngredients();
+    }
+    
+    public ArrayList<Ingredient> getSearchedIng(String what, String attribute){
+        return ingDAO.getSearchedIngredients(what, attribute);
     }
 
 // ------------------------* Leverancier data *-----------------------
     public Supplier getSupplier(int a) {
-        SupplierDAO dao = new SupplierDAO();
-        return dao.getSupplier(a);
+        return supDAO.getSupplier(a);
     }
 
     /**
@@ -86,8 +95,7 @@ public class Manager {
      * @param newSupplier
      */
     public void addSupplier(Supplier newSupplier) {
-        SupplierDAO dao = new SupplierDAO();
-        dao.addSupplier(newSupplier);
+        supDAO.addSupplier(newSupplier);
     }
 
     /**
@@ -97,8 +105,7 @@ public class Manager {
      * @param updateSupplier -> Adres
      */
     public void updateSupplier(int id, Supplier updateSupplier) {
-        SupplierDAO dao = new SupplierDAO();
-        dao.updateSupplier(updateSupplier, id);
+        supDAO.updateSupplier(updateSupplier, id);
     }
 
     /**
@@ -107,14 +114,20 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
      */
     public void deleteSupplier(int id) {
-        SupplierDAO dao = new SupplierDAO();
-        dao.deleteSupplier(id);
+        supDAO.deleteSupplier(id);
     }
-
-// ------------------------* Login Information *-----------------------
-   
-    public boolean checkLoginInfo(String username, String password) {
-        LoginDAO dao = new LoginDAO();
-        return dao.checkLoginInfo(username, password);
+    
+    public ArrayList<Supplier> updateTableSup(){
+        supDAO.updateSuppliers();
+        return supDAO.getAllSuppliers();
+    }
+    
+    public ArrayList<Supplier> getSearchedSup(String what, String attribute){
+        return supDAO.getSearchedSuppliers(what, attribute);
+    }
+	
+	public boolean checkLoginInfo(String username, String password) {
+        
+        return loginDAO.checkLoginInfo(username, password);
     }
 }

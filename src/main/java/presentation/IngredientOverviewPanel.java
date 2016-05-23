@@ -16,10 +16,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-/**
- *
- * @author Mart
- */
 public class IngredientOverviewPanel extends JPanel {
 
     private final JButton button1, button2, button3, button4, button5;
@@ -29,12 +25,12 @@ public class IngredientOverviewPanel extends JPanel {
     Controller controller;
     private final JTable table;
     private final JScrollPane spTable;
-    private Manager m;
+    Manager m;
     private final DefaultTableModel model;
 
-    public IngredientOverviewPanel(Controller c) {
+    public IngredientOverviewPanel(Controller c, Manager m) {
         controller = c;
-        m = new Manager();
+        this.m = m;
         setLayout(null);
 
         label1 = new JLabel("");
@@ -124,7 +120,7 @@ public class IngredientOverviewPanel extends JPanel {
         model.setRowCount(0);
         // Een lijst van ingredienten worden via een DAO opgehaald.
         IngredientDAO dao = new IngredientDAO();
-        ArrayList<Ingredient> ingredientList = dao.getAllIngredients();
+        ArrayList<Ingredient> ingredientList = m.updateTableIng();
         // Per ingredient: stop de waarden in een rij (row) van het model.
         for(Ingredient i : ingredientList) {
             model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
@@ -191,8 +187,7 @@ public class IngredientOverviewPanel extends JPanel {
             } else {
                 label1.setText("");
                 model.setRowCount(0);
-                IngredientDAO dao = new IngredientDAO();
-                ArrayList<Ingredient> ingredientList = dao.getSearchedIngredients(what, attribute);
+                ArrayList<Ingredient> ingredientList = m.getSearchedIng(what,attribute);
                 // Per ingredient: stop de waarden in een rij (row) van het model.
                 for(Ingredient i : ingredientList) {
                    model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});

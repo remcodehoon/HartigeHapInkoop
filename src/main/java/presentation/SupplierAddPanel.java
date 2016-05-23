@@ -13,14 +13,14 @@ import javax.swing.SwingConstants;
 public class SupplierAddPanel extends JPanel {
 
     private final JLabel label1;
-    private final TextField /*field1,*/ field2, field3, field4, field5, field6, field7;
+    private final TextField field2, field3, field4, field5, field6, field7;
     private final JButton button1, button2;
     Controller controller;
     private final Manager m;
 
-    public SupplierAddPanel(Controller c) {
+    public SupplierAddPanel(Controller c, Manager m) {
         controller = c;
-        m = new Manager();
+        this.m = m;
         setLayout(null);
 
         add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));

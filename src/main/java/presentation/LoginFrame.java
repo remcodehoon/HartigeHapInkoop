@@ -1,23 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package presentation;
 
+import businesslogic.Manager;
 import javax.swing.JFrame;
 
-/**
- *
- * @author Remco
- */
 public class LoginFrame extends JFrame {
 
     Controller controller;
+    Manager m;
 
-    public LoginFrame(Controller c) {
+    public LoginFrame(Controller c, Manager m) {
+        this.m = m;
         controller = c;
-        setSize(250, 200);
+        setSize(250, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Login");
         setLayout(null);

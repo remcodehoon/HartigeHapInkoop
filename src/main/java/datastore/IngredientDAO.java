@@ -10,7 +10,12 @@ import java.util.logging.Logger;
 public class IngredientDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-
+    private final ArrayList<Ingredient> list;
+    
+    public IngredientDAO(){
+        list = new ArrayList<>();
+    }
+    
     public Ingredient getIngredient(int a) {
         Ingredient ingredient = null;
         // Instantiate
@@ -36,9 +41,13 @@ public class IngredientDAO {
         }
         return ingredient;
     }
-
+    
     public ArrayList<Ingredient> getAllIngredients() {
-        ArrayList<Ingredient> ingredientList = new ArrayList<>();
+         return list;
+    }
+    
+    public void updateIngredients() {
+        list.clear();
         Ingredient ingredient;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -56,14 +65,13 @@ public class IngredientDAO {
                 int maxStock = resultset.getInt("maxStock");
                 // Create product
                 ingredient = new Ingredient(id, name, inStock, minStock, maxStock);
-                ingredientList.add(ingredient);
+                list.add(ingredient);
             }
         } catch (SQLException e) {
             log.log(Level.SEVERE, e.toString(), e);
         } finally {
             connection.closeConnection();
         }
-        return ingredientList;
     }
 
     private Ingredient fetchItem(ResultSet resultset) {

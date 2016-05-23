@@ -13,15 +13,15 @@ import javax.swing.SwingConstants;
 public class SupplierUpdatePanel extends JPanel {
 
     private final JLabel label1;
-    private final TextField /*field1,*/ field2, field3, field4, field5, field6, field7;
+    private final TextField field2, field3, field4, field5, field6, field7;
     private final JButton button1, button2;
     Controller controller;
-    private Manager m;
+    Manager m;
     private int id = -1;
 
-    public SupplierUpdatePanel(Controller c) {
+    public SupplierUpdatePanel(Controller c,Manager m) {
         controller = c;
-        m = new Manager();
+        this.m = m;
         setLayout(null);
 
         add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));
