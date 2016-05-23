@@ -17,7 +17,7 @@ public class SupplierFrame extends JFrame {
 
     public SupplierFrame(Controller c) {
         controller = c;
-        setSize(1366, 768);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Leveranciers overzicht");
     }

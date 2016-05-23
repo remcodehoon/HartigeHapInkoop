@@ -16,7 +16,7 @@ public class Mainmenu extends JFrame {
 
     public Mainmenu(Controller c) {
         controller = c;
-        setSize(1366, 768);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Hoofdmenu inkoop");
         setContentPane(new MainmenuPanel(controller));
