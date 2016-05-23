@@ -25,20 +25,20 @@ public class LoginPanel extends JPanel {
 	this.m = m;
         
         usernameLabel = new JLabel("Gebruikersnaam:", SwingConstants.CENTER);
-        usernameLabel.setBounds(0,0,250,30);
+        usernameLabel.setBounds(0,0,330,30);
         username = new TextField(20);
-        username.setBounds(50,30,150,30);
+        username.setBounds(90,30,150,30);
         passwordLabel = new JLabel("Wachtwoord:", SwingConstants.CENTER);
-        passwordLabel.setBounds(0,60,250,30);
+        passwordLabel.setBounds(0,60,330,30);
         password = new JPasswordField(20);
         password.setEchoChar('*');
-        password.setBounds(50,90,150,30);
+        password.setBounds(90,90,150,30);
         login = new JButton("Login");
         loginHandler = new LoginHandler();
         login.addActionListener(loginHandler);
-        login.setBounds(65,130,120,30);
+        login.setBounds(105,130,120,30);
         notificationLabel = new JLabel("",SwingConstants.CENTER);
-        notificationLabel.setBounds(0,170,250,30);
+        notificationLabel.setBounds(0,170,330,30);
     }
 
     public void createButtons() {
@@ -66,7 +66,7 @@ public class LoginPanel extends JPanel {
             if(m.checkLoginInfo(u, p)) {
                 controller.makeVisible("Mainmenu");
             } else {
-                notificationLabel.setText("Gebruiker niet gevonden");
+                notificationLabel.setText("Gebruiksnaam/wachtwoord combinatie onjuist");
             }
         }
     }
