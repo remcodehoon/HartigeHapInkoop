@@ -6,6 +6,7 @@ import datastore.SupplierDAO;
 import domain.Ingredient;
 import domain.Supplier;
 import java.util.ArrayList;
+import java.util.Set;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -75,12 +76,22 @@ public class Manager {
         ingDAO.deleteIngredient(id);
     }
     
-    public ArrayList<Ingredient> updateTableIng(){
+    /**
+     *
+     * @return Ingredient set
+     */
+    public Set<Ingredient> updateTableIng(){
         ingDAO.updateIngredients();
         return ingDAO.getAllIngredients();
     }
     
-    public ArrayList<Ingredient> getSearchedIng(String what, String attribute){
+    /**
+     *
+     * @param what
+     * @param attribute
+     * @return Set of found ingredients
+     */
+    public Set<Ingredient> getSearchedIng(String what, String attribute){
         return ingDAO.getSearchedIngredients(what, attribute);
     }
 

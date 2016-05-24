@@ -3,17 +3,18 @@ package datastore;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Ingredient;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class IngredientDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-    private final ArrayList<Ingredient> list;
+    private final Set<Ingredient> list;
     
     public IngredientDAO(){
-        list = new ArrayList<>();
+        list = new HashSet<>();
     }
     
     public Ingredient getIngredient(int a) {
@@ -42,7 +43,7 @@ public class IngredientDAO {
         return ingredient;
     }
     
-    public ArrayList<Ingredient> getAllIngredients() {
+    public Set<Ingredient> getAllIngredients() {
          return list;
     }
     
@@ -106,7 +107,7 @@ public class IngredientDAO {
                 + valueName + "','" + valueInStock + "','" + String.valueOf(valueMinstock) + "'," + String.valueOf(valueMaxstock) + ");";
         
         // Execute query
-        boolean resultset = connection.executeSQLInsertStatement(selectSQL);
+        connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
 
@@ -169,7 +170,7 @@ public class IngredientDAO {
         return id;
     }
 
-    public ArrayList<Ingredient> getSearchedIngredients(String what, String att) {
+    public Set<Ingredient> getSearchedIngredients(String what, String att) {
         String selectSQL = "SELECT * FROM dhh_ingredient WHERE ";
         switch(att){
             default:
@@ -196,7 +197,8 @@ public class IngredientDAO {
                 selectSQL += "maxStock=" + what + ";";
                 break;
         }
-        ArrayList<Ingredient> ingredientList = new ArrayList<>();
+        Set<Ingredient> ingredientList;
+        ingredientList = new HashSet<>();
         Ingredient ingredient;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();

@@ -5,7 +5,7 @@ import domain.Ingredient;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -118,7 +118,7 @@ public class IngredientOverviewPanel extends JPanel {
         //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
         // Een lijst van ingredienten worden via een DAO opgehaald.
-        ArrayList<Ingredient> ingredientList = m.updateTableIng();
+        Set<Ingredient> ingredientList = m.updateTableIng();
         // Per ingredient: stop de waarden in een rij (row) van het model.
         for(Ingredient i : ingredientList) {
             model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
@@ -185,7 +185,7 @@ public class IngredientOverviewPanel extends JPanel {
             } else {
                 label1.setText("");
                 model.setRowCount(0);
-                ArrayList<Ingredient> ingredientList = m.getSearchedIng(what,attribute);
+                Set<Ingredient> ingredientList = m.getSearchedIng(what,attribute);
                 // Per ingredient: stop de waarden in een rij (row) van het model.
                 for(Ingredient i : ingredientList) {
                    model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
