@@ -27,15 +27,15 @@ public class Controller {
 // Maakt de controller aan
     public Controller() {
         m = new Manager();
-        frame1 = new Mainmenu(this,m);
+        frame1 = new Mainmenu(this);
 
-        frame2 = new SupplierFrame(this,m);
+        frame2 = new SupplierFrame(this);
         panel20 = new SupplierOverviewPanel(this,m);
         panel21 = new SupplierAddPanel(this,m);
         panel22 = new SupplierUpdatePanel(this,m);
         panel23 = new SupplierDeletePanel(this,m);
 
-        frame3 = new IngredientFrame(this,m);
+        frame3 = new IngredientFrame(this);
         panel30 = new IngredientOverviewPanel(this,m);
         panel31 = new IngredientAddPanel(this,m);
         panel32 = new IngredientUpdatePanel(this,m);

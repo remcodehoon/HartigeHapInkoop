@@ -42,4 +42,28 @@ public class LoginDAO {
         return false;
     }
     
+    public int getEmployeeId(String username, String password) {
+        // Instantiate
+        DatabaseConnection connection = new DatabaseConnection();
+        // Open connection
+        connection.openConnection();
+        // Query
+        String selectSQL = "SELECT id FROM dhh_employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\" LIMIT 1";
+        
+        // Execute query
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            if (resultset.first()) {
+                return resultset.getInt("id");
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
+            return 0;
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return 0;
+    }
+    
 }

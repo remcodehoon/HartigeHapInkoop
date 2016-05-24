@@ -164,7 +164,6 @@ public class SupplierDAO {
     public void addSupplier(Supplier sup) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        //int valueID = sup.getId();
         String valueName = sup.getName();
         String valueAddress = sup.getAddress();
         String valuePostalCode = sup.getPostalCode();
@@ -197,7 +196,7 @@ public class SupplierDAO {
                     + ",`name` = '" + valueName + "', `address` = '" + valueAddress + "', `postalCode` = '" + valuePostalCode
                     + "', `contactName` = '" + valueContactName + "', `email` = '" + valueEmail + "', `phoneNo` = '" + valuePhoneNo
                     + "' WHERE `dhh_supplier`.`id` = " + String.valueOf(id);
-            boolean resultset = connection.executeSQLInsertStatement(selectSQL);
+            connection.executeSQLInsertStatement(selectSQL);
         } else {
             log.log(Level.SEVERE, "ID's DONT match, query is NOT executed");
         }
@@ -217,7 +216,7 @@ public class SupplierDAO {
     }
 
     public int getMaxID() {
-        int ID = 0;
+        int id = 0;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "SELECT * FROM dhh_supplier WHERE id = (SELECT max(id) FROM dhh_supplier)";
@@ -228,14 +227,17 @@ public class SupplierDAO {
         try {
             if (resultset2.first()) {
 
-                ID = resultset2.getInt("id");
+                id = resultset2.getInt("id");
+                
             }
         } catch (SQLException e) {
+            
             log.log(Level.SEVERE, e.toString(), e);
+            
         } finally {
             // Close the connection to the database
             connection.closeConnection();
         }
-        return ID;
+        return id;
     }
 }

@@ -14,13 +14,27 @@ public class Manager {
     SupplierDAO supDAO;
     IngredientDAO ingDAO;
     LoginDAO loginDAO;
+    private int employeeId;
     
     public Manager() {
         supDAO = new SupplierDAO();
         ingDAO = new IngredientDAO();
 	loginDAO = new LoginDAO();
+        employeeId = 0;
     }
 
+    public void setEmployeeId(int id) {
+        this.employeeId = id;
+    }
+    
+    public int getEmployeeId() {
+        return this.employeeId;
+    }
+    
+    public int getEmployeeId(String username, String password) {
+        return loginDAO.getEmployeeId(username, password);
+    }
+    
     public Boolean checkNumbers(String invoer) {
         String regex = "[0-9]+";
         return invoer.matches(regex);

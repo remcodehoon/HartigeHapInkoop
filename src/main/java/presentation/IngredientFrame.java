@@ -1,13 +1,12 @@
 package presentation;
 
-import businesslogic.Manager;
 import javax.swing.JFrame;
 
 public class IngredientFrame extends JFrame {
 
     Controller controller = null;
 
-    public IngredientFrame(Controller c, Manager m) {
+    public IngredientFrame(Controller c) {
         controller = c;
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSize(1366, 768);

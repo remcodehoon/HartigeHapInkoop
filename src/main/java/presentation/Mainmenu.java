@@ -1,6 +1,5 @@
 package presentation;
 
-import businesslogic.Manager;
 import java.awt.BorderLayout;
 import java.awt.TextArea;
 import static java.awt.TextArea.SCROLLBARS_NONE;
@@ -15,7 +14,7 @@ public class Mainmenu extends JFrame {
 
     Controller controller = null;
 
-    public Mainmenu(Controller c, Manager m) {
+    public Mainmenu(Controller c) {
         controller = c;
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

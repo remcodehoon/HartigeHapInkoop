@@ -127,7 +127,7 @@ public class IngredientDAO {
                     + String.valueOf(valueMaxstock) + "' WHERE `dhh_ingredient`.`id` = " + String.valueOf(id);
 
             
-            boolean resultset = connection.executeSQLInsertStatement(selectSQL);
+            connection.executeSQLInsertStatement(selectSQL);
         } else {
             log.log(Level.SEVERE, "ID's DONT match, query is NOT executed");
             connection.closeConnection();

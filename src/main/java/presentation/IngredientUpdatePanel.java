@@ -71,7 +71,6 @@ public class IngredientUpdatePanel extends JPanel {
         field4.setText(String.valueOf(selIng.getMinStock()));
         field5.setText(String.valueOf(selIng.getMaxStock()));
         id = selIng.getId();
-        //field1.setText(String.valueOf(selIng.getId()));
     }
 
     private class ButtonHandler implements ActionListener {
