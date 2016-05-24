@@ -173,9 +173,9 @@ public class SupplierDAO {
         String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_supplier` (`name`, `address`, `postalCode`, `contactName`, `email`, `phoneNo`) VALUES('"
                 + valueName + "','" + valueAddress + "','" + valuePostalCode + "','"
                 + valueContactName + "','" + valueEmail + "','" + valuePhoneNo + "');";
-        System.out.println(selectSQL);
+        
         // Execute query
-        boolean resultset = connection.executeSQLInsertStatement(selectSQL);
+        connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
 
@@ -197,7 +197,7 @@ public class SupplierDAO {
                     + "' WHERE `dhh_supplier`.`id` = " + String.valueOf(id);
             boolean resultset = connection.executeSQLInsertStatement(selectSQL);
         } else {
-            System.out.println("ID's DONT match, query is NOT executed");
+            log.log(Level.SEVERE, "ID's DONT match, query is NOT executed");
         }
         connection.closeConnection();
     }
@@ -209,7 +209,7 @@ public class SupplierDAO {
         String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_supplier` WHERE `id` = " + id;
         boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
         if (resultset) {
-            System.out.println("Supplier deleted.");
+            log.log(Level.SEVERE, "Supplier deleted.");
         }
         connection.closeConnection();
     }
@@ -229,7 +229,7 @@ public class SupplierDAO {
                 ID = resultset2.getInt("id");
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            log.log(Level.SEVERE, e.toString(), e);
         } finally {
             // Close the connection to the database
             connection.closeConnection();

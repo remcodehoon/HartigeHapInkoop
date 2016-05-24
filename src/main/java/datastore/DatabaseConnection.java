@@ -67,7 +67,7 @@ public class DatabaseConnection {
             try {
                 open = !connection.isClosed() && !statement.isClosed();
             } catch (SQLException e) {
-                System.out.println(e);
+                log.log(Level.SEVERE, e.toString(), e);
                 open = false;
             }
         }
@@ -82,7 +82,7 @@ public class DatabaseConnection {
             statement.close();
             connection.close();
         } catch (Exception e) {
-            System.out.println(e);
+            log.log(Level.SEVERE, e.toString(), e);
         }
     }
 
@@ -96,7 +96,7 @@ public class DatabaseConnection {
             try {
                 resultset = statement.executeQuery(query);
             } catch (SQLException e) {
-                System.out.println(e);
+                log.log(Level.SEVERE, e.toString(), e);
                 resultset = null;
             }
         }
@@ -115,7 +115,7 @@ public class DatabaseConnection {
                 statement.executeUpdate(query);
                 result = true;
             } catch (SQLException e) {
-                System.out.println(e);
+                log.log(Level.SEVERE, e.toString(), e);
                 result = false;
             }
         }
@@ -132,7 +132,7 @@ public class DatabaseConnection {
                 statement.executeUpdate(query);
                 gelukt = true;
             } catch (SQLException e) {
-                System.out.println(e);
+                log.log(Level.SEVERE, e.toString(), e);
             }
         }
         return gelukt;
