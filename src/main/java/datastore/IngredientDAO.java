@@ -26,7 +26,6 @@ public class IngredientDAO {
         // Query
 
         String selectSQL = "SELECT * FROM dhh_ingredient WHERE id = " + String.valueOf(a);
-        System.out.println(selectSQL);
 
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
@@ -89,7 +88,7 @@ public class IngredientDAO {
             ingredient = new Ingredient(id, name, inStock, minStock, maxStock);
 
         } catch (SQLException e) {
-            System.out.println(e);
+            log.log(Level.SEVERE, e.toString(), e);
         }
         return ingredient;
     }
@@ -116,7 +115,7 @@ public class IngredientDAO {
         connection.openConnection();
         int valueID = ingredient.getId();
         if (valueID == id) {
-            System.out.println("ID's match, query is executed");
+            log.log(Level.SEVERE, "ID's match, query is executed");
             String valueName = ingredient.getName();
             int valueInStock = ingredient.getInStock();
             int valueMinstock = ingredient.getMinStock();
@@ -130,7 +129,7 @@ public class IngredientDAO {
             
             boolean resultset = connection.executeSQLInsertStatement(selectSQL);
         } else {
-            System.out.println("ID's DONT match, query is NOT executed");
+            log.log(Level.SEVERE, "ID's DONT match, query is NOT executed");
             connection.closeConnection();
         }
     }
@@ -142,7 +141,7 @@ public class IngredientDAO {
         String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_ingredient` WHERE `id` = " + id;
         boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
         if (resultset) {
-            System.out.println("Ingredient deleted.");
+            log.log(Level.SEVERE, "Ingredient deleted");
         }
         connection.closeConnection();
     }
@@ -162,7 +161,7 @@ public class IngredientDAO {
                 id = resultset2.getInt("id");
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            log.log(Level.SEVERE, e.toString(), e);
         } finally {
             // Close the connection to the database
             connection.closeConnection();
