@@ -162,12 +162,6 @@ public class Controller {
     
     public void makeVisible(String framenaam, Ingredient ing) {
         switch (framenaam) {
-            default:
-                frame3.setContentPane(panel30);
-                panel30.refreshTable();
-                panel30.setVisible(true);
-                break;
-
             case "Ingredient_update":
                 frame3.setContentPane(panel32);
                 panel32.setVisible(true);
@@ -181,17 +175,17 @@ public class Controller {
                 frame3.setVisible(true);
                 panel33.setIngredient(ing);
                 break;
+            
+            default:
+                frame3.setContentPane(panel30);
+                panel30.refreshTable();
+                panel30.setVisible(true);
+                break;
         }
     }
 
     public void makeVisible(String framenaam, Supplier sup) {
         switch (framenaam) {
-            default:
-                frame2.setContentPane(panel20);
-                panel20.refreshTable();
-                panel20.setVisible(true);
-                break;
-
             case "Supplier_update":
                 frame2.setContentPane(panel22);
                 panel22.setVisible(true);
@@ -204,6 +198,12 @@ public class Controller {
                 panel23.setVisible(true);
                 frame2.setVisible(true);
                 panel23.setSupplier(sup);
+                break;
+              
+            default:
+                frame2.setContentPane(panel20);
+                panel20.refreshTable();
+                panel20.setVisible(true);
                 break;
         }
     }

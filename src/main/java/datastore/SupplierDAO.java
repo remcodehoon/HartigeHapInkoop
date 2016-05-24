@@ -79,11 +79,7 @@ public class SupplierDAO {
 
     public ArrayList<Supplier> getSearchedSuppliers(String what, String att) {
         String selectSQL = "SELECT * FROM dhh_supplier WHERE ";
-        switch(att){
-            default:
-                selectSQL += att + "=" + what;
-                break;
-                
+        switch(att){  
             case "ID":
                 selectSQL += "id=" + what +";";
                 break;
@@ -110,6 +106,10 @@ public class SupplierDAO {
                 
             case "E-mail":
                 selectSQL += "email LIKE '%" + what + "%';";
+                break;
+                
+            default:
+                selectSQL += att + "=" + what;
                 break;
         }
         ArrayList<Supplier> supplierList = new ArrayList<>();

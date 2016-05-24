@@ -39,9 +39,6 @@ public class Ingredient {
 
     public void setAttInt(String what, int value) {
         switch (what) {
-            default:
-                break;
-
             case "id":
                 id = value;
                 break;
@@ -56,6 +53,9 @@ public class Ingredient {
 
             case "maxStock":
                 maxStock = value;
+                break;
+                
+            default:
                 break;
         }
     }

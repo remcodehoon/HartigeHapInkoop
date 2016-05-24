@@ -49,9 +49,6 @@ public class Supplier {
 
     public void setAttString(String what, String value) {
         switch (what) {
-            default:
-                break;
-
             case "name":
                 name = value;
                 break;
@@ -74,6 +71,9 @@ public class Supplier {
 
             case "phoneNo":
                 phoneNo = value;
+                break;
+                
+            default:
                 break;
         }
     }

@@ -172,10 +172,6 @@ public class IngredientDAO {
     public Set<Ingredient> getSearchedIngredients(String what, String att) {
         String selectSQL = "SELECT * FROM dhh_ingredient WHERE ";
         switch(att){
-            default:
-                selectSQL += att + "=" + what;
-                break;
-                
             case "ID":
                 selectSQL += "id=" + what +";";
                 break;
@@ -194,6 +190,10 @@ public class IngredientDAO {
                 
             case "Maximum Voorraad":
                 selectSQL += "maxStock=" + what + ";";
+                break;
+                
+            default:
+                selectSQL += att + "=" + what;
                 break;
         }
         Set<Ingredient> ingredientList;

@@ -30,14 +30,14 @@ public class Manager {
         JLabel label = new JLabel(text);
         label.setBounds(x, y, length, width);
         switch (align) {
-            default:
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                break;
             case "left":
                 label.setHorizontalAlignment(SwingConstants.LEFT);
                 break;
             case "right":
                 label.setHorizontalAlignment(SwingConstants.RIGHT);
+                break;
+            default:
+                label.setHorizontalAlignment(SwingConstants.CENTER);
                 break;
         }
         return label;
