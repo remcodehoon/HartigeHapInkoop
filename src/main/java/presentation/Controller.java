@@ -51,90 +51,115 @@ public class Controller {
         frame1.setVisible(false);
         frame2.setVisible(false);
         frame3.setVisible(false);
+        frame4.setVisible(false);
 
         switch (framenaam) {
             case "Mainmenu":
-                frame2.setVisible(false);
-                frame3.setVisible(false);
-		frame4.setVisible(false);
-                frame1.setVisible(true);
+                showMainMenu();
                 break;
 
             case "Supplier_overview":
-                frame1.setVisible(false);
-                frame3.setVisible(false);
-		frame4.setVisible(false);
-
-                frame2.setContentPane(panel2_0);
-                panel2_0.refreshTable();
-                panel2_0.setVisible(true);
-                frame2.setVisible(true);
+                showSupplierOverview();
                 break;
 
             case "Supplier_add":
-                frame2.setContentPane(panel2_1);
-                panel2_1.setVisible(true);
-                frame2.setVisible(true);
+                showSupplierAdd();
                 break;
 
             case "Supplier_update":
-                frame2.setContentPane(panel2_2);
-                panel2_2.setVisible(true);
-                frame2.setVisible(true);
+                showSupplierUpdate();
                 break;
 
             case "Supplier_delete":
-                frame2.setContentPane(panel2_3);
-                panel2_3.setVisible(true);
-                frame2.setVisible(true);
+                showSupplierDelete();
                 break;
 
             case "Ingredient_overview":
-                frame1.setVisible(false);
-                frame2.setVisible(false);
-		frame4.setVisible(false);
-
-                frame3.setContentPane(panel3_0);
-                panel3_0.refreshTable();
-                panel3_0.setVisible(true);
-                frame3.setVisible(true);
+                showIngredientOverview();
                 break;
 
             case "Ingredient_add":
-                frame3.setContentPane(panel3_1);
-                panel3_1.setVisible(true);
-                frame3.setVisible(true);
+                showIngredientAdd();
                 break;
 
             case "Ingredient_update":
-                frame3.setContentPane(panel3_2);
-                panel3_2.setVisible(true);
-                frame3.setVisible(true);
+                showIngredientUpdate();
                 break;
 
             case "Ingredient_delete":
-                frame3.setContentPane(panel3_3);
-                panel3_3.setVisible(true);
-                frame3.setVisible(true);
+                showIngredientDelete();
                 break;
 				
             case "Login":
-                frame1.setVisible(false);
-                frame2.setVisible(false);
-                frame3.setVisible(false);
-                frame4.setVisible(true);
-                frame4.setContentPane(frame4_0);
-                frame4_0.createButtons();
+                showLogin();
                 break;
                 
             default:
-                frame1.setVisible(true);
-                frame2.setVisible(false);
-                frame3.setVisible(false);
+                frame4.setVisible(true);
                 break;
         }
     }
 
+    private void showMainMenu() {
+        frame1.setVisible(true);
+    }
+    
+    private void showSupplierOverview() {
+        frame2.setContentPane(panel2_0);
+        panel2_0.refreshTable();
+        panel2_0.setVisible(true);
+        frame2.setVisible(true);
+    }
+    
+    private void showSupplierAdd() {
+        frame2.setContentPane(panel2_1);
+        panel2_1.setVisible(true);
+        frame2.setVisible(true);
+    }
+    
+    private void showSupplierUpdate() {
+        frame2.setContentPane(panel2_2);
+        panel2_2.setVisible(true);
+        frame2.setVisible(true);
+    }
+    
+    private void showSupplierDelete() {
+        frame2.setContentPane(panel2_3);
+        panel2_3.setVisible(true);
+        frame2.setVisible(true);
+    }
+    
+    private void showIngredientOverview() {
+        frame3.setContentPane(panel3_0);
+        panel3_0.refreshTable();
+        panel3_0.setVisible(true);
+        frame3.setVisible(true);
+    }
+    
+    private void showIngredientAdd() {
+        frame3.setContentPane(panel3_1);
+        panel3_1.setVisible(true);
+        frame3.setVisible(true);
+    }
+    
+    private void showIngredientUpdate() {
+        frame3.setContentPane(panel3_2);
+        panel3_2.setVisible(true);
+        frame3.setVisible(true);
+    }
+    
+    private void showIngredientDelete() {
+        frame3.setContentPane(panel3_3);
+        panel3_3.setVisible(true);
+        frame3.setVisible(true);
+    }
+    
+    private void showLogin() {
+        frame4.setVisible(true);
+        frame4.setContentPane(frame4_0);
+        frame4_0.createButtons();
+    }
+    
     public void makeVisible(String framenaam, Ingredient ing) {
         switch (framenaam) {
             default:
