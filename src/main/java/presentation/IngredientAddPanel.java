@@ -31,6 +31,8 @@ public class IngredientAddPanel extends JPanel {
         add(m.createLabel("[max 3 getallen]", 460, 180, 200, 30, "left"));
         add(m.createLabel("[max 3 getallen]", 460, 220, 200, 30, "left"));
         add(m.createLabel("[max 3 getallen]", 460, 260, 200, 30, "left"));
+        
+        add(m.createLabel("Gebruiker ID: " + m.getEmployeeId(), 460, 285, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);

@@ -23,36 +23,45 @@ public class Controller {
 	
     LoginFrame frame4;
     LoginPanel frame40;
+    
+    Controller controller;
 
 // Maakt de controller aan
     public Controller() {
         m = new Manager();
-        frame1 = new Mainmenu(this);
-
-        frame2 = new SupplierFrame(this);
-        panel20 = new SupplierOverviewPanel(this,m);
-        panel21 = new SupplierAddPanel(this,m);
-        panel22 = new SupplierUpdatePanel(this,m);
-        panel23 = new SupplierDeletePanel(this,m);
-
-        frame3 = new IngredientFrame(this);
-        panel30 = new IngredientOverviewPanel(this,m);
-        panel31 = new IngredientAddPanel(this,m);
-        panel32 = new IngredientUpdatePanel(this,m);
-        panel33 = new IngredientDeletePanel(this,m);
-		
+        
         frame4 = new LoginFrame(this,m);
         frame40 = new LoginPanel(this,m);
+        
+        this.controller = this;
     }
 
+    public void createFrames() {
+        frame1 = new Mainmenu(controller);
+
+        frame2 = new SupplierFrame(controller);
+        panel20 = new SupplierOverviewPanel(controller,m);
+        panel21 = new SupplierAddPanel(controller,m);
+        panel22 = new SupplierUpdatePanel(controller,m);
+        panel23 = new SupplierDeletePanel(controller,m);
+
+        frame3 = new IngredientFrame(controller);
+        panel30 = new IngredientOverviewPanel(controller,m);
+        panel31 = new IngredientAddPanel(controller,m);
+        panel32 = new IngredientUpdatePanel(controller,m);
+        panel33 = new IngredientDeletePanel(controller,m);
+    }
+    
 // Maakt een bepaald frame zichtbaar
     public void makeVisible(String framenaam) {
 
-        frame1.setVisible(false);
-        frame2.setVisible(false);
-        frame3.setVisible(false);
-        frame4.setVisible(false);
-
+        if(m.getEmployeeId() != 0) {
+            frame1.setVisible(false);
+            frame2.setVisible(false);
+            frame3.setVisible(false);
+            frame4.setVisible(false);
+        }
+        
         switch (framenaam) {
             case "Mainmenu":
                 showMainMenu();

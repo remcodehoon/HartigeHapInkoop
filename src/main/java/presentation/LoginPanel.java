@@ -61,8 +61,9 @@ public class LoginPanel extends JPanel {
             String u = username.getText();
             
             if(m.checkLoginInfo(u, p)) {
-                controller.makeVisible("Mainmenu");
                 m.setEmployeeId(m.getEmployeeId(u, p));
+                controller.createFrames();
+                controller.makeVisible("Mainmenu");
             } else {
                 notificationLabel.setText("Gebruiksnaam/wachtwoord combinatie onjuist");
             }
