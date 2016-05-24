@@ -128,7 +128,11 @@ public class Manager {
         supDAO.deleteSupplier(id);
     }
     
-    public ArrayList<Supplier> updateTableSup(){
+    /**
+     *
+     * @return Set of Suppliers
+     */
+    public Set<Supplier> updateTableSup(){
         supDAO.updateSuppliers();
         return supDAO.getAllSuppliers();
     }

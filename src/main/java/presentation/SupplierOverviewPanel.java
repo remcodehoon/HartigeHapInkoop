@@ -11,6 +11,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -128,7 +129,7 @@ public class SupplierOverviewPanel extends JPanel {
         //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
         // Een lijst van leveranciers worden via een DAO opgehaald.
-        ArrayList<Supplier> supplierList = m.updateTableSup();
+        Set<Supplier> supplierList = m.updateTableSup();
         // Per leverancier: stop de waarden in een rij (row) van het model.
         for (Supplier s : supplierList) {
             model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});

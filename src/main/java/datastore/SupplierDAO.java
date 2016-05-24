@@ -4,16 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Supplier;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SupplierDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-    private final ArrayList<Supplier> list;
+    private final Set<Supplier> list;
     
     public SupplierDAO(){
-        list = new ArrayList<>();
+        list = new HashSet<>();
     }
     
     public Supplier getSupplier(int a) {
@@ -41,7 +43,7 @@ public class SupplierDAO {
         return sup;
     }
 
-    public ArrayList<Supplier> getAllSuppliers() {
+    public Set<Supplier> getAllSuppliers() {
          return list;
     }
     

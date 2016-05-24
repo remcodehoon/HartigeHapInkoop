@@ -8,21 +8,21 @@ import domain.Supplier;
 public class Controller {
     Manager m;
     SupplierFrame frame2;
-    SupplierOverviewPanel panel2_0;
-    SupplierAddPanel panel2_1;
-    SupplierUpdatePanel panel2_2;
-    SupplierDeletePanel panel2_3;
+    SupplierOverviewPanel panel20;
+    SupplierAddPanel panel21;
+    SupplierUpdatePanel panel22;
+    SupplierDeletePanel panel23;
 
     Mainmenu frame1;
 
     IngredientFrame frame3;
-    IngredientOverviewPanel panel3_0;
-    IngredientAddPanel panel3_1;
-    IngredientUpdatePanel panel3_2;
-    IngredientDeletePanel panel3_3;
+    IngredientOverviewPanel panel30;
+    IngredientAddPanel panel31;
+    IngredientUpdatePanel panel32;
+    IngredientDeletePanel panel33;
 	
     LoginFrame frame4;
-    LoginPanel frame4_0;
+    LoginPanel frame40;
 
 // Maakt de controller aan
     public Controller() {
@@ -30,19 +30,19 @@ public class Controller {
         frame1 = new Mainmenu(this,m);
 
         frame2 = new SupplierFrame(this,m);
-        panel2_0 = new SupplierOverviewPanel(this,m);
-        panel2_1 = new SupplierAddPanel(this,m);
-        panel2_2 = new SupplierUpdatePanel(this,m);
-        panel2_3 = new SupplierDeletePanel(this,m);
+        panel20 = new SupplierOverviewPanel(this,m);
+        panel21 = new SupplierAddPanel(this,m);
+        panel22 = new SupplierUpdatePanel(this,m);
+        panel23 = new SupplierDeletePanel(this,m);
 
         frame3 = new IngredientFrame(this,m);
-        panel3_0 = new IngredientOverviewPanel(this,m);
-        panel3_1 = new IngredientAddPanel(this,m);
-        panel3_2 = new IngredientUpdatePanel(this,m);
-        panel3_3 = new IngredientDeletePanel(this,m);
+        panel30 = new IngredientOverviewPanel(this,m);
+        panel31 = new IngredientAddPanel(this,m);
+        panel32 = new IngredientUpdatePanel(this,m);
+        panel33 = new IngredientDeletePanel(this,m);
 		
         frame4 = new LoginFrame(this,m);
-        frame4_0 = new LoginPanel(this,m);
+        frame40 = new LoginPanel(this,m);
     }
 
 // Maakt een bepaald frame zichtbaar
@@ -105,81 +105,81 @@ public class Controller {
     }
     
     private void showSupplierOverview() {
-        frame2.setContentPane(panel2_0);
-        panel2_0.refreshTable();
-        panel2_0.setVisible(true);
+        frame2.setContentPane(panel20);
+        panel20.refreshTable();
+        panel20.setVisible(true);
         frame2.setVisible(true);
     }
     
     private void showSupplierAdd() {
-        frame2.setContentPane(panel2_1);
-        panel2_1.setVisible(true);
+        frame2.setContentPane(panel21);
+        panel21.setVisible(true);
         frame2.setVisible(true);
     }
     
     private void showSupplierUpdate() {
-        frame2.setContentPane(panel2_2);
-        panel2_2.setVisible(true);
+        frame2.setContentPane(panel22);
+        panel22.setVisible(true);
         frame2.setVisible(true);
     }
     
     private void showSupplierDelete() {
-        frame2.setContentPane(panel2_3);
-        panel2_3.setVisible(true);
+        frame2.setContentPane(panel23);
+        panel23.setVisible(true);
         frame2.setVisible(true);
     }
     
     private void showIngredientOverview() {
-        frame3.setContentPane(panel3_0);
-        panel3_0.refreshTable();
-        panel3_0.setVisible(true);
+        frame3.setContentPane(panel30);
+        panel30.refreshTable();
+        panel30.setVisible(true);
         frame3.setVisible(true);
     }
     
     private void showIngredientAdd() {
-        frame3.setContentPane(panel3_1);
-        panel3_1.setVisible(true);
+        frame3.setContentPane(panel31);
+        panel31.setVisible(true);
         frame3.setVisible(true);
     }
     
     private void showIngredientUpdate() {
-        frame3.setContentPane(panel3_2);
-        panel3_2.setVisible(true);
+        frame3.setContentPane(panel32);
+        panel32.setVisible(true);
         frame3.setVisible(true);
     }
     
     private void showIngredientDelete() {
-        frame3.setContentPane(panel3_3);
-        panel3_3.setVisible(true);
+        frame3.setContentPane(panel33);
+        panel33.setVisible(true);
         frame3.setVisible(true);
     }
     
     private void showLogin() {
         frame4.setVisible(true);
-        frame4.setContentPane(frame4_0);
-        frame4_0.createButtons();
+        frame4.setContentPane(frame40);
+        frame40.createButtons();
     }
     
     public void makeVisible(String framenaam, Ingredient ing) {
         switch (framenaam) {
             default:
-                frame3.setContentPane(panel3_0);
-                panel3_0.refreshTable();
-                panel3_0.setVisible(true);
+                frame3.setContentPane(panel30);
+                panel30.refreshTable();
+                panel30.setVisible(true);
                 break;
 
             case "Ingredient_update":
-                frame3.setContentPane(panel3_2);
-                panel3_2.setVisible(true);
+                frame3.setContentPane(panel32);
+                panel32.setVisible(true);
                 frame3.setVisible(true);
-                panel3_2.setIngredient(ing);
+                panel32.setIngredient(ing);
                 break;
 
             case "Ingredient_delete":
-                frame3.setContentPane(panel3_3);
-                panel3_3.setVisible(true);
+                frame3.setContentPane(panel33);
+                panel33.setVisible(true);
                 frame3.setVisible(true);
-                panel3_3.setIngredient(ing);
+                panel33.setIngredient(ing);
                 break;
         }
     }
@@ -187,23 +187,23 @@ public class Controller {
     public void makeVisible(String framenaam, Supplier sup) {
         switch (framenaam) {
             default:
-                frame2.setContentPane(panel2_0);
-                panel2_0.refreshTable();
-                panel2_0.setVisible(true);
+                frame2.setContentPane(panel20);
+                panel20.refreshTable();
+                panel20.setVisible(true);
                 break;
 
             case "Supplier_update":
-                frame2.setContentPane(panel2_2);
-                panel2_2.setVisible(true);
+                frame2.setContentPane(panel22);
+                panel22.setVisible(true);
                 frame2.setVisible(true);
-                panel2_2.setSupplier(sup);
+                panel22.setSupplier(sup);
                 break;
 
             case "Supplier_delete":
-                frame2.setContentPane(panel2_3);
-                panel2_3.setVisible(true);
+                frame2.setContentPane(panel23);
+                panel23.setVisible(true);
                 frame2.setVisible(true);
-                panel2_3.setSupplier(sup);
+                panel23.setSupplier(sup);
                 break;
         }
     }
