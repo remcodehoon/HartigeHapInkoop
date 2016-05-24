@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class LoginDAO {
     
-    private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
+    private static final Logger log = Logger.getLogger(LoginDAO.class.getName());
     
     public boolean checkLoginInfo(String username, String password) {
         // Instantiate
