@@ -110,37 +110,20 @@ public class OrderUpdatePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (id > -1) {
-                
-                Order updateOrder = m.getOrder(id);
-                updateOrder.setNr(Integer.parseInt(field2.getText()));
-                updateOrder.setDate(field3.getText());
-                int status;
-                switch((String) box1.getSelectedItem()){
-                    default:
-                    status = 0;
-                    break;
-                
-                    case "Aangemaakt":
-                        status = 0;
-                        break;
-
-                    case "Geaccepteerd":
-                        status = 1;
-                        break;    
-
-                    case "Besteld":
-                        status = 2;
-                        break;    
-
-                    case "Geleverd":
-                        status = 3;
-                        break;      
+                if(field2.getText().length() > 0 && field2.getText().length() <= 11 && m.checkNumbers(field2.getText()) 
+                        && field3.getText().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")
+                        && field5.getText().length() == 1 && m.checkNumbers(field5.getText())) { // heeft alle constrains gecheckt
+                    Order updateOrder = m.getOrder(id);
+                    updateOrder.setNr(Integer.parseInt(field2.getText()));
+                    updateOrder.setDate(field3.getText());
+                    int status = m.getOrderStatus((String) box1.getSelectedItem());
+                    updateOrder.setStatusId(status);
+                    updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
+                    m.updateOrder(id, updateOrder);
+                    label1.setText("Bestelling is gewijzigd!");
+                } else {
+                    label1.setText("Fout in de velden!");
                 }
-                updateOrder.setStatusId(status);
-                updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
-                m.updateOrder(id, updateOrder);
-                
-                label1.setText("Bestelling is gewijzigd!");
             } else {
                 label1.setText("Bestelling is niet geselecteerd, ga terug naar vorige scherm!");
             }

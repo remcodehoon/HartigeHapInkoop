@@ -146,6 +146,16 @@ public class Manager {
         return loginDAO.checkLoginInfo(username, password);
     }
         
+    public ArrayList<String> getSupplierNames(){
+        ArrayList<String> supNames = new ArrayList<String>();
+        Set<Supplier> list = supDAO.getAllSuppliers();
+        for(Supplier sup : list){
+            supNames.add(sup.getName());
+        }
+        
+        return supNames;
+    }
+        
      //-------------------* Bestelling Info *------------------------------
     public Order getOrder(int a) {
         return orderDAO.getOrder(a);
@@ -207,11 +217,11 @@ public class Manager {
                 returnstatus = 2;
                 break;    
                     
-            case "Besteld":
+            case "Geleverd":
                 returnstatus = 3;
                 break;    
                     
-            case "Geleverd":
+            case "Afgerond":
                 returnstatus = 4;
                break;   
         }

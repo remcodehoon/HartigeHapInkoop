@@ -148,9 +148,13 @@ public class OrderOverviewPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
             if (row != -1) {
-                int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                Order testOrder = new Order(index,"2016-05-24",1,1);
-                controller.makeVisible("Order_update", testOrder);
+                if(table.getValueAt(row, 2).equals("Geaccepteerd")){
+                   label1.setText("Geaccepteerde orders kunnen niet gewijzigd worden"); 
+                } else {
+                    int index = Integer.parseInt(table.getValueAt(row, 0).toString());
+                    Order sel = m.getOrder(index);
+                    controller.makeVisible("Order_update", sel);
+                }
             } else {
                 label1.setText("Selecteer eerst een order om te updaten!");
             }

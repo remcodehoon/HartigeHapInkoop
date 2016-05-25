@@ -19,27 +19,30 @@ public class OrderDAO {
     
     public Order getOrder(int a) {
         Order order = null;
-        // Instantiate
-        DatabaseConnection connection = new DatabaseConnection();
-        // Open connection
-        connection.openConnection();
-        // Query
 
-        String selectSQL = "SELECT * FROM dhh_order WHERE orderNo = " + String.valueOf(a);
-
-        // Execute query
-        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
-            if (resultset.first()) {
-                order = fetchItem(resultset);
+            for(Order i : list){
+                if(i.getNr() == a){
+                    order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
+                }
             }
-        } catch (SQLException e) {
+            return order;
+        } catch (Exception e) {
             log.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            // Close the connection to the database
-            connection.closeConnection();
+            DatabaseConnection connection = new DatabaseConnection();
+            connection.openConnection();
+            String selectSQL = "SELECT * FROM dhh_order WHERE orderNo = " + a;
+            ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+            try {
+                if (resultset.first())
+                    order = fetchItem(resultset);
+            } catch (SQLException f) {
+                log.log(Level.SEVERE, f.toString(), f);
+            } finally {
+                connection.closeConnection();
+            }
+            return order;
         }
-        return order;
     }
     
     public Set<Order> getAllOrders() {
@@ -93,71 +96,71 @@ public class OrderDAO {
 
     public void addOrder(Order order) {
         DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-        
-        int id = this.getMaxID() + 1;
-        String date = order.getDate();
-        int statusId = order.getStatusId();
-        int employeeId = order.getEmployeeId();
 
-        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_order` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES("
-                + String.valueOf(id) + ",'" + date + "','" + String.valueOf(statusId) + "','" + String.valueOf(employeeId) + "');";
-        
-        // Execute query
-        connection.executeSQLInsertStatement(selectSQL);
-        connection.closeConnection();
+        boolean succes = true;
+        try {
+            connection.openConnection();
+            String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_order` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES("
+                + order.getNr() + ",'" + order.getDate() + "','" + order.getStatusId() + "','" + order.getEmployeeId() + "');";
+            connection.executeSQLInsertStatement(selectSQL);
+        } catch (Exception e) {
+            succes = false;
+            log.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            if(succes)
+                list.add(order); 
+            connection.closeConnection();
+        } 
     }
 
     public void updateOrder(Order order, int id) {
         DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-        int valueID = order.getNr();
-        String date = order.getDate();
-        int statusId = order.getStatusId();
-        int employeeId = order.getEmployeeId();
-
-        String selectSQL = "UPDATE `martkic145_stunt`.`dhh_order` SET `orderNo` =" + String.valueOf(valueID)
-            + ",`orderDate` = '" + date + "', `statusId` = " + String.valueOf(statusId)
-            + ", `employeeId` = " + String.valueOf(employeeId) + " WHERE `dhh_order`.`orderNo` = " + String.valueOf(id);
-            
-        connection.executeSQLInsertStatement(selectSQL);
-        log.log(Level.SEVERE, "ID's DONT match, query is NOT executed");
-        connection.closeConnection();
+        try {
+            int valueID = order.getNr();
+            if (valueID == id) {
+                connection.openConnection();
+                log.log(Level.SEVERE, "ID's match, query is executed");
+                String selectSQL = "UPDATE `martkic145_stunt`.`dhh_order` SET `orderNo` =" + valueID
+                    + ",`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
+                    + ", `employeeId` = " + order.getEmployeeId() + " WHERE `dhh_order`.`orderNo` = " + id;
+                connection.executeSQLInsertStatement(selectSQL);
+                list.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
+                    i.setNr(id);
+                    return i;
+                }).map((i) -> {
+                    i.setDate(order.getDate());
+                    return i;
+                }).map((i) -> {
+                    i.setStatusId(order.getStatusId());
+                    return i;
+                }).forEach((i) -> {
+                    i.setEmployeeId(order.getEmployeeId());
+                });
+            }
+        } catch(Exception e) {
+            log.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            connection.closeConnection();
+        }
     }
 
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-
-        String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
-        boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
-        if (resultset) {
-            log.log(Level.SEVERE, "Bestelling deleted");
-        }
-        connection.closeConnection();
-    }
-
-    public int getMaxID() {
-        int id = 0;
-        DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-        String selectSQL = "SELECT * FROM `martkic145_stunt`.`dhh_order` WHERE orderNo = (SELECT max(orderNo) FROM dhh_order)";
-
-        // Execute query
-        ResultSet resultset2 = connection.executeSQLSelectStatement(selectSQL);
-        
         try {
-            if (resultset2.first()) {
-
-                id = resultset2.getInt("orderNo");
+            connection.openConnection();
+            String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
+            boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
+            if (resultset) {
+                log.log(Level.SEVERE, "Bestelling deleted");
             }
-        } catch (SQLException e) {
+            list.stream().filter((i) -> (i.getNr() == id)).forEach((i) -> {
+                list.remove(i);
+            });
+        } catch(Exception e) {
             log.log(Level.SEVERE, e.toString(), e);
         } finally {
-            // Close the connection to the database
             connection.closeConnection();
         }
-        return id;
     }
 
     public Set<Order> getSearchedOrders(String what, String att) {

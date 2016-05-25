@@ -3,7 +3,6 @@ package datastore;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Ingredient;
-import static java.util.Comparator.comparing;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -100,16 +99,12 @@ public class IngredientDAO {
 
     public void addIngredient(Ingredient ingredient) {
         DatabaseConnection connection = new DatabaseConnection();
-        
-        String valueName = ingredient.getName();
-        int valueInStock = ingredient.getInStock();
-        int valueMinstock = ingredient.getMinStock();
-        int valueMaxstock = ingredient.getMaxStock();
+
         boolean succes = true;
         try {
             connection.openConnection();
             String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_ingredient` (`ingredientName`, `inStock`, `minStock`, `maxStock`) VALUES('"
-                + valueName + "','" + valueInStock + "','" + String.valueOf(valueMinstock) + "'," + String.valueOf(valueMaxstock) + ");";
+                + ingredient.getName() + "','" + ingredient.getInStock() + "','" + ingredient.getMinStock() + "'," + ingredient.getMaxStock() + ");";
             connection.executeSQLInsertStatement(selectSQL);
         } catch (Exception e) {
             succes = false;
@@ -118,45 +113,39 @@ public class IngredientDAO {
             if(succes)
                 list.add(ingredient); 
             connection.closeConnection();
-        }
-        
-        
+        } 
     }
 
     public void updateIngredient(Ingredient ingredient, int id) {
         DatabaseConnection connection = new DatabaseConnection();
-            try {
-                int valueID = ingredient.getId();
-                if (valueID == id) {
-                    connection.openConnection();
-                    log.log(Level.SEVERE, "ID's match, query is executed");
-                    String valueName = ingredient.getName();
-                    int valueInStock = ingredient.getInStock();
-                    int valueMinstock = ingredient.getMinStock();
-                    int valueMaxstock = ingredient.getMaxStock();
-                    String selectSQL = "UPDATE `martkic145_stunt`.`dhh_ingredient` SET `id` =" + String.valueOf(valueID)
-                    + ",`ingredientName` = '" + valueName + "', `inStock` = '" + String.valueOf(valueInStock)
-                    + "', `minStock` = '" + String.valueOf(valueMinstock) + "', `maxStock` = '"
-                    + String.valueOf(valueMaxstock) + "' WHERE `dhh_ingredient`.`id` = " + String.valueOf(id);
-                    connection.executeSQLInsertStatement(selectSQL);
-                    list.stream().filter((i) -> (i.getId() == id)).map((i) -> {
-                        i.setName(valueName);
-                        return i;
-                    }).map((i) -> {
-                        i.setAttInt("inStock",valueInStock);
-                        return i;
-                    }).map((i) -> {
-                        i.setAttInt("minStock",valueMinstock);
-                        return i;
-                    }).forEach((i) -> {
-                        i.setAttInt("maxStock",valueMaxstock);
-                    });
-                }
-            } catch(Exception e) {
-                log.log(Level.SEVERE, e.toString(), e);
-            } finally {
-                connection.closeConnection();
+        try {
+            int valueID = ingredient.getId();
+            if (valueID == id) {
+                connection.openConnection();
+                log.log(Level.SEVERE, "ID's match, query is executed");
+                String selectSQL = "UPDATE `martkic145_stunt`.`dhh_ingredient` SET `id` =" + valueID
+                + ",`ingredientName` = '" + ingredient.getName() + "', `inStock` = '" + ingredient.getInStock()
+                + "', `minStock` = '" + ingredient.getMinStock() + "', `maxStock` = '"
+                + ingredient.getMaxStock() + "' WHERE `dhh_ingredient`.`id` = " + id;
+                connection.executeSQLInsertStatement(selectSQL);
+                list.stream().filter((i) -> (i.getId() == id)).map((i) -> {
+                    i.setName(ingredient.getName());
+                    return i;
+                }).map((i) -> {
+                    i.setAttInt("inStock",ingredient.getInStock());
+                    return i;
+                }).map((i) -> {
+                    i.setAttInt("minStock",ingredient.getMinStock());
+                    return i;
+                }).forEach((i) -> {
+                    i.setAttInt("maxStock",ingredient.getMaxStock());
+                });
             }
+        } catch(Exception e) {
+            log.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            connection.closeConnection();
+        }
     }
 
     public void deleteIngredient(int id) {
