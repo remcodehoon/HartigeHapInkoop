@@ -24,11 +24,10 @@ public class Mainmenu extends JFrame {
     }
 }
 
-// Vult het frame in
 class MainmenuPanel extends JPanel {
 
     private final TextArea field1, field2, field3;
-    private final JButton button1, button2;
+    private final JButton button1, button2, button3;
     Controller controller;
 
     public MainmenuPanel(Controller c) {
@@ -74,8 +73,14 @@ class MainmenuPanel extends JPanel {
         button2 = new JButton("Leveranciers");
         ButtonHandler2 kh2 = new ButtonHandler2();
         button2.addActionListener(kh2);
-        button2.setBounds(325, 400, 200, 50);
+        button2.setBounds(275, 400, 200, 50);
         add(button2);
+        
+        button3 = new JButton("Bestellingen");
+        ButtonHandler3 kh3 = new ButtonHandler3();
+        button3.addActionListener(kh3);
+        button3.setBounds(525, 400, 200, 50);
+        add(button3);
     }
 
     private class ButtonHandler implements ActionListener {
@@ -93,4 +98,13 @@ class MainmenuPanel extends JPanel {
             controller.makeVisible("Supplier_overview");
         }
     }
+    
+    private class ButtonHandler3 implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.makeVisible("Order_overview");
+        }
+    }
 }
+

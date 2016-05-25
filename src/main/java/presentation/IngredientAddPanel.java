@@ -23,16 +23,16 @@ public class IngredientAddPanel extends JPanel {
         this.m = m;
         setLayout(null);
 
-        add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));
-        add(m.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
-        add(m.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
-        add(m.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
-        add(m.createLabel("[max 25 char]", 460, 140, 200, 30, "left"));
-        add(m.createLabel("[max 3 getallen]", 460, 180, 200, 30, "left"));
-        add(m.createLabel("[max 3 getallen]", 460, 220, 200, 30, "left"));
-        add(m.createLabel("[max 3 getallen]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("Naam:", 25, 140, 200, 30, "right"));
+        add(c.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("[max 25 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 3 getallen]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 3 getallen]", 460, 220, 200, 30, "left"));
+        add(c.createLabel("[max 3 getallen]", 460, 260, 200, 30, "left"));
         
-        add(m.createLabel("Gebruiker ID: " + m.getEmployeeId(), 460, 285, 200, 30, "left"));
+        //add(c.createLabel("Gebruiker ID: " + m.getEmployeeId(), 460, 285, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -79,48 +79,32 @@ public class IngredientAddPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String string2, string3, string4, string5;
-            boolean b1 = false;
-            boolean b2 = false;
-            boolean b3 = false;
-            boolean b4 = false;
-            string2 = field2.getText();
-            if (string2.length() > 0 && string2.length() <= 25) {
-                b1 = true;
+            String string2, string3, string4, string5, message;
+            message = "";
+            try {
+                message = "Ingredient toegevoegd";
+                string2 = field2.getText();
+                string3 = field3.getText();
+                string4 = field4.getText();
+                string5 = field5.getText();
+                if(string2.length() > 0 && string2.length() <= 25 && string3.length() > 0 && m.checkNumbers(string3) 
+                    && string3.length() <= 3 && string3.length() > 0 && m.checkNumbers(string3) && string3.length() <= 3 
+                    && string4.length() > 0 && m.checkNumbers(string4) && string4.length() <= 3 && string5.length() > 0 
+                    && m.checkNumbers(string5) && string5.length() <= 3) { // heeft alle constrains gecheckt
+                        Ingredient newIngredient = new Ingredient(0, string2, Integer.parseInt(string3), Integer.parseInt(string4), Integer.parseInt(string5));
+                        m.addIngredient(newIngredient);
+                } else
+                    message = "Fout in de velden!";
+            } catch(NumberFormatException f) {
+                message = "Fout in de velden!";
+            } catch(Exception f) {
+                message = "Fout in de velden!";
+            } finally {
+                label1.setText(message);
             }
-            string3 = field3.getText();
-            if (string3.length() > 0 && m.checkNumbers(string3) && string3.length() <= 3) {
-                b2 = true;
-            }
-            string4 = field4.getText();
-            if (string4.length() > 0 && m.checkNumbers(string4) && string4.length() <= 3) {
-                b3 = true;
-            }
-            string5 = field5.getText();
-            if (string5.length() > 0 && m.checkNumbers(string5) && string5.length() <= 3) {
-                b4 = true;
-            }
-            String message = "Vul de velden in: ";
-            if (!b1) {
-                message += "Naam : ";
-            }
-            if (!b2) {
-                message += "Voorraad : ";
-            }
-            if (!b3) {
-                message += "Min Voorraad : ";
-            }
-            if (!b4) {
-                message += "Max Voorraad : ";
-            }
-            message = message.substring(0, message.length() - 3);
-            if (b1 && b2 && b3 && b4) {
-                message = "Nieuw ingrediënt is aangemaakt!";
-                Ingredient newIngredient = new Ingredient(0, string2, Integer.parseInt(string3), Integer.parseInt(string4), Integer.parseInt(string5));
-                m.addIngredient(newIngredient);
-            }
-            label1.setText(message);
         }
     }
+        
+   
 
 }

@@ -2,23 +2,25 @@ package businesslogic;
 
 import datastore.IngredientDAO;
 import datastore.LoginDAO;
+import datastore.OrderDAO;
 import datastore.SupplierDAO;
 import domain.Ingredient;
+import domain.Order;
 import domain.Supplier;
 import java.util.ArrayList;
 import java.util.Set;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 public class Manager {
-    SupplierDAO supDAO;
-    IngredientDAO ingDAO;
-    LoginDAO loginDAO;
+    private static SupplierDAO supDAO;
+    private static IngredientDAO ingDAO;
+    private static OrderDAO orderDAO;
+    private static LoginDAO loginDAO;
     private int employeeId;
     
     public Manager() {
         supDAO = new SupplierDAO();
         ingDAO = new IngredientDAO();
+        orderDAO = new OrderDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
     }
@@ -40,22 +42,6 @@ public class Manager {
         return invoer.matches(regex);
     }
 
-    public JLabel createLabel(String text, int x, int y, int length, int width, String align) {
-        JLabel label = new JLabel(text);
-        label.setBounds(x, y, length, width);
-        switch (align) {
-            case "left":
-                label.setHorizontalAlignment(SwingConstants.LEFT);
-                break;
-            case "right":
-                label.setHorizontalAlignment(SwingConstants.RIGHT);
-                break;
-            default:
-                label.setHorizontalAlignment(SwingConstants.CENTER);
-                break;
-        }
-        return label;
-    }
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
@@ -158,5 +144,103 @@ public class Manager {
 	public boolean checkLoginInfo(String username, String password) {
         
         return loginDAO.checkLoginInfo(username, password);
+    }
+        
+     //-------------------* Bestelling Info *------------------------------
+    public Order getOrder(int a) {
+        return orderDAO.getOrder(a);
+    }
+
+    /**
+     * voegt deze bestelling toe aan de database
+     *
+     * @param newOrder
+     */
+    public void addOrder(Order newOrder) {
+        orderDAO.addOrder(newOrder);
+    }
+
+    /**
+     * wijzigt een leverancier in de database met bijbehorend id
+     *
+     * @param id -> Naam
+     * @param updateOrder
+     */
+    public void updateOrder(int id, Order updateOrder) {
+        orderDAO.updateOrder(updateOrder, id);
+    }
+
+    /**
+     * Verwijdert een leverancier uit de database aan de hand van het ID.
+     *
+     * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
+     */
+    public void deleteOrder(int id) {
+        orderDAO.deleteOrder(id);
+    }
+    
+    public Set<Order> getSearchedOrder(String what, String attribute){
+        return orderDAO.getSearchedOrders(what, attribute);
+    }
+        
+    public Set<Order> updateTableOrder(){
+        orderDAO.updateOrders();
+        return orderDAO.getAllOrders();
+    }
+    
+    public int getOrderStatus(String status){
+        int returnstatus;
+        switch(status){
+            default:
+                returnstatus = 0;
+                break;
+            
+            case "Fout":
+                returnstatus = 0;
+                break;    
+                
+            case "Aangemaakt":
+                returnstatus = 1;
+                break;
+                    
+            case "Geaccepteerd":
+                returnstatus = 2;
+                break;    
+                    
+            case "Besteld":
+                returnstatus = 3;
+                break;    
+                    
+            case "Geleverd":
+                returnstatus = 4;
+               break;   
+        }
+        return returnstatus;
+    }
+    
+    public String getOrderStatus(int status){
+        String returnstatus;
+        switch(status){ 
+            default:
+                returnstatus = "Fout";
+                break;
+                
+            case 0:
+                returnstatus = "Aangemaakt";
+                break;
+                    
+            case 1:
+                returnstatus = "Geaccepteerd";
+                break;    
+                    
+            case 2:
+                returnstatus = "Besteld";
+                break;    
+                    
+            case 3:
+                returnstatus = "Geleverd";
+                break; 
+        }
+        return returnstatus;
     }
 }

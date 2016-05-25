@@ -48,6 +48,7 @@ public class LoginPanel extends JPanel {
         add(passwordLabel);
         add(password);
         add(login);
+        getRootPane().setDefaultButton(login);
         add(notificationLabel);
     }
     
@@ -62,6 +63,7 @@ public class LoginPanel extends JPanel {
             
             if(m.checkLoginInfo(u, p)) {
                 m.setEmployeeId(m.getEmployeeId(u, p));
+                notificationLabel.setText("Welkom");
                 controller.createFrames();
                 controller.makeVisible("Mainmenu");
             } else {

@@ -23,19 +23,19 @@ public class SupplierAddPanel extends JPanel {
         this.m = m;
         setLayout(null);
 
-        add(m.createLabel("Naam:", 25, 140, 200, 30, "right"));
-        add(m.createLabel("Adres", 25, 180, 200, 30, "right"));
-        add(m.createLabel("Postcode:", 25, 220, 200, 30, "right"));
-        add(m.createLabel("Contactpersoon:", 25, 260, 200, 30, "right"));
-        add(m.createLabel("Emailadres:", 25, 300, 200, 30, "right"));
-        add(m.createLabel("Telefoonnummer:", 25, 340, 200, 30, "right"));
+        add(c.createLabel("Naam:", 25, 140, 200, 30, "right"));
+        add(c.createLabel("Adres", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Postcode:", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Contactpersoon:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Emailadres:", 25, 300, 200, 30, "right"));
+        add(c.createLabel("Telefoonnummer:", 25, 340, 200, 30, "right"));
 
-        add(m.createLabel("[max 50 char]", 460, 140, 200, 30, "left"));
-        add(m.createLabel("[max 35 char]", 460, 180, 200, 30, "left"));
-        add(m.createLabel("[max 6 char]", 460, 220, 200, 30, "left"));
-        add(m.createLabel("[max 25 char]", 460, 260, 200, 30, "left"));
-        add(m.createLabel("[max 40 char]", 460, 300, 200, 30, "left"));
-        add(m.createLabel("[max 15 getallen]", 460, 340, 200, 30, "left"));
+        add(c.createLabel("[max 50 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 35 char]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 6 char]", 460, 220, 200, 30, "left"));
+        add(c.createLabel("[max 25 char]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("[max 40 char]", 460, 300, 200, 30, "left"));
+        add(c.createLabel("[max 15 getallen]", 460, 340, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);

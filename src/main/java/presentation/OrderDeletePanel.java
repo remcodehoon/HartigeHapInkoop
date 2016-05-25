@@ -1,7 +1,7 @@
 package presentation;
 
 import businesslogic.Manager;
-import domain.Ingredient;
+import domain.Order;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,16 +10,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class IngredientDeletePanel extends JPanel {
+public class OrderDeletePanel extends JPanel {
 
     private final JLabel label1;
-    private final TextField /*field1,*/ field2, field3, field4, field5;
+    private final TextField field2, field3, field4, field5;
     private final JButton button1, button2;
     Controller controller;
     Manager m;
     private int id = -1;
 
-    public IngredientDeletePanel(Controller c, Manager m) {
+    public OrderDeletePanel(Controller c, Manager m) {
         controller = c;
         this.m = m;
         setLayout(null);
@@ -29,10 +29,10 @@ public class IngredientDeletePanel extends JPanel {
         label1.setBounds(200, 450, 600, 30);
         add(label1);
 
-        add(c.createLabel("Naam:", 25, 140, 200, 30, "right"));
-        add(c.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
-        add(c.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Bestelling nummer:", 25, 140, 200, 30, "right"));
+        add(c.createLabel("Datum:", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Medewerker nummer:", 25, 260, 200, 30, "right"));
 
         field2 = new TextField("");
         field2.setBounds(250, 140, 200, 30);
@@ -65,12 +65,12 @@ public class IngredientDeletePanel extends JPanel {
 
     }
 
-    public void setIngredient(Ingredient selIng) {
-        field2.setText(selIng.getName());
-        field3.setText(String.valueOf(selIng.getInStock()));
-        field4.setText(String.valueOf(selIng.getMinStock()));
-        field5.setText(String.valueOf(selIng.getMaxStock()));
-        id = selIng.getId();
+    public void setOrder(Order selOrder) {
+        id = selOrder.getNr();
+        field2.setText(String.valueOf(id));
+        field3.setText(String.valueOf(selOrder.getDate()));
+        field4.setText(String.valueOf(m.getOrderStatus(selOrder.getStatusId())));
+        field5.setText(String.valueOf(selOrder.getEmployeeId()));
     }
 
     private class ButtonHandler implements ActionListener {
@@ -78,7 +78,7 @@ public class IngredientDeletePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             label1.setText("");
-            controller.makeVisible("Ingredient_overview");
+            controller.makeVisible("Order_overview");
         }
     }
 

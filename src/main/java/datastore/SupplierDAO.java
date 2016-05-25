@@ -214,30 +214,4 @@ public class SupplierDAO {
         }
         connection.closeConnection();
     }
-
-    public int getMaxID() {
-        int id = 0;
-        DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_supplier WHERE id = (SELECT max(id) FROM dhh_supplier)";
-
-        // Execute query
-        ResultSet resultset2 = connection.executeSQLSelectStatement(selectSQL);
-        
-        try {
-            if (resultset2.first()) {
-
-                id = resultset2.getInt("id");
-                
-            }
-        } catch (SQLException e) {
-            
-            log.log(Level.SEVERE, e.toString(), e);
-            
-        } finally {
-            // Close the connection to the database
-            connection.closeConnection();
-        }
-        return id;
-    }
 }
