@@ -3,6 +3,7 @@ package presentation;
 
 import businesslogic.Manager;
 import domain.Order;
+import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +50,7 @@ public class OrderAddPanel extends JPanel {
         field3 = new TextField();
         field3.setBounds(250, 180, 200, 30);
         add(field3);
-        String[] options = {"Aangemaakt", "Geaccepteerd", "Besteld", "Geleverd"};
+        String[] options = {"Aangemaakt", "Geaccepteerd", "Geleverd", "Afgerond"};
         box1 = new JComboBox(options);
         box1.setBounds(250, 220, 200, 30);
         add(box1);
@@ -57,7 +58,6 @@ public class OrderAddPanel extends JPanel {
         String[] suppliers = supplierNames.stream().toArray(String[]::new);
         box2 = new JComboBox(suppliers);
         box2.setBounds(250, 260, 200, 30);
-        box2.
         add(box2);
         
         button1 = new JButton("Terug");
@@ -93,8 +93,11 @@ public class OrderAddPanel extends JPanel {
             int status = m.getOrderStatus((String) box1.getSelectedItem());
             if(string1.length() > 0 && string1.length() <= 11 && m.checkNumbers(string1) 
                     && string2.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) { // heeft alle constrains gecheckt
+                Supplier sup = m.getSupplier((String) box2.getSelectedItem());
+                int fkey = sup.getId();
                 int empId = m.getEmployeeId();
-                Order newOrder = new Order(Integer.parseInt(string1), string2, status, empId);
+                Order newOrder = new Order(Integer.parseInt(string1), string2, status, empId, fkey);
+                newOrder.setSupplier(sup);
                 m.addOrder(newOrder);
                 label1.setText("Bestelling toegevoegd");
             } else {

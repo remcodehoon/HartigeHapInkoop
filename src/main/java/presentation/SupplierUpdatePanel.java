@@ -103,7 +103,7 @@ public class SupplierUpdatePanel extends JPanel {
                 Supplier updateSupplier = m.getSupplier(id);
                 updateSupplier.setId(id);
                 updateSupplier.setAttString("name", field2.getText());
-                updateSupplier.setAttString("addres", field3.getText());
+                updateSupplier.setAttString("address", field3.getText());
                 updateSupplier.setAttString("postalCode", field4.getText());
                 updateSupplier.setAttString("contactName", field5.getText());
                 updateSupplier.setAttString("email", field6.getText());

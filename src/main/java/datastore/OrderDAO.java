@@ -11,46 +11,30 @@ import java.util.logging.Logger;
 public class OrderDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-    private Set<Order> list;
     
     public OrderDAO(){
-        list = new HashSet<>();
+        
     }
     
     public Order getOrder(int a) {
         Order order = null;
-
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT * FROM dhh_order WHERE orderNo = " + a;
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
-            for(Order i : list){
-                if(i.getNr() == a){
-                    order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
-                }
-            }
-            return order;
-        } catch (Exception e) {
-            log.log(Level.SEVERE, e.toString(), e);
-            DatabaseConnection connection = new DatabaseConnection();
-            connection.openConnection();
-            String selectSQL = "SELECT * FROM dhh_order WHERE orderNo = " + a;
-            ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
-            try {
-                if (resultset.first())
-                    order = fetchItem(resultset);
-            } catch (SQLException f) {
-                log.log(Level.SEVERE, f.toString(), f);
-            } finally {
-                connection.closeConnection();
-            }
-            return order;
+            if (resultset.first())
+                order = fetchItem(resultset);
+        } catch (SQLException f) {
+            log.log(Level.SEVERE, f.toString(), f);
+        } finally {
+            connection.closeConnection();
         }
+        return order;
     }
     
-    public Set<Order> getAllOrders() {
-        return list;
-    }
-    
-    public void updateOrders() {
-        list.clear();
+    public Set<Order> updateOrders() {
+        Set<Order> list = new HashSet<>();
         Order order;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -65,8 +49,8 @@ public class OrderDAO {
                 String date = resultset.getString("orderDate");
                 int statusId = resultset.getInt("statusId");
                 int employeeId = resultset.getInt("employeeId");
-                // Create product
-                order = new Order(nr, date, statusId, employeeId);
+                int fkey = resultset.getInt("supplierId");
+                order = new Order(nr, date, statusId, employeeId, fkey);
                 list.add(order);
             }
         } catch (SQLException e) {
@@ -74,6 +58,7 @@ public class OrderDAO {
         } finally {
             connection.closeConnection();
         }
+        return list;
     }
 
     private Order fetchItem(ResultSet resultset) {
@@ -85,8 +70,9 @@ public class OrderDAO {
             String date = resultset.getString("orderDate");
             int statusId = resultset.getInt("statusId");
             int employeeId = resultset.getInt("employeeId");
+            int fkey = resultset.getInt("supplierId");
             // Create product
-            order = new Order(nr, date, statusId, employeeId);
+            order = new Order(nr, date, statusId, employeeId, fkey);
 
         } catch (SQLException e) {
             log.log(Level.SEVERE, e.toString(), e);
@@ -96,71 +82,33 @@ public class OrderDAO {
 
     public void addOrder(Order order) {
         DatabaseConnection connection = new DatabaseConnection();
-
-        boolean succes = true;
-        try {
-            connection.openConnection();
-            String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_order` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES("
-                + order.getNr() + ",'" + order.getDate() + "','" + order.getStatusId() + "','" + order.getEmployeeId() + "');";
-            connection.executeSQLInsertStatement(selectSQL);
-        } catch (Exception e) {
-            succes = false;
-            log.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            if(succes)
-                list.add(order); 
-            connection.closeConnection();
-        } 
+        connection.openConnection();
+        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_order` (`orderNo`,`orderDate`, `statusId`, `employeeId`, `supplierId`) VALUES("
+            + order.getNr() + ",'" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + "," + order.getFkey() +");";
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
+        System.out.print(selectSQL);
     }
 
     public void updateOrder(Order order, int id) {
         DatabaseConnection connection = new DatabaseConnection();
-        try {
-            int valueID = order.getNr();
-            if (valueID == id) {
-                connection.openConnection();
-                log.log(Level.SEVERE, "ID's match, query is executed");
-                String selectSQL = "UPDATE `martkic145_stunt`.`dhh_order` SET `orderNo` =" + valueID
-                    + ",`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
-                    + ", `employeeId` = " + order.getEmployeeId() + " WHERE `dhh_order`.`orderNo` = " + id;
-                connection.executeSQLInsertStatement(selectSQL);
-                list.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
-                    i.setNr(id);
-                    return i;
-                }).map((i) -> {
-                    i.setDate(order.getDate());
-                    return i;
-                }).map((i) -> {
-                    i.setStatusId(order.getStatusId());
-                    return i;
-                }).forEach((i) -> {
-                    i.setEmployeeId(order.getEmployeeId());
-                });
-            }
-        } catch(Exception e) {
-            log.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            connection.closeConnection();
-        }
+        int valueID = order.getNr();
+        connection.openConnection();
+        log.log(Level.SEVERE, "ID's match, query is executed");
+        String selectSQL = "UPDATE `martkic145_stunt`.`dhh_order` SET `orderNo` =" + valueID
+            + ",`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
+            + ", `employeeId` = " + order.getEmployeeId() + ",`supplierId` = " + order.getFkey() + " WHERE `dhh_order`.`orderNo` = " + id;
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
+        System.out.print(selectSQL);
     }
 
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();
-        try {
-            connection.openConnection();
-            String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
-            boolean resultset = connection.executeSQLDeleteStatement(selectSQL);
-            if (resultset) {
-                log.log(Level.SEVERE, "Bestelling deleted");
-            }
-            list.stream().filter((i) -> (i.getNr() == id)).forEach((i) -> {
-                list.remove(i);
-            });
-        } catch(Exception e) {
-            log.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            connection.closeConnection();
-        }
+        connection.openConnection();
+        String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        connection.closeConnection();
     }
 
     public Set<Order> getSearchedOrders(String what, String att) {
@@ -205,8 +153,9 @@ public class OrderDAO {
                 String date = resultset.getString("orderDate");
                 int statusId = resultset.getInt("statusId");
                 int employeeId = resultset.getInt("employeeId");
+                int fkey = resultset.getInt("supplierId");
                 // Create product
-                order = new Order(nr, date, statusId, employeeId);
+                order = new Order(nr, date, statusId, employeeId, fkey);
                 orderList.add(order);
             }
         }

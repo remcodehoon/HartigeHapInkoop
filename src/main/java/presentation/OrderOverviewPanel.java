@@ -168,8 +168,8 @@ public class OrderOverviewPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                Order testOrder = new Order(index,"2016-05-24",1,1);
-                controller.makeVisible("Order_delete", testOrder);
+                Order selOrder = m.getOrder(index);
+                controller.makeVisible("Order_delete", selOrder);
             }
             label1.setText("Selecteer eerst een order om te deleten!");
         }

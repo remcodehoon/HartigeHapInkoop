@@ -8,6 +8,7 @@ import domain.Ingredient;
 import domain.Order;
 import domain.Supplier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Manager {
@@ -16,13 +17,19 @@ public class Manager {
     private static OrderDAO orderDAO;
     private static LoginDAO loginDAO;
     private int employeeId;
-    
+    private Set<Supplier> supList;
+    private Set<Ingredient> ingList;
+    private Set<Order> orderList;
+   
     public Manager() {
         supDAO = new SupplierDAO();
         ingDAO = new IngredientDAO();
         orderDAO = new OrderDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
+        supList = new HashSet<>();
+        ingList = new HashSet<>();
+        orderList = new HashSet<>();
     }
 
     public void setEmployeeId(int id) {
@@ -45,7 +52,17 @@ public class Manager {
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
-        return ingDAO.getIngredient(a);
+        Ingredient ingredient = null;
+        for(Ingredient i : ingList){
+                if(i.getId() == a){
+                    ingredient = new Ingredient(i.getId(),i.getName(),i.getInStock(),i.getMinStock(),i.getMaxStock());
+                }
+            }
+        if(ingredient != null){
+            return ingredient;
+        } else {
+            return ingDAO.getIngredient(a);
+        } 
     }
 
     /**
@@ -54,6 +71,7 @@ public class Manager {
      * @param newIngredient
      */
     public void addIngredient(Ingredient newIngredient) {
+        ingList.add(newIngredient); 
         ingDAO.addIngredient(newIngredient);
     }
 
@@ -64,6 +82,18 @@ public class Manager {
      * @param updateIng
      */
     public void updateIngredient(int id, Ingredient updateIng) {
+        ingList.stream().filter((i) -> (i.getId() == id)).map((i) -> {
+            i.setName(updateIng.getName());
+            return i;
+        }).map((i) -> {
+            i.setAttInt("inStock",updateIng.getInStock());
+            return i;
+        }).map((i) -> {
+            i.setAttInt("minStock",updateIng.getMinStock());
+            return i;
+        }).forEach((i) -> {
+            i.setAttInt("maxStock",updateIng.getMaxStock());
+        });
         ingDAO.updateIngredient(updateIng, id);
     }
 
@@ -73,6 +103,9 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een ingredient te verwijderen.
      */
     public void deleteIngredient(int id) {
+        ingList.stream().filter((i) -> (i.getId() == id)).forEach((i) -> {
+            ingList.remove(i);
+            });
         ingDAO.deleteIngredient(id);
     }
     
@@ -81,8 +114,8 @@ public class Manager {
      * @return Ingredient set
      */
     public Set<Ingredient> updateTableIng(){
-        ingDAO.updateIngredients();
-        return ingDAO.getAllIngredients();
+        ingList = ingDAO.updateIngredients();
+        return ingList;
     }
     
     /**
@@ -97,15 +130,39 @@ public class Manager {
 
 // ------------------------* Leverancier data *-----------------------
     public Supplier getSupplier(int a) {
-        return supDAO.getSupplier(a);
+        Supplier supplier = null;
+        for(Supplier i : supList){
+            if(i.getId() == a){
+                supplier = new Supplier(i.getId(),i.getName(),i.getAddress(),i.getPostalCode(),i.getContactName(),i.getEmail(),i.getPhoneNo());
+            }
+        }
+        if(supplier != null) {
+            return supplier;
+        } else {
+            return supDAO.getSupplier(a);  
+        }
     }
-
+    
+    public Supplier getSupplier(String name) {
+        Supplier supplier = null;
+        for(Supplier i : supList){
+                if(i.getName().equals(name)){
+                    supplier = new Supplier(i.getId(),i.getName(),i.getAddress(),i.getPostalCode(),i.getContactName(),i.getEmail(),i.getPhoneNo());
+                }
+            }
+        if(supplier != null) {
+            return supplier;
+        } else {
+        return supDAO.getSupplier(name);
+        }
+    }
     /**
      * voegt deze leverancier toe aan de database
      *
      * @param newSupplier
      */
     public void addSupplier(Supplier newSupplier) {
+        supList.add(newSupplier);
         supDAO.addSupplier(newSupplier);
     }
 
@@ -116,6 +173,24 @@ public class Manager {
      * @param updateSupplier -> Adres
      */
     public void updateSupplier(int id, Supplier updateSupplier) {
+        supList.stream().filter((i) -> (i.getId() == id)).map((i) -> {
+            i.setAttString("name",updateSupplier.getName());
+            return i;
+        }).map((i) -> {
+            i.setAttString("address",updateSupplier.getAddress());
+            return i;
+        }).map((i) -> {
+            i.setAttString("postalCode",updateSupplier.getPostalCode());
+            return i;
+        }).map((i) -> {
+            i.setAttString("contactName",updateSupplier.getContactName());
+            return i;
+        }).map((i) -> {
+            i.setAttString("email",updateSupplier.getEmail());
+            return i;
+        }).forEach((i) -> {
+            i.setAttString("phoneNo",updateSupplier.getPhoneNo());
+        });
         supDAO.updateSupplier(updateSupplier, id);
     }
 
@@ -125,6 +200,9 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
      */
     public void deleteSupplier(int id) {
+        supList.stream().filter((i) -> (i.getId() == id)).forEach((i) -> {
+            supList.remove(i);
+        });
         supDAO.deleteSupplier(id);
     }
     
@@ -133,8 +211,8 @@ public class Manager {
      * @return Set of Suppliers
      */
     public Set<Supplier> updateTableSup(){
-        supDAO.updateSuppliers();
-        return supDAO.getAllSuppliers();
+        supList = supDAO.updateSuppliers();
+        return supList;
     }
     
     public ArrayList<Supplier> getSearchedSup(String what, String attribute){
@@ -148,8 +226,7 @@ public class Manager {
         
     public ArrayList<String> getSupplierNames(){
         ArrayList<String> supNames = new ArrayList<String>();
-        Set<Supplier> list = supDAO.getAllSuppliers();
-        for(Supplier sup : list){
+        for(Supplier sup : supList){
             supNames.add(sup.getName());
         }
         
@@ -158,7 +235,18 @@ public class Manager {
         
      //-------------------* Bestelling Info *------------------------------
     public Order getOrder(int a) {
-        return orderDAO.getOrder(a);
+        Order order = null;
+        for(Order i : orderList){
+            if(i.getNr() == a){
+                order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId(),i.getFkey());
+                //order.setSupplier(i.get);
+            }
+        }
+        if(order != null) {
+            return order;
+        } else {
+            return orderDAO.getOrder(a);
+        }
     }
 
     /**
@@ -167,6 +255,7 @@ public class Manager {
      * @param newOrder
      */
     public void addOrder(Order newOrder) {
+        orderList.add(newOrder); 
         orderDAO.addOrder(newOrder);
     }
 
@@ -177,6 +266,18 @@ public class Manager {
      * @param updateOrder
      */
     public void updateOrder(int id, Order updateOrder) {
+        orderList.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
+            i.setNr(updateOrder.getNr());
+            return i;
+        }).map((i) -> {
+            i.setDate(updateOrder.getDate());
+            return i;
+        }).map((i) -> {
+            i.setStatusId(updateOrder.getStatusId());
+            return i;
+        }).forEach((i) -> {
+            i.setEmployeeId(updateOrder.getEmployeeId());
+        });
         orderDAO.updateOrder(updateOrder, id);
     }
 
@@ -186,6 +287,9 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
      */
     public void deleteOrder(int id) {
+        orderList.stream().filter((i) -> (i.getNr() == id)).forEach((i) -> {
+            orderList.remove(i);
+        });
         orderDAO.deleteOrder(id);
     }
     
@@ -194,8 +298,8 @@ public class Manager {
     }
         
     public Set<Order> updateTableOrder(){
-        orderDAO.updateOrders();
-        return orderDAO.getAllOrders();
+        orderList = orderDAO.updateOrders();
+        return orderList;
     }
     
     public int getOrderStatus(String status){

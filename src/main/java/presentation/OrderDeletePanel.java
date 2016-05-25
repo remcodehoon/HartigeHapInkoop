@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 public class OrderDeletePanel extends JPanel {
 
     private final JLabel label1;
-    private final TextField field2, field3, field4, field5;
+    private final TextField field2, field3, field4, field5, field6;
     private final JButton button1, button2;
     Controller controller;
     Manager m;
@@ -32,7 +32,8 @@ public class OrderDeletePanel extends JPanel {
         add(c.createLabel("Bestelling nummer:", 25, 140, 200, 30, "right"));
         add(c.createLabel("Datum:", 25, 180, 200, 30, "right"));
         add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Medewerker nummer:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Leverancier:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Ingevoerd door medewerker:", 25, 300, 200, 30, "right"));
 
         field2 = new TextField("");
         field2.setBounds(250, 140, 200, 30);
@@ -50,7 +51,10 @@ public class OrderDeletePanel extends JPanel {
         field5.setBounds(250, 260, 200, 30);
         field5.setEditable(false);
         add(field5);
-
+        field6 = new TextField("");
+        field6.setBounds(250, 300, 200, 30);
+        field6.setEditable(false);
+        add(field6);
         button1 = new JButton("Terug");
         ButtonHandler kh = new ButtonHandler();
         button1.addActionListener(kh);
@@ -70,7 +74,11 @@ public class OrderDeletePanel extends JPanel {
         field2.setText(String.valueOf(id));
         field3.setText(String.valueOf(selOrder.getDate()));
         field4.setText(String.valueOf(m.getOrderStatus(selOrder.getStatusId())));
-        field5.setText(String.valueOf(selOrder.getEmployeeId()));
+        field6.setText(String.valueOf(selOrder.getEmployeeId()));
+        if(selOrder.getSupplier() != null)
+            field5.setText(String.valueOf(selOrder.getSupplier().getName()));
+        else
+            field5.setText("Order heeft nog geen leverancier");
     }
 
     private class ButtonHandler implements ActionListener {
@@ -87,10 +95,10 @@ public class OrderDeletePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (id > -1) {
-                label1.setText("'" + field2.getText() + "' verwijderd!");
-                m.deleteIngredient(id);
+                label1.setText("Order " + field2.getText() + " verwijderd!");
+                m.deleteOrder(id);
             } else {
-                label1.setText("Ingredient is niet geselecteerd, ga terug naar vorige scherm!");
+                label1.setText("Order is niet geselecteerd, ga terug naar vorige scherm!");
             }
         }
     }
