@@ -197,7 +197,7 @@ public class SupplierOverviewPanel extends JPanel {
             } else {
                 label1.setText("");
                 model.setRowCount(0);
-                ArrayList<Supplier> ingredientList = m.getSearchedSup(what, attribute);
+                Set<Supplier> ingredientList = m.getSearchedSup(what, attribute);
                 // Per ingredient: stop de waarden in een rij (row) van het model.
                 for(Supplier s : ingredientList) {
                     model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});

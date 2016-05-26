@@ -175,7 +175,6 @@ public class SupplierDAO {
         Supplier sup;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
 
         try {

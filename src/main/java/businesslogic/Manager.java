@@ -48,6 +48,11 @@ public class Manager {
         String regex = "[0-9]+";
         return invoer.matches(regex);
     }
+    
+    public boolean checkLoginInfo(String username, String password) {
+        
+        return loginDAO.checkLoginInfo(username, password);
+    }
 
 
 // ------------------------* Ingredient data *-----------------------  
@@ -125,8 +130,56 @@ public class Manager {
      * @return Set of found ingredients
      */
     public Set<Ingredient> getSearchedIng(String what, String attribute){
-        return ingDAO.getSearchedIngredients(what, attribute);
+        Set<Ingredient> ingSearchList = new HashSet<>();
+        switch(attribute){  
+            case "ID":
+                ingList.stream().forEach((i) -> {
+                    String search = ""+ i.getId();
+                    if(search.matches(".*" + what +".*"))
+                        ingSearchList.add(i);
+                });
+                break;
+        
+            case "Naam":
+                ingList.stream().filter((i) -> (i.getName().matches(".*" + what +".*"))).forEach((i) -> {
+                    ingSearchList.add(i);
+                });
+                break;
+                
+            case "Voorraad":
+                ingList.stream().forEach((i) -> {
+                    String search = ""+ i.getInStock();
+                    if(search.matches(".*" + what +".*"))
+                        ingSearchList.add(i);
+                });
+                break;
+            
+            case "Minimum Voorraad":
+                ingList.stream().forEach((i) -> {
+                    String voorraad = ""+ i.getMinStock();
+                    if(voorraad.matches(".*" + what +".*"))
+                        ingSearchList.add(i);
+                });
+                break;
+                
+            case "Maximum Voorraad":
+                ingList.stream().forEach((i) -> {
+                    String search = ""+ i.getMaxStock();
+                    if(search.matches(".*" + what +".*"))
+                        ingSearchList.add(i);
+                });
+                break;
+                
+            default:
+                break;
+        }
+        if(!ingSearchList.isEmpty()) {
+            return ingSearchList;
+        } else {
+            return ingDAO.getSearchedIngredients(what, attribute);
+        }
     }
+    
 
 // ------------------------* Leverancier data *-----------------------
     public Supplier getSupplier(int a) {
@@ -215,20 +268,69 @@ public class Manager {
         return supList;
     }
     
-    public ArrayList<Supplier> getSearchedSup(String what, String attribute){
-        return supDAO.getSearchedSuppliers(what, attribute);
-    }
-	
-	public boolean checkLoginInfo(String username, String password) {
+    public Set<Supplier> getSearchedSup(String what, String attribute){
+        Set<Supplier> supSearchList = new HashSet<>();
+        switch(attribute){  
+            case "ID":
+                supList.stream().forEach((i) -> {
+                    String search = ""+ i.getId();
+                    if(search.matches(".*" + what +".*"))
+                        supSearchList.add(i);
+                });
+                break;
         
-        return loginDAO.checkLoginInfo(username, password);
-    }
-        
-    public ArrayList<String> getSupplierNames(){
-        ArrayList<String> supNames = new ArrayList<String>();
-        for(Supplier sup : supList){
-            supNames.add(sup.getName());
+            case "Naam":
+                supList.stream().filter((i) -> (i.getName().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+                
+            case "Postcode":
+                supList.stream().filter((i) -> (i.getPostalCode().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+            
+            case "Adres":
+                supList.stream().filter((i) -> (i.getAddress().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+                
+            case "Tel Nummer":
+                supList.stream().filter((i) -> (i.getPhoneNo().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+            
+            case "Contact Persoon":
+                supList.stream().filter((i) -> (i.getContactName().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+                
+            case "E-mail":
+                supList.stream().filter((i) -> (i.getEmail().matches(".*" + what +".*"))).forEach((i) -> {
+                    supSearchList.add(i);
+                });
+                break;
+                
+            default:
+                break;
         }
+       if(!supSearchList.isEmpty()) {
+            return supSearchList;
+        } else {
+           supList = (Set<Supplier>) supDAO.getSearchedSuppliers(what, attribute);
+            return supList;
+        }
+    }
+   
+    public ArrayList<String> getSupplierNames(){
+        ArrayList<String> supNames = new ArrayList<>();
+        supList.stream().forEach((sup) -> {
+            supNames.add(sup.getName());
+        });
         
         return supNames;
     }

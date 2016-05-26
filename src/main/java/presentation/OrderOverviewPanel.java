@@ -119,15 +119,11 @@ public class OrderOverviewPanel extends JPanel {
      * Refreshes the JTable.
      */
     public void refreshTable() {
-        //refresh ook het label
         label1.setText("");
-        //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
-        // Een lijst van ingredienten worden via een DAO opgehaald.
         Set<Order> orderList = m.updateTableOrder();
-        // Per ingredient: stop de waarden in een rij (row) van het model.
         for(Order o : orderList) {
-            model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId()});
+            model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), m.getSupplier(o.getFkey()).getName()});
         }
         table.setModel(model);
         model.fireTableDataChanged();
