@@ -6,30 +6,37 @@ import datastore.OrderDAO;
 import datastore.SupplierDAO;
 import domain.Ingredient;
 import domain.Order;
+import domain.OrderRow;
 import domain.Supplier;
+import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Manager {
     private static SupplierDAO supDAO;
     private static IngredientDAO ingDAO;
     private static OrderDAO orderDAO;
+    //private static OrderRowDAO orderRowDAO;
     private static LoginDAO loginDAO;
     private int employeeId;
     private Set<Supplier> supList;
     private Set<Ingredient> ingList;
     private Set<Order> orderList;
+    private Set<OrderRow> orderRowList;
    
     public Manager() {
         supDAO = new SupplierDAO();
         ingDAO = new IngredientDAO();
         orderDAO = new OrderDAO();
+        //orderRowDAO = new OrderRowDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
         supList = new HashSet<>();
         ingList = new HashSet<>();
         orderList = new HashSet<>();
+        orderRowList = new HashSet<>();
     }
 
     public void setEmployeeId(int id) {
@@ -67,6 +74,20 @@ public class Manager {
             return ingredient;
         } else {
             return ingDAO.getIngredient(a);
+        } 
+    }
+    
+    public Ingredient getIngredient(String naam) {
+        Ingredient ingredient = null;
+        for(Ingredient i : ingList){
+                if(i.getName().equals(naam)){
+                    ingredient = new Ingredient(i.getId(),i.getName(),i.getInStock(),i.getMinStock(),i.getMaxStock());
+                }
+            }
+        if(ingredient != null){
+            return ingredient;
+        } else {
+            return ingDAO.getIngredient(naam);
         } 
     }
 
@@ -108,10 +129,14 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een ingredient te verwijderen.
      */
     public void deleteIngredient(int id) {
-        ingList.stream().filter((i) -> (i.getId() == id)).forEach((i) -> {
-            ingList.remove(i);
-            });
-        ingDAO.deleteIngredient(id);
+        Iterator<Ingredient> i = ingList.iterator();
+        while(i.hasNext()) {
+            Ingredient o = i.next();
+            if(o.getId() == id) {
+                i.remove();
+                ingDAO.deleteIngredient(id);
+            }
+        }
     }
     
     /**
@@ -178,6 +203,15 @@ public class Manager {
         } else {
             return ingDAO.getSearchedIngredients(what, attribute);
         }
+    }
+    
+    public ArrayList<String> getIngredientNames(){
+        ArrayList<String> ingNames = new ArrayList<>();
+        ingList.stream().forEach((sup) -> {
+            ingNames.add(sup.getName());
+        });
+        
+        return ingNames;
     }
     
 
@@ -253,10 +287,14 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
      */
     public void deleteSupplier(int id) {
-        supList.stream().filter((i) -> (i.getId() == id)).forEach((i) -> {
-            supList.remove(i);
-        });
-        supDAO.deleteSupplier(id);
+        Iterator<Supplier> i = supList.iterator();
+        while(i.hasNext()) {
+            Supplier o = i.next();
+            if(o.getId() == id) {
+                i.remove();
+                supDAO.deleteSupplier(id);
+            }
+        }   
     }
     
     /**
@@ -359,6 +397,7 @@ public class Manager {
     public void addOrder(Order newOrder) {
         orderList.add(newOrder); 
         orderDAO.addOrder(newOrder);
+        orderDAO.addOrderRow(newOrder);
     }
 
     /**
@@ -368,6 +407,7 @@ public class Manager {
      * @param updateOrder
      */
     public void updateOrder(int id, Order updateOrder) {
+        orderDAO.updateOrderRow(updateOrder, id);
         orderList.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
             i.setNr(updateOrder.getNr());
             return i;
@@ -389,10 +429,15 @@ public class Manager {
      * @param id Het id dat gebruikt wordt om een leverancier te verwijderen.
      */
     public void deleteOrder(int id) {
-        orderList.stream().filter((i) -> (i.getNr() == id)).forEach((i) -> {
-            orderList.remove(i);
-        });
-        orderDAO.deleteOrder(id);
+        Iterator<Order> i = orderList.iterator();
+        while(i.hasNext()) {
+            Order o = i.next();
+            if(o.getNr()== id) {
+                i.remove();
+                orderDAO.deleteOrderRow(id);
+                orderDAO.deleteOrder(id);
+            }
+        }   
     }
     
     public Set<Order> getSearchedOrder(String what, String attribute){
@@ -441,22 +486,27 @@ public class Manager {
                 returnstatus = "Fout";
                 break;
                 
-            case 0:
+            case 1:
                 returnstatus = "Aangemaakt";
                 break;
                     
-            case 1:
-                returnstatus = "Geaccepteerd";
-                break;    
-                    
             case 2:
-                returnstatus = "Besteld";
+                returnstatus = "Geaccepteerd";
                 break;    
                     
             case 3:
                 returnstatus = "Geleverd";
+                break;    
+                    
+            case 4:
+                returnstatus = "Afgerond";
                 break; 
         }
         return returnstatus;
+    }
+    //-------------------* Order Row Info *------------------------------
+    public void addOrderRow(OrderRow newOrderRow) {
+        orderRowList.add(newOrderRow); 
+        //orderRowDAO.addOrder(newOrderRow);
     }
 }

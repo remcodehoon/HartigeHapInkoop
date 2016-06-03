@@ -3,6 +3,7 @@ package datastore;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Order;
+import domain.OrderRow;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -89,6 +90,24 @@ public class OrderDAO {
         connection.closeConnection();
         System.out.print(selectSQL);
     }
+    
+    public void addOrderRow(Order order) {
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_orderrow` (`ingredientId`,`amount`, `prize`, `orderNr`) VALUES ";
+        int orderNr = order.getNr();
+        Set<OrderRow> orderRowList = order.getOrderRows();
+        if(!orderRowList.isEmpty()){
+            for(OrderRow i : orderRowList){
+                selectSQL += "(" + i.getIngredient().getId() + "," + i.getAmount() + "," + i.getPrize() + "," + orderNr + "),";
+            }
+            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+        }
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
+        System.out.print(selectSQL);
+    }
+    
 
     public void updateOrder(Order order, int id) {
         DatabaseConnection connection = new DatabaseConnection();
@@ -100,13 +119,39 @@ public class OrderDAO {
             + ", `employeeId` = " + order.getEmployeeId() + ",`supplierId` = " + order.getFkey() + " WHERE `dhh_order`.`orderNo` = " + id;
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
-        System.out.print(selectSQL);
+    }
+    
+    public void updateOrderRow(Order order, int id) {
+        DatabaseConnection connection = new DatabaseConnection();
+        int valueID = order.getNr();
+        connection.openConnection();
+        String selectSQL = "DELETE from `martkic145_stunt`.`dhh_orderrow` WHERE `orderNr`=" + valueID;
+        connection.executeSQLInsertStatement(selectSQL);
+        selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_orderrow` (`ingredientId`,`amount`, `prize`, `orderNr`) VALUES ";
+        int orderNr = order.getNr();
+        Set<OrderRow> orderRowList = order.getOrderRows();
+        if(!orderRowList.isEmpty()){
+            for(OrderRow i : orderRowList){
+                selectSQL += "(" + i.getIngredient().getId() + "," + i.getAmount() + "," + i.getPrize() + "," + orderNr + "),";
+            }
+            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+        }
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
     }
 
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        connection.closeConnection();
+    }
+    
+    public void deleteOrderRow(int id) {
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "DELETE from `martkic145_stunt`.`dhh_orderrow` WHERE `orderNr`=" + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }

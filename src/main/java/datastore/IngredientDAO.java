@@ -33,6 +33,23 @@ public class IngredientDAO {
         return ingredient;
     }
     
+    public Ingredient getIngredient(String naam) {
+        Ingredient ingredient = null;
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT * FROM dhh_ingredient WHERE ingredientName = '" + naam + "';";
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            if (resultset.first())
+                ingredient = fetchItem(resultset);
+        } catch (SQLException f) {
+            log.log(Level.SEVERE, f.toString(), f);
+        } finally {
+            connection.closeConnection();
+        }
+        return ingredient;
+    }
+    
     public Set<Ingredient> updateIngredients() {
         Set<Ingredient> list = new HashSet<>();
         Ingredient ingredient;
