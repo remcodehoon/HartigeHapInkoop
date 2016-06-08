@@ -45,7 +45,7 @@ public class OrderAddPanel extends JPanel {
         add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
         add(c.createLabel("Leverancier:", 25, 260, 200, 30, "right"));
 
-        add(c.createLabel("[max 11 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 20 char]", 460, 140, 200, 30, "left"));
         add(c.createLabel("[datum jjjj-mm-dd]", 460, 180, 200, 30, "left"));
         add(c.createLabel("[selecteer 1]", 460, 220, 120, 30, "left"));
         add(c.createLabel("[selecteer 1]", 460, 260, 120, 30, "left"));
@@ -157,12 +157,16 @@ public class OrderAddPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String string1, string2;
-            string1 = field2.getText();
-            string2 = field3.getText();
-            int status = m.getOrderStatus((String) box1.getSelectedItem());
-            if(string1.length() > 0 && string1.length() <= 11 && m.checkNumbers(string1) 
-                    && string2.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) { // heeft alle constrains gecheckt
+            String message = "";
+            try {
+                String string1, string2;
+                string1 = field2.getText();
+                string2 = field3.getText();
+                int status = m.getOrderStatus((String) box1.getSelectedItem());
+                if(string1.length() <= 0 || string1.length() >= 20)
+                    throw new Exception("Fout in Bestellingnummer.");
+                if(!string2.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})"))
+                    throw new Exception("Fout in Datum.");
                 Supplier sup = m.getSupplier((String) box2.getSelectedItem());
                 int fkey = sup.getId();
                 int empId = m.getEmployeeId();
@@ -173,9 +177,11 @@ public class OrderAddPanel extends JPanel {
                     i.setOrder(newOrder);
                 }
                 m.addOrder(newOrder);
-                label1.setText("Bestelling toegevoegd");
-            } else {
-                label1.setText("Fout in de velden");
+                message = "Bestelleing toegevoegd.";
+            } catch (Exception f){
+                message = f.getMessage();
+            } finally {
+                label1.setText(message);
             }
         }
     }

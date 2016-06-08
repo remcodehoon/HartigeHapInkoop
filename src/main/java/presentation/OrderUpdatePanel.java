@@ -4,15 +4,12 @@ import businesslogic.Manager;
 import domain.Ingredient;
 import domain.Order;
 import domain.OrderRow;
-import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -182,7 +179,7 @@ public class OrderUpdatePanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             if (id > -1) {
                 try {
-                    if(field2.getText().length() < 0 || field2.getText().length() > 11 || !m.checkNumbers(field2.getText()))
+                    if(field2.getText().length() <= 0 || field2.getText().length() >= 20)
                         throw new Exception("Fout in Bestellingnummer.");
                     if(!field3.getText().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})"))
                         throw new Exception("Fout in Datum.");

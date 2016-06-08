@@ -27,10 +27,10 @@ public class IngredientAddPanel extends JPanel {
         add(c.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
         add(c.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
         add(c.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
-        add(c.createLabel("[max 25 char]", 460, 140, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 180, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 220, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 220, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 260, 200, 30, "left"));
         
         //add(c.createLabel("Gebruiker ID: " + m.getEmployeeId(), 460, 285, 200, 30, "left"));
 
@@ -87,18 +87,20 @@ public class IngredientAddPanel extends JPanel {
                 string3 = field3.getText();
                 string4 = field4.getText();
                 string5 = field5.getText();
-                if(string2.length() > 0 && string2.length() <= 25 && string3.length() > 0 && m.checkNumbers(string3) 
-                    && string3.length() <= 3 && string3.length() > 0 && m.checkNumbers(string3) && string3.length() <= 3 
-                    && string4.length() > 0 && m.checkNumbers(string4) && string4.length() <= 3 && string5.length() > 0 
-                    && m.checkNumbers(string5) && string5.length() <= 3) { // heeft alle constrains gecheckt
+                if(string2.length() <= 0 || string2.length() > 45 )
+                    throw new Exception("Fout in Naam.");
+                if(string3.length() <= 0 || !m.checkNumbers(string3) || string3.length() > 11)
+                    throw new Exception("Fout in Voorraad.");
+                if(string4.length() <= 0 || !m.checkNumbers(string4) || string4.length() > 11)
+                    throw new Exception("Fout in Minimum Voorraad.");
+                if(string5.length() <= 0 || !m.checkNumbers(string5) || string5.length() > 11)
+                    throw new Exception("Fout in Maximum Voorraad.");
                         Ingredient newIngredient = new Ingredient(0, string2, Integer.parseInt(string3), Integer.parseInt(string4), Integer.parseInt(string5));
                         m.addIngredient(newIngredient);
-                } else
-                    message = "Fout in de velden!";
             } catch(NumberFormatException f) {
-                message = "Fout in de velden!";
+                message = f.getMessage();
             } catch(Exception f) {
-                message = "Fout in de velden!";
+                message = f.getMessage();
             } finally {
                 label1.setText(message);
             }

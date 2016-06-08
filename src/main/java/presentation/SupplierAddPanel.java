@@ -30,12 +30,12 @@ public class SupplierAddPanel extends JPanel {
         add(c.createLabel("Emailadres:", 25, 300, 200, 30, "right"));
         add(c.createLabel("Telefoonnummer:", 25, 340, 200, 30, "right"));
 
-        add(c.createLabel("[max 50 char]", 460, 140, 200, 30, "left"));
-        add(c.createLabel("[max 35 char]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 180, 200, 30, "left"));
         add(c.createLabel("[max 6 char]", 460, 220, 200, 30, "left"));
-        add(c.createLabel("[max 25 char]", 460, 260, 200, 30, "left"));
-        add(c.createLabel("[max 40 char]", 460, 300, 200, 30, "left"));
-        add(c.createLabel("[max 15 getallen]", 460, 340, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 300, 200, 30, "left"));
+        add(c.createLabel("[max 14 getallen]", 460, 340, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -88,63 +88,35 @@ public class SupplierAddPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String string2, string3, string4, string5, string6, string7;
-            boolean b1 = false;
-            boolean b2 = false;
-            boolean b3 = false;
-            boolean b4 = false;
-            boolean b5 = false;
-            boolean b6 = false;
-            string2 = field2.getText();
-            if (string2.length() > 0 && string2.length() <= 50) {
-                b1 = true;
-            }
-            string3 = field3.getText();
-            if (string3.length() > 0 && string3.length() <= 35) {
-                b2 = true;
-            }
-            string4 = field4.getText();
-            if (string4.length() > 0 && string4.length() == 6) {
-                b3 = true;
-            }
-            string5 = field5.getText();
-            if (string5.length() > 0 && string5.length() <= 25) {
-                b4 = true;
-            }
-            string6 = field6.getText();
-            if (string6.length() > 0 && string6.length() <= 40) {
-                b5 = true;
-            }
-            string7 = field7.getText();
-            if (string7.length() > 0 && string7.length() <= 15 && m.checkNumbers(string7)) {
-                b6 = true;
-            }
-            String message = "Vul de velden in: ";
-            if (!b1) {
-                message += "Naam : ";
-            }
-            if (!b2) {
-                message += "Adres : ";
-            }
-            if (!b3) {
-                message += "Postcode : ";
-            }
-            if (!b4) {
-                message += "Contactpersoon : ";
-            }
-            if (!b5) {
-                message += "Email : ";
-            }
-            if (!b6) {
-                message += "Tel nummer : ";
-            }
-            message = message.substring(0, message.length() - 3);
-            if (b1 && b2 && b3 && b4 && b5 && b6) {
-                message = "Nieuwe leverancier is aangemaakt!";
+            String message = "";
+            try{
+                String string2, string3, string4, string5, string6, string7;
+                string2 = field2.getText();
+                string3 = field3.getText();
+                string4 = field4.getText();
+                string5 = field5.getText();
+                string6 = field6.getText();
+                string7 = field7.getText();
+                if(string2.length() <= 0 || string2.length() > 45 )
+                    throw new Exception("Fout in Naam.");
+                if(string3.length() <= 0 || string3.length() > 45)
+                    throw new Exception("Fout in Adres.");
+                if(string4.length() <= 0 || string4.length() > 6)
+                    throw new Exception("Fout in Postcode.");
+                if(string5.length() <= 0 || string5.length() > 45)
+                    throw new Exception("Fout in Contactpersoon.");
+                if(string5.length() <= 0 || string5.length() > 45)
+                    throw new Exception("Fout in Email.");
+                if(string5.length() <= 0 || string5.length() > 14)
+                    throw new Exception("Fout in Telefoonnummer.");
                 Supplier newSupplier = new Supplier(0, string2, string3, string4, string5, string6, string7);
                 m.addSupplier(newSupplier);
+                message = "Nieuwe leverancier is aangemaakt!";
+            } catch (Exception f){
+                message = f.getMessage();  
+            } finally {
+                label1.setText(message);
             }
-            label1.setText(message);
         }
     }
 

@@ -31,12 +31,12 @@ public class SupplierUpdatePanel extends JPanel {
         add(c.createLabel("Emailadres:", 25, 300, 200, 30, "right"));
         add(c.createLabel("Telefoonnummer:", 25, 340, 200, 30, "right"));
 
-        add(c.createLabel("[max 50 char]", 460, 140, 200, 30, "left"));
-        add(c.createLabel("[max 35 char]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 180, 200, 30, "left"));
         add(c.createLabel("[max 6 char]", 460, 220, 200, 30, "left"));
-        add(c.createLabel("[max 25 char]", 460, 260, 200, 30, "left"));
-        add(c.createLabel("[max 40 char]", 460, 300, 200, 30, "left"));
-        add(c.createLabel("[max 15 getallen]", 460, 340, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 300, 200, 30, "left"));
+        add(c.createLabel("[max 14 getallen]", 460, 340, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -99,19 +99,45 @@ public class SupplierUpdatePanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (id > -1) {
-                Supplier updateSupplier = m.getSupplier(id);
-                updateSupplier.setId(id);
-                updateSupplier.setAttString("name", field2.getText());
-                updateSupplier.setAttString("address", field3.getText());
-                updateSupplier.setAttString("postalCode", field4.getText());
-                updateSupplier.setAttString("contactName", field5.getText());
-                updateSupplier.setAttString("email", field6.getText());
-                updateSupplier.setAttString("phoneNo", field7.getText());
-                m.updateSupplier(id, updateSupplier);
-                label1.setText("Leverancier is gewijzigd!");
-            } else {
-                label1.setText("Leverancier is niet geselecteerd, ga terug naar vorige scherm!");
+            String message = "";
+            try{
+                if (id > -1) {
+                    String string2, string3, string4, string5, string6, string7;
+                    string2 = field2.getText();
+                    string3 = field3.getText();
+                    string4 = field4.getText();
+                    string5 = field5.getText();
+                    string6 = field6.getText();
+                    string7 = field7.getText();
+                    if(string2.length() <= 0 || string2.length() > 45 )
+                        throw new Exception("Fout in Naam.");
+                    if(string3.length() <= 0 || string3.length() > 45)
+                        throw new Exception("Fout in Adres.");
+                    if(string4.length() <= 0 || string4.length() > 6)
+                        throw new Exception("Fout in Postcode.");
+                    if(string5.length() <= 0 || string5.length() > 45)
+                        throw new Exception("Fout in Contactpersoon.");
+                    if(string5.length() <= 0 || string5.length() > 45)
+                        throw new Exception("Fout in Email.");
+                    if(string5.length() <= 0 || string5.length() > 14)
+                        throw new Exception("Fout in Telefoonnummer.");
+                    Supplier updateSupplier = m.getSupplier(id);
+                    updateSupplier.setId(id);
+                    updateSupplier.setAttString("name", string2);
+                    updateSupplier.setAttString("address", string3);
+                    updateSupplier.setAttString("postalCode", string4);
+                    updateSupplier.setAttString("contactName", string5);
+                    updateSupplier.setAttString("email", string6);
+                    updateSupplier.setAttString("phoneNo", string7);
+                    m.updateSupplier(id, updateSupplier);
+                    label1.setText("Leverancier is gewijzigd!");
+                } else {
+                    label1.setText("Leverancier is niet geselecteerd, ga terug naar vorige scherm!");
+                }
+            } catch (Exception f){
+                message = f.getMessage();  
+            } finally {
+                label1.setText(message);
             }
         }
     }

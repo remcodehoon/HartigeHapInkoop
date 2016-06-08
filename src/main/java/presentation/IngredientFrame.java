@@ -11,7 +11,7 @@ public class IngredientFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setSize(1366, 768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Leveranciers overzicht");
+        setTitle("Ingredient overzicht");
         setLayout(null);
     }
 }

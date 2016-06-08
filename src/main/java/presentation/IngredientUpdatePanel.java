@@ -28,10 +28,10 @@ public class IngredientUpdatePanel extends JPanel {
         add(c.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
         add(c.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
         add(c.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
-        add(c.createLabel("[max 25 char]", 460, 140, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 180, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 220, 200, 30, "left"));
-        add(c.createLabel("[max 3 getallen]", 460, 260, 200, 30, "left"));
+        add(c.createLabel("[max 45 char]", 460, 140, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 180, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 220, 200, 30, "left"));
+        add(c.createLabel("[max 11 getallen]", 460, 260, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -86,28 +86,37 @@ public class IngredientUpdatePanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String string2,string3,string4,string5;
-            string2 = field2.getText();
-            string3 = field3.getText();
-            string4 = field4.getText();
-            string5 = field5.getText();
-            if (id > -1) {
-                if(string2.length() > 0 && string2.length() <= 25 && string3.length() > 0 && m.checkNumbers(string3) 
-                    && string3.length() <= 3 && string3.length() > 0 && m.checkNumbers(string3) && string3.length() <= 3 
-                    && string4.length() > 0 && m.checkNumbers(string4) && string4.length() <= 3 && string5.length() > 0 
-                    && m.checkNumbers(string5) && string5.length() <= 3) { // heeft alle constrains gecheckt
-                        Ingredient updateIngredient = m.getIngredient(id);
-                        updateIngredient.setAttInt("id", id);
-                        updateIngredient.setName(string2);
-                        updateIngredient.setAttInt("inStock", Integer.parseInt(string3));
-                        updateIngredient.setAttInt("minStock", Integer.parseInt(string4));
-                        updateIngredient.setAttInt("maxStock", Integer.parseInt(string5));
-                        m.updateIngredient(id, updateIngredient);
-                        label1.setText("Ingredient is gewijzigd!");
-                } else 
-                    label1.setText("Fout in de velden");
-            } else {
-                label1.setText("Ingredient is niet geselecteerd, ga terug naar vorige scherm!");
+            String message = "";
+            try{
+                String string2,string3,string4,string5;
+                string2 = field2.getText();
+                string3 = field3.getText();
+                string4 = field4.getText();
+                string5 = field5.getText();
+                if (id > -1) {
+                if(string2.length() <= 0 || string2.length() > 45 )
+                    throw new Exception("Fout in Naam.");
+                if(string3.length() <= 0 || !m.checkNumbers(string3) || string3.length() > 11)
+                    throw new Exception("Fout in Voorraad.");
+                if(string4.length() <= 0 || !m.checkNumbers(string4) || string4.length() > 11)
+                    throw new Exception("Fout in Minimum Voorraad.");
+                if(string5.length() <= 0 || !m.checkNumbers(string5) || string5.length() > 11)
+                    throw new Exception("Fout in Maximum Voorraad.");
+                Ingredient updateIngredient = m.getIngredient(id);
+                updateIngredient.setAttInt("id", id);
+                updateIngredient.setName(string2);
+                updateIngredient.setAttInt("inStock", Integer.parseInt(string3));
+                updateIngredient.setAttInt("minStock", Integer.parseInt(string4));
+                updateIngredient.setAttInt("maxStock", Integer.parseInt(string5));
+                m.updateIngredient(id, updateIngredient);
+                message = ("Ingredient is gewijzigd!");
+                } else {
+                message = ("Ingredient is niet geselecteerd, ga terug naar vorige scherm!");
+                }
+            } catch (Exception f){
+                message = f.getMessage();
+            } finally {
+                label1.setText(message);
             }
         }
     }

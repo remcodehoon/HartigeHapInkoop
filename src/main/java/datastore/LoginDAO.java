@@ -24,7 +24,7 @@ public class LoginDAO {
         // Open connection
         connection.openConnection();
         // Query
-        String selectSQL = "SELECT * FROM dhh_employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\"";
+        String selectSQL = "SELECT id FROM employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\"";
         
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
@@ -48,7 +48,7 @@ public class LoginDAO {
         // Open connection
         connection.openConnection();
         // Query
-        String selectSQL = "SELECT id FROM dhh_employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\" LIMIT 1";
+        String selectSQL = "SELECT id FROM employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\" LIMIT 1";
         
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);

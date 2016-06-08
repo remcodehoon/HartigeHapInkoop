@@ -69,7 +69,6 @@ public class Controller {
     
 // Maakt een bepaald frame zichtbaar
     public void makeVisible(String framenaam) {
-
         if(m.getEmployeeId() != 0) {
             frame1.setVisible(false);
             frame2.setVisible(false);

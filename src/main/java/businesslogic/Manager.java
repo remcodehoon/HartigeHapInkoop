@@ -4,6 +4,7 @@ import datastore.IngredientDAO;
 import datastore.LoginDAO;
 import datastore.OrderDAO;
 import datastore.SupplierDAO;
+import domain.Employee;
 import domain.Ingredient;
 import domain.Order;
 import domain.OrderRow;
@@ -38,7 +39,7 @@ public class Manager {
         orderList = new HashSet<>();
         orderRowList = new HashSet<>();
     }
-
+    
     public void setEmployeeId(int id) {
         this.employeeId = id;
     }
@@ -407,7 +408,7 @@ public class Manager {
      * @param updateOrder
      */
     public void updateOrder(int id, Order updateOrder) {
-        orderDAO.updateOrderRow(updateOrder, id);
+        //orderDAO.updateOrderRow(updateOrder, id);
         orderList.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
             i.setNr(updateOrder.getNr());
             return i;
@@ -434,7 +435,7 @@ public class Manager {
             Order o = i.next();
             if(o.getNr()== id) {
                 i.remove();
-                orderDAO.deleteOrderRow(id);
+                //orderDAO.deleteOrderRow(id);
                 orderDAO.deleteOrder(id);
             }
         }   

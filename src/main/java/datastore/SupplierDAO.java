@@ -21,7 +21,7 @@ public class SupplierDAO {
         Supplier supplier = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_supplier WHERE id = " + String.valueOf(a);
+        String selectSQL = "SELECT * FROM supplier WHERE id = " + String.valueOf(a);
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
             if (resultset.first())
@@ -38,7 +38,7 @@ public class SupplierDAO {
         Supplier supplier = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_supplier WHERE name = " + name;
+        String selectSQL = "SELECT * FROM supplier WHERE name = " + name;
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
             if (resultset.first())
@@ -57,7 +57,7 @@ public class SupplierDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
 
-        String selectSQL = "SELECT * FROM dhh_supplier";
+        String selectSQL = "SELECT * FROM supplier";
 
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
 
@@ -106,7 +106,7 @@ public class SupplierDAO {
     public void addSupplier(Supplier sup) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_supplier` (`name`, `address`, `postalCode`, `contactName`, `email`, `phoneNo`) VALUES('"
+        String selectSQL = "INSERT INTO `23ivp4a`.`supplier` (`name`, `address`, `postalCode`, `contactName`, `email`, `phoneNo`) VALUES('"
             + sup.getName() + "','" + sup.getAddress() + "','" + sup.getPostalCode() + "','"
             + sup.getContactName() + "','" + sup.getEmail() + "','" + sup.getPhoneNo() + "');";
         connection.executeSQLInsertStatement(selectSQL);
@@ -119,10 +119,10 @@ public class SupplierDAO {
             if (valueID == id) {
                 connection.openConnection();
                 log.log(Level.SEVERE, "ID's match, query is executed");
-                String selectSQL = "UPDATE `martkic145_stunt`.`dhh_supplier` SET `id` =" + String.valueOf(valueID)
+                String selectSQL = "UPDATE `23ivp4a`.`supplier` SET `id` =" + String.valueOf(valueID)
                 + ",`name` = '" + sup.getName() + "', `address` = '" + sup.getAddress() + "', `postalCode` = '" + sup.getPostalCode()
                     + "', `contactName` = '" + sup.getContactName() + "', `email` = '" + sup.getEmail() + "', `phoneNo` = '" + sup.getPhoneNo()
-                    + "' WHERE `dhh_supplier`.`id` = " + id;
+                    + "' WHERE `supplier`.`id` = " + id;
                 connection.executeSQLInsertStatement(selectSQL);
                 connection.closeConnection();
             }
@@ -131,13 +131,13 @@ public class SupplierDAO {
     public void deleteSupplier(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_supplier` WHERE `id` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`supplier` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
     
     public ArrayList<Supplier> getSearchedSuppliers(String what, String att) {
-        String selectSQL = "SELECT * FROM dhh_supplier WHERE ";
+        String selectSQL = "SELECT * FROM supplier WHERE ";
         switch(att){  
             case "ID":
                 selectSQL += "id=" + what +";";

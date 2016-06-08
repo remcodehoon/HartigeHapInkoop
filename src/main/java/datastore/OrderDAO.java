@@ -21,7 +21,7 @@ public class OrderDAO {
         Order order = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_order WHERE orderNo = " + a;
+        String selectSQL = "SELECT * FROM stockorder WHERE orderNo = " + a;
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
             if (resultset.first())
@@ -40,7 +40,7 @@ public class OrderDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
 
-        String selectSQL = "SELECT * FROM dhh_order";
+        String selectSQL = "SELECT stockorder.* FROM stockorder";
 
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
 
@@ -50,8 +50,7 @@ public class OrderDAO {
                 String date = resultset.getString("orderDate");
                 int statusId = resultset.getInt("statusId");
                 int employeeId = resultset.getInt("employeeId");
-                int fkey = resultset.getInt("supplierId");
-                order = new Order(nr, date, statusId, employeeId, fkey);
+                order = new Order(nr, date, statusId, employeeId, 1);
                 list.add(order);
             }
         } catch (SQLException e) {
@@ -84,8 +83,8 @@ public class OrderDAO {
     public void addOrder(Order order) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_order` (`orderNo`,`orderDate`, `statusId`, `employeeId`, `supplierId`) VALUES("
-            + order.getNr() + ",'" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + "," + order.getFkey() +");";
+        String selectSQL = "INSERT INTO `23ivp4a`.`stockorder` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES("
+            + order.getNr() + ",'" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + ");";
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
         System.out.print(selectSQL);
@@ -94,7 +93,7 @@ public class OrderDAO {
     public void addOrderRow(Order order) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_orderrow` (`ingredientId`,`amount`, `prize`, `orderNr`) VALUES ";
+        String selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`,`amount`, `prize`, `orderNr`) VALUES ";
         int orderNr = order.getNr();
         Set<OrderRow> orderRowList = order.getOrderRows();
         if(!orderRowList.isEmpty()){
@@ -114,20 +113,20 @@ public class OrderDAO {
         int valueID = order.getNr();
         connection.openConnection();
         log.log(Level.SEVERE, "ID's match, query is executed");
-        String selectSQL = "UPDATE `martkic145_stunt`.`dhh_order` SET `orderNo` =" + valueID
+        String selectSQL = "UPDATE `23ivp4a`.`stockorder` SET `orderNo` =" + valueID
             + ",`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
-            + ", `employeeId` = " + order.getEmployeeId() + ",`supplierId` = " + order.getFkey() + " WHERE `dhh_order`.`orderNo` = " + id;
+            + ", `employeeId` = " + order.getEmployeeId() + " WHERE `stockorder`.`orderNo` = " + id;
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
-    
+    /*
     public void updateOrderRow(Order order, int id) {
         DatabaseConnection connection = new DatabaseConnection();
         int valueID = order.getNr();
         connection.openConnection();
-        String selectSQL = "DELETE from `martkic145_stunt`.`dhh_orderrow` WHERE `orderNr`=" + valueID;
+        String selectSQL = "DELETE from `23ivp4a`.`stockorder_ingredient` WHERE `stockorderId`=" + valueID;
         connection.executeSQLInsertStatement(selectSQL);
-        selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_orderrow` (`ingredientId`,`amount`, `prize`, `orderNr`) VALUES ";
+        selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`,`quantity`, `prize`, `orderNr`) VALUES ";
         int orderNr = order.getNr();
         Set<OrderRow> orderRowList = order.getOrderRows();
         if(!orderRowList.isEmpty()){
@@ -139,25 +138,28 @@ public class OrderDAO {
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
-
+    */
+    
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_order` WHERE `orderNo` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder` WHERE `orderNo` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
     
+    /*
     public void deleteOrderRow(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE from `martkic145_stunt`.`dhh_orderrow` WHERE `orderNr`=" + id;
+        String selectSQL = "DELETE from `23ivp4a`.`stockorder` WHERE `orderNr`=" + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
+    */
 
     public Set<Order> getSearchedOrders(String what, String att) {
-        String selectSQL = "SELECT * FROM dhh_order WHERE ";
+        String selectSQL = "SELECT * FROM stockorder WHERE ";
         switch(att){
             case "Bestelling nummer":
                 selectSQL += "orderNo=" + what +";";
@@ -171,13 +173,17 @@ public class OrderDAO {
                 selectSQL += "statusId=" + what + ";";
                 break;
             
-            case "Gebruiker nummer Voorraad":
+            case "Gebruiker nummer":
                 selectSQL += "employeeId=" + what + ";";
                 break;
                 
-            case "Maximum Voorraad":
-                selectSQL += "maxStock=" + what + ";";
+            case "Leverancier":
+                selectSQL = "SELECT stockorder.* FROM stockorder, stockorder_ingredient, "
+                        + "supplier WHERE stockorder.orderNo = stockorder_ingredient.stockorderId"
+                        + " AND stockorder_ingredient.supplierId = supplier.name AND "
+                        + "supplier.name = " + what + ";";
                 break;
+
                 
             default:
                 selectSQL += att + "=" + what;

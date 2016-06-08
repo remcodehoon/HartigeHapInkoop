@@ -20,7 +20,7 @@ public class IngredientDAO {
         Ingredient ingredient = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_ingredient WHERE id = " + String.valueOf(a);
+        String selectSQL = "SELECT * FROM ingredient WHERE id = " + String.valueOf(a);
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
             if (resultset.first())
@@ -37,7 +37,7 @@ public class IngredientDAO {
         Ingredient ingredient = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT * FROM dhh_ingredient WHERE ingredientName = '" + naam + "';";
+        String selectSQL = "SELECT * FROM ingredient WHERE ingredientName = '" + naam + "';";
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         try {
             if (resultset.first())
@@ -56,7 +56,7 @@ public class IngredientDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
 
-        String selectSQL = "SELECT * FROM dhh_ingredient";
+        String selectSQL = "SELECT * FROM ingredient";
 
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
 
@@ -101,7 +101,7 @@ public class IngredientDAO {
     public void addIngredient(Ingredient ingredient) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "INSERT INTO `martkic145_stunt`.`dhh_ingredient` (`ingredientName`, `inStock`, `minStock`, `maxStock`) VALUES('"
+        String selectSQL = "INSERT INTO `23ivp4a`.`ingredient` (`ingredientName`, `inStock`, `minStock`, `maxStock`) VALUES('"
             + ingredient.getName() + "','" + ingredient.getInStock() + "','" + ingredient.getMinStock() + "'," + ingredient.getMaxStock() + ");";
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
@@ -112,11 +112,10 @@ public class IngredientDAO {
         int valueID = ingredient.getId();
         if (valueID == id) {
             connection.openConnection();
-            log.log(Level.SEVERE, "ID's match, query is executed");
-            String selectSQL = "UPDATE `martkic145_stunt`.`dhh_ingredient` SET `id` =" + valueID
+            String selectSQL = "UPDATE `23ivp4a`.`ingredient` SET `id` =" + valueID
             + ",`ingredientName` = '" + ingredient.getName() + "', `inStock` = '" + ingredient.getInStock()
             + "', `minStock` = '" + ingredient.getMinStock() + "', `maxStock` = '"
-            + ingredient.getMaxStock() + "' WHERE `dhh_ingredient`.`id` = " + id;
+            + ingredient.getMaxStock() + "' WHERE `ingredient`.`id` = " + id;
             connection.executeSQLInsertStatement(selectSQL);
             connection.closeConnection();
         }
@@ -125,7 +124,7 @@ public class IngredientDAO {
     public void deleteIngredient(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `martkic145_stunt`.`dhh_ingredient` WHERE `id` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
@@ -133,7 +132,7 @@ public class IngredientDAO {
 
 
     public Set<Ingredient> getSearchedIngredients(String what, String att) {
-        String selectSQL = "SELECT * FROM dhh_ingredient WHERE ";
+        String selectSQL = "SELECT * FROM ingredient WHERE ";
         switch(att){
             case "ID":
                 selectSQL += "id=" + what +";";
