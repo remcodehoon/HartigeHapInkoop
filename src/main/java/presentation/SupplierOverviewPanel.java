@@ -153,6 +153,7 @@ public class SupplierOverviewPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
+                m.updateSupplierIngredientList();
                 Supplier sel = m.getSupplier(index);
                 controller.makeVisible("Supplier_update", sel);
             } else {
@@ -168,6 +169,7 @@ public class SupplierOverviewPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
+                m.updateSupplierIngredientList();
                 Supplier sel = m.getSupplier(index);
                 controller.makeVisible("Supplier_delete", sel);
             } else {

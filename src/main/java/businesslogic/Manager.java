@@ -9,6 +9,7 @@ import domain.Ingredient;
 import domain.Order;
 import domain.OrderRow;
 import domain.Supplier;
+import domain.SupplierIngredient;
 import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,21 +24,31 @@ public class Manager {
     private static LoginDAO loginDAO;
     private int employeeId;
     private Set<Supplier> supList;
+    private Set<SupplierIngredient> supIngList;
     private Set<Ingredient> ingList;
     private Set<Order> orderList;
     private Set<OrderRow> orderRowList;
    
     public Manager() {
-        supDAO = new SupplierDAO();
+        supDAO = new SupplierDAO(this);
         ingDAO = new IngredientDAO();
         orderDAO = new OrderDAO();
         //orderRowDAO = new OrderRowDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
         supList = new HashSet<>();
+        supIngList = new HashSet<>();
         ingList = new HashSet<>();
         orderList = new HashSet<>();
         orderRowList = new HashSet<>();
+    }
+    
+    public void updateTables(){
+        ingList = ingDAO.updateIngredients();
+        orderList = orderDAO.updateOrders();
+        supList = supDAO.updateSuppliers();
+        supIngList = supDAO.updateSupplierIngredients();
+        updateSupplierIngredientList();
     }
     
     public void setEmployeeId(int id) {
@@ -65,31 +76,21 @@ public class Manager {
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
-        Ingredient ingredient = null;
         for(Ingredient i : ingList){
-                if(i.getId() == a){
-                    ingredient = new Ingredient(i.getId(),i.getName(),i.getInStock(),i.getMinStock(),i.getMaxStock());
-                }
+            if(i.getId() == a){
+                return i;
             }
-        if(ingredient != null){
-            return ingredient;
-        } else {
-            return ingDAO.getIngredient(a);
-        } 
+        }
+        return ingDAO.getIngredient(a);
     }
     
     public Ingredient getIngredient(String naam) {
-        Ingredient ingredient = null;
         for(Ingredient i : ingList){
-                if(i.getName().equals(naam)){
-                    ingredient = new Ingredient(i.getId(),i.getName(),i.getInStock(),i.getMinStock(),i.getMaxStock());
-                }
+            if(i.getName().equals(naam)){
+                return i;
             }
-        if(ingredient != null){
-            return ingredient;
-        } else {
-            return ingDAO.getIngredient(naam);
-        } 
+        }
+        return ingDAO.getIngredient(naam); 
     }
 
     /**
@@ -208,52 +209,58 @@ public class Manager {
     
     public ArrayList<String> getIngredientNames(){
         ArrayList<String> ingNames = new ArrayList<>();
-        ingList.stream().forEach((sup) -> {
-            ingNames.add(sup.getName());
-        });
-        
+        for(Ingredient ing : ingList){
+            ingNames.add(ing.getName());
+        }
         return ingNames;
     }
     
 
 // ------------------------* Leverancier data *-----------------------
     public Supplier getSupplier(int a) {
-        Supplier supplier = null;
         for(Supplier i : supList){
             if(i.getId() == a){
-                supplier = new Supplier(i.getId(),i.getName(),i.getAddress(),i.getPostalCode(),i.getContactName(),i.getEmail(),i.getPhoneNo());
+                return i;
             }
         }
-        if(supplier != null) {
-            return supplier;
-        } else {
-            return supDAO.getSupplier(a);  
-        }
+        System.out.println("DAO USED");
+        return supDAO.getSupplier(a);  
     }
     
     public Supplier getSupplier(String name) {
-        Supplier supplier = null;
         for(Supplier i : supList){
-                if(i.getName().equals(name)){
-                    supplier = new Supplier(i.getId(),i.getName(),i.getAddress(),i.getPostalCode(),i.getContactName(),i.getEmail(),i.getPhoneNo());
-                }
+            if(i.getName().equals(name)){
+                return i;
             }
-        if(supplier != null) {
-            return supplier;
-        } else {
-        return supDAO.getSupplier(name);
         }
+        System.out.println("DAO USED");
+        return supDAO.getSupplier(name);
     }
+    
     /**
      * voegt deze leverancier toe aan de database
      *
      * @param newSupplier
+     * @param orderList
      */
     public void addSupplier(Supplier newSupplier) {
         supList.add(newSupplier);
         supDAO.addSupplier(newSupplier);
+        
+    }
+    
+    public void addSupplierRows(Set<SupplierIngredient> orderList){
+        for(SupplierIngredient i : orderList){
+            Supplier sup = supDAO.getSupplier(supDAO.getMaxID());
+            i.setSupplier(sup);
+        }
+        supDAO.addSupplierOrderList(orderList);
     }
 
+    public int getSupplierMaxId(){
+        return supDAO.getMaxID();
+    }
+    
     /**
      * wijzigt een leverancier in de database met bijbehorend id
      *
@@ -374,6 +381,19 @@ public class Manager {
         return supNames;
     }
         
+    public void updateSupplierIngredientList(){
+        for(Supplier i : supList){
+            Set<SupplierIngredient> newlist = new HashSet<>();
+            for(SupplierIngredient o : supIngList){
+                if(i.getId() == o.getSupplier().getId()){
+                    newlist.add(o);
+                }
+            }
+            i.setIngredientList(newlist);
+        }
+        //System.out.println(getSupplier(5).getIngredientList().size());
+    }
+    
      //-------------------* Bestelling Info *------------------------------
     public Order getOrder(int a) {
         Order order = null;

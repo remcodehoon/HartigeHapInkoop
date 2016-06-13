@@ -2,13 +2,21 @@ package presentation;
 
 import businesslogic.Manager;
 import domain.Supplier;
+import domain.SupplierIngredient;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class SupplierDeletePanel extends JPanel {
 
@@ -18,6 +26,9 @@ public class SupplierDeletePanel extends JPanel {
     Controller controller;
     Manager m;
     private int id = -1;
+    private final JTable table;
+    private final JScrollPane spTable;
+    private final DefaultTableModel model;
 
     public SupplierDeletePanel(Controller c, Manager m) {
         controller = c;
@@ -73,6 +84,32 @@ public class SupplierDeletePanel extends JPanel {
         Button2.setBounds(25, 400, 200, 50);
         add(Button2);
 
+        model = new DefaultTableModel() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            //Cellen kunnen niet aangepast worden
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        ;
+        }; 
+        String[] colName = {"Ingrediënt", "Aantal", "Prijs"};
+        model.setColumnIdentifiers(colName);
+        table = new JTable(model);
+        spTable = new JScrollPane(table);
+        spTable.setBounds(850, 140, 350, 345);
+        add(spTable);
+        
+        int[] colWidth = new int[3];
+        colWidth[0] = 200;
+        colWidth[1] = 100;
+        colWidth[2] = 50;
+        TableColumn column;
+        for (int i = 0; i < colWidth.length; i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth(colWidth[i]);
+        }
     }
 
     public void setSupplier(Supplier selSup) {
@@ -82,6 +119,13 @@ public class SupplierDeletePanel extends JPanel {
         field5.setText(selSup.getContactName());
         field6.setText(selSup.getEmail());
         field7.setText(selSup.getPhoneNo());
+        model.setRowCount(0);
+        for(SupplierIngredient o : selSup.getIngredientList()) {
+            model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice()});
+        }
+        System.out.println(selSup.getIngredientList().size());
+        table.setModel(model);
+        model.fireTableDataChanged();
         id = selSup.getId();
     }
 

@@ -1,9 +1,13 @@
 package domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Supplier {
 
     private int id;
     private String name, address, postalCode, contactName, email, phoneNo;
+    private Set<SupplierIngredient> ingredientList;
 
     public Supplier(int id, String name, String address, String postalCode, String contactName, String email, String phoneNo) {
         this.id = id;
@@ -13,6 +17,7 @@ public class Supplier {
         this.contactName = contactName;
         this.email = email;
         this.phoneNo = phoneNo;
+        ingredientList = new HashSet<>();
     }
 
     public int getId() {
@@ -42,9 +47,17 @@ public class Supplier {
     public String getPhoneNo() {
         return phoneNo;
     }
+    
+    public Set<SupplierIngredient> getIngredientList(){
+        return ingredientList;
+    }
 
     public void setId(int newid) {
         id = newid;
+    }
+    
+    public void setIngredientList(Set<SupplierIngredient> ingredientList){
+        this.ingredientList = ingredientList;
     }
 
     public void setAttString(String what, String value) {
