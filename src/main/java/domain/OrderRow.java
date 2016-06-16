@@ -3,48 +3,47 @@ package domain;
 public class OrderRow {
     
     private Ingredient ingredient;
-    private int amount;
-    private double prize;  
     private Order order;
+    private Supplier supplier;
+    private int amount;  
     
-    public OrderRow(Ingredient ingredient, int amount, double prize, Order order){
+    public OrderRow(Ingredient ingredient, Order order, Supplier supplier, int amount){
         this.ingredient = ingredient;
-        this.amount = amount;
-        this.prize = prize;
         this.order = order;
+        this.supplier = supplier;
+        this.amount = amount;
     }
     
     public Ingredient getIngredient(){
         return ingredient;
     }
     
-    public int getAmount(){
-        return amount;
-    }
-    
-    public double getPrize(){
-        return prize;
-    }
-    
     public Order getOrder(){
         return order;
     }
     
+    public Supplier getSupplier(){
+        return supplier;
+    }
+    
+    public int getAmount(){
+        return amount;
+    }
     
     public void setIngredient(Ingredient ing){
         ingredient = ing;
     }
     
-    public void setAmount(int amount){
-        this.amount = amount;
-    }
-    
-    public void setPrize(double prize){
-        this.prize = prize;
-    }
-    
     public void setOrder(Order order){
         this.order = order;
+    }
+    
+    public void setSupplier(Supplier sup){
+        supplier = sup;
+    }
+    
+    public void setAmount(int amount){
+        this.amount = amount;
     }
 }
 

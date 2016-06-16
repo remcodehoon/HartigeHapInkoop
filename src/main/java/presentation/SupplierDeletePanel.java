@@ -98,7 +98,7 @@ public class SupplierDeletePanel extends JPanel {
         model.setColumnIdentifiers(colName);
         table = new JTable(model);
         spTable = new JScrollPane(table);
-        spTable.setBounds(850, 140, 350, 345);
+        spTable.setBounds(630, 140, 350, 345);
         add(spTable);
         
         int[] colWidth = new int[3];

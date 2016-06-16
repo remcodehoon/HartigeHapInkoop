@@ -75,8 +75,8 @@ public class OrderDeletePanel extends JPanel {
         field3.setText(String.valueOf(selOrder.getDate()));
         field4.setText(String.valueOf(m.getOrderStatus(selOrder.getStatusId())));
         field6.setText(String.valueOf(selOrder.getEmployeeId()));
-        if(selOrder.getFkey() != 0)
-            field5.setText(String.valueOf(m.getSupplier(selOrder.getFkey()).getName()));
+        if(selOrder.getSupplier() != null)
+            field5.setText(String.valueOf(selOrder.getSupplier().getName()));
         else
             field5.setText("Order heeft nog geen leverancier");
     }

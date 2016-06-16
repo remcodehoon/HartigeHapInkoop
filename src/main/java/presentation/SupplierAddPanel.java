@@ -57,8 +57,8 @@ public class SupplierAddPanel extends JPanel {
         add(c.createLabel("[max 14 getallen]", 460, 340, 160, 30, "left"));
         
         add(c.createLabel("Kies een ingrediënt", 630, 140, 220, 30, "left"));
-        add(c.createLabel("Aantal [max 11 getallen]", 630, 220, 70, 30, "left"));
-        add(c.createLabel("Prijs [max 8 getallen]", 630, 300, 70, 30, "left"));
+        add(c.createLabel("Aantal [max 11 getallen]", 630, 220, 220, 30, "left"));
+        add(c.createLabel("Prijs [max 8 getallen]", 630, 300, 220, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -149,6 +149,15 @@ public class SupplierAddPanel extends JPanel {
         button4.setBounds(730, 380, 80, 30);
         add(button4);
 
+    }
+    
+    public void setSupplier(){
+        ArrayList<String> ingNames = m.getIngredientNames();
+        String[] ingredients = ingNames.stream().toArray(String[]::new);
+        box1.removeAllItems();
+        for(String str : ingredients) {
+           box1.addItem(str);
+        }
     }
     
     public void refreshOrderRow() {

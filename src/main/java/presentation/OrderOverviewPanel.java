@@ -64,7 +64,7 @@ public class OrderOverviewPanel extends JPanel {
         colWidth[4] = 130;
 
         table = new JTable(model);
-        this.refreshTable();
+        //this.refreshTable();
         spTable = new JScrollPane(table);
         spTable.setBounds(25, 55, 750, 345);
         add(spTable);
@@ -123,7 +123,10 @@ public class OrderOverviewPanel extends JPanel {
         model.setRowCount(0);
         Set<Order> orderList = m.updateTableOrder();
         for(Order o : orderList) {
-            model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), m.getSupplier(o.getFkey()).getName()});
+            if(o.getSupplier() != null)
+                model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
+            else
+                model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
         }
         table.setModel(model);
         model.fireTableDataChanged();

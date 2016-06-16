@@ -108,7 +108,7 @@ public class SupplierDAO {
         return list;
     }
     
-    public Set<SupplierIngredient> updateSupplierIngredients() {
+    public Set<SupplierIngredient> getAllSupplierIngredients() {
         Set<SupplierIngredient> list = new HashSet<>();
         Supplier sup;
         Ingredient ing;
@@ -184,7 +184,6 @@ public class SupplierDAO {
             int valueID = sup.getId();
             if (valueID == id) {
                 connection.openConnection();
-                log.log(Level.SEVERE, "ID's match, query is executed");
                 String selectSQL = "UPDATE `23ivp4a`.`supplier` SET `id` =" + String.valueOf(valueID)
                 + ",`name` = '" + sup.getName() + "', `address` = '" + sup.getAddress() + "', `postalCode` = '" + sup.getPostalCode()
                     + "', `contactName` = '" + sup.getContactName() + "', `email` = '" + sup.getEmail() + "', `phoneNo` = '" + sup.getPhoneNo()
@@ -193,11 +192,27 @@ public class SupplierDAO {
                 connection.closeConnection();
             }
     }
+    
+    public void updateSupplierIngredient(Set<SupplierIngredient> list, int id) {
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
+        for(SupplierIngredient i : list){
+                selectSQL += "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
+        }
+        selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
+    }
 
     public void deleteSupplier(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `23ivp4a`.`supplier` WHERE `id` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "DELETE FROM `23ivp4a`.`supplier` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }

@@ -54,6 +54,10 @@ public class SupplierUpdatePanel extends JPanel {
         add(c.createLabel("[max 45 char]", 460, 260, 160, 30, "left"));
         add(c.createLabel("[max 45 char]", 460, 300, 160, 30, "left"));
         add(c.createLabel("[max 14 getallen]", 460, 340, 160, 30, "left"));
+        
+        add(c.createLabel("Kies een ingrediënt", 630, 140, 220, 30, "left"));
+        add(c.createLabel("Aantal [max 11 getallen]", 630, 220, 220, 30, "left"));
+        add(c.createLabel("Prijs [max 8 getallen]", 630, 300, 220, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -92,7 +96,19 @@ public class SupplierUpdatePanel extends JPanel {
         add(button2);
 
         list = new HashSet<>();
-        model = new DefaultTableModel();
+        model = new DefaultTableModel() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            //Cellen kunnen niet aangepast worden
+            public boolean isCellEditable(int row, int column) {
+                if(column == 0){
+                    return false;
+                } else
+                    return true;
+            }
+        ;
+        }; 
         String[] colName = {"Ingrediënt", "Aantal", "Prijs"};
         model.setColumnIdentifiers(colName);
         table = new JTable(model);
@@ -145,6 +161,7 @@ public class SupplierUpdatePanel extends JPanel {
         field7.setText(selSup.getPhoneNo());
         id = selSup.getId();
         model.setRowCount(0);
+        list = selSup.getIngredientList();
         originalList = new HashSet<>();
         for(SupplierIngredient o : selSup.getIngredientList()) {
             model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice()});
@@ -153,6 +170,13 @@ public class SupplierUpdatePanel extends JPanel {
         //System.out.println(selSup.getIngredientList().size());
         table.setModel(model);
         model.fireTableDataChanged();
+        
+        ArrayList<String> ingNames = m.getIngredientNames();
+        String[] ingredients = ingNames.stream().toArray(String[]::new);
+        box1.removeAllItems();
+        for(String str : ingredients) {
+           box1.addItem(str);
+        }
     }
     
     public void refreshOrderRow() {
@@ -165,12 +189,12 @@ public class SupplierUpdatePanel extends JPanel {
     }
     
     public void makeListFromTable() {
+        list.clear();
         Supplier sup = m.getSupplier(id);
         for (int count = 0; count < model.getRowCount(); count++){
             SupplierIngredient newSupIng = new SupplierIngredient(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),sup,
                     Integer.parseInt(model.getValueAt(count, 1).toString()),Double.parseDouble(model.getValueAt(count, 2).toString()));
             list.add(newSupIng);
-            System.out.println(newSupIng.toString());
         }
     }
 
@@ -217,32 +241,14 @@ public class SupplierUpdatePanel extends JPanel {
                     updateSupplier.setAttString("contactName", string5);
                     updateSupplier.setAttString("email", string6);
                     updateSupplier.setAttString("phoneNo", string7);
-                    m.updateSupplier(id, updateSupplier);
-                    label1.setText("Leverancier is gewijzigd!");
                     makeListFromTable();
-                    Set<SupplierIngredient> updateList = new HashSet<>();
-                    for(SupplierIngredient i : list){
-                        boolean b = false;
-                        for(SupplierIngredient o : originalList){
-                            if(i.getIngredient().getId() == o.getIngredient().getId()){
-                                b = true;
-                                if(i.getPrice() != o.getPrice() || i.getQuantity() != o.getQuantity())
-                                    updateList.add(i);
-                            }
-                        } 
-                        if(!b){ // new ingredient (handmatig toegevoegd)
-                            updateList.add(i);
-                        }
-                    }
-                    for(SupplierIngredient o : updateList)
-                        System.out.println(o.toString());
+                    m.updateSupplier(id, updateSupplier, list);
+                    label1.setText("Leverancier is gewijzigd!");
                 } else {
                     label1.setText("Leverancier is niet geselecteerd, ga terug naar vorige scherm!");
                 }
             } catch (Exception f){
-                message = f.getMessage();  
-            } finally {
-                label1.setText(message);
+                label1.setText(f.getMessage());
             }
         }
     }
@@ -259,7 +265,7 @@ public class SupplierUpdatePanel extends JPanel {
                     throw new Exception("Fout in Aantal.");
                 if(string2.length() > 9 || string1.length() < 1)
                     throw new Exception("Fout in Prijs.");
-                Supplier testSupplier = new Supplier(m.getSupplierMaxId(), "", "", "", "", "", "");
+                Supplier testSupplier = m.getSupplier(id);
                 Ingredient checkIngredient = m.getIngredient((String) box1.getSelectedItem());
                 int amount = Integer.parseInt(field21.getText());
                 double prise = Double.parseDouble(field22.getText());

@@ -32,7 +32,7 @@ public class Manager {
     public Manager() {
         supDAO = new SupplierDAO(this);
         ingDAO = new IngredientDAO();
-        orderDAO = new OrderDAO();
+        orderDAO = new OrderDAO(this);
         //orderRowDAO = new OrderRowDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
@@ -47,7 +47,8 @@ public class Manager {
         ingList = ingDAO.updateIngredients();
         orderList = orderDAO.updateOrders();
         supList = supDAO.updateSuppliers();
-        supIngList = supDAO.updateSupplierIngredients();
+        supIngList = supDAO.getAllSupplierIngredients();
+        orderRowList = orderDAO.updateOrderRows();
         updateSupplierIngredientList();
     }
     
@@ -267,7 +268,7 @@ public class Manager {
      * @param id -> Naam
      * @param updateSupplier -> Adres
      */
-    public void updateSupplier(int id, Supplier updateSupplier) {
+    public void updateSupplier(int id, Supplier updateSupplier, Set<SupplierIngredient> list) {
         supList.stream().filter((i) -> (i.getId() == id)).map((i) -> {
             i.setAttString("name",updateSupplier.getName());
             return i;
@@ -287,6 +288,7 @@ public class Manager {
             i.setAttString("phoneNo",updateSupplier.getPhoneNo());
         });
         supDAO.updateSupplier(updateSupplier, id);
+        supDAO.updateSupplierIngredient(list, id);
     }
 
     /**
@@ -399,7 +401,7 @@ public class Manager {
         Order order = null;
         for(Order i : orderList){
             if(i.getNr() == a){
-                order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId(),i.getFkey());
+                order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
                 //order.setSupplier(i.get);
             }
         }
@@ -526,8 +528,29 @@ public class Manager {
         return returnstatus;
     }
     //-------------------* Order Row Info *------------------------------
+    public Set<OrderRow> getAllOrderRows(){
+        orderRowList = orderDAO.updateOrderRows();
+        return orderRowList;
+    }
+    
     public void addOrderRow(OrderRow newOrderRow) {
         orderRowList.add(newOrderRow); 
         //orderRowDAO.addOrder(newOrderRow);
+    }
+    
+    public Set<SupplierIngredient> getSupplierIngredientList(){
+        supIngList = supDAO.getAllSupplierIngredients();
+        return supIngList;
+    }
+    
+    public Set<SupplierIngredient> getSupplierIngredientList(Supplier sup){
+        supIngList = supDAO.getAllSupplierIngredients();
+        Set<SupplierIngredient> list = new HashSet<>();
+        for(SupplierIngredient i : supIngList){
+            if(i.getSupplier().getId() == sup.getId()){
+                list.add(i);
+            }
+        }
+        return list;
     }
 }

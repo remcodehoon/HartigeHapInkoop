@@ -155,6 +155,7 @@ public class Controller {
     
     private void showSupplierAdd() {
         frame2.setContentPane(panel21);
+        panel21.setSupplier();
         panel21.setVisible(true);
         frame2.setVisible(true);
     }
@@ -207,6 +208,7 @@ public class Controller {
     
     private void showOrderAdd() {
         frame5.setContentPane(panel51);
+        panel51.setOrder();
         panel51.setVisible(true);
         frame5.setVisible(true);
     }

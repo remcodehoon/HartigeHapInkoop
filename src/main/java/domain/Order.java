@@ -8,18 +8,17 @@ import java.util.Iterator;
  * @author Mart
  */
 public class Order {
-    private int nr, statusId, employeeId, fkey;
+    private int nr, statusId, employeeId;
     private String date;
     private Supplier supplier;
     private Set<OrderRow> orders;
 
-    public Order(int nr, String date, int statusId, int employeeId, int fkey) {
+    public Order(int nr, String date, int statusId, int employeeId) {
         this.nr = nr;
         this.date = date;
         this.statusId = statusId;
         this.employeeId = employeeId;
-        this.fkey = fkey;
-        supplier = null;
+        this.supplier = null;
         orders = new HashSet<>();
     }
 
@@ -37,10 +36,6 @@ public class Order {
 
     public int getEmployeeId() {
         return employeeId;
-    }
-    
-    public int getFkey() {
-        return fkey;
     }
     
     public Supplier getSupplier() {
@@ -66,10 +61,7 @@ public class Order {
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
-    
-    public void SetFkey(int fkey) {
-        this.fkey = fkey;
-    }
+
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;

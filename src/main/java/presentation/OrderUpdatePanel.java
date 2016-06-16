@@ -4,6 +4,8 @@ import businesslogic.Manager;
 import domain.Ingredient;
 import domain.Order;
 import domain.OrderRow;
+import domain.Supplier;
+import domain.SupplierIngredient;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,6 +79,16 @@ public class OrderUpdatePanel extends JPanel {
         String[] suppliers = supplierNames.stream().toArray(String[]::new);
         box2 = new JComboBox(suppliers);
         box2.setBounds(250, 260, 200, 30);
+        box2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                JComboBox comboBox = (JComboBox) event.getSource();
+                //System.out.println(comboBox.getSelectedItem());
+                if(comboBox.getSelectedItem() != null ){
+                    Supplier sup = m.getSupplier((String) comboBox.getSelectedItem());
+                    updateTable(sup);
+                }
+            }
+        });
         add(box2);
         field5 = new TextField();
         field5.setBounds(250, 300, 200, 30);
@@ -98,7 +110,10 @@ public class OrderUpdatePanel extends JPanel {
             @Override
             //Cellen kunnen niet aangepast worden
             public boolean isCellEditable(int row, int column) {
-                return false;
+                if(column == 3){
+                    return true;
+                } else
+                    return false;
             }
         ;
         }; 
@@ -148,18 +163,26 @@ public class OrderUpdatePanel extends JPanel {
         field2.setText(String.valueOf(id));
         field3.setText(String.valueOf(selOrder.getDate()));
         box1.setSelectedIndex(selOrder.getStatusId() - 1);
-        box2.setSelectedIndex(selOrder.getFkey());
+        
         field5.setText(String.valueOf(selOrder.getEmployeeId()));
-        if(selOrder.getSupplier() != null)
+        if(selOrder.getSupplier() != null){
             label2.setText(selOrder.getSupplier().getName());
-        list = selOrder.getOrderRows();
-    }
-    
-    public void refreshOrderRow() {
-        model.setRowCount(0);
-        for(OrderRow o : list) {
-            model.addRow(new Object[]{o.getIngredient().getName(), o.getAmount(), o.getPrize()});
+            box2.setSelectedItem(selOrder.getSupplier().getName());
         }
+        
+        list = m.getAllOrderRows();
+        Set<SupplierIngredient> supIngList = m.getSupplierIngredientList();
+        model.setRowCount(0);
+        int x = 0;
+        for(OrderRow i : list){
+            for(SupplierIngredient o : supIngList) {
+                if(i.getIngredient().getId() == o.getIngredient().getId() && i.getSupplier().getId() == o.getSupplier().getId()){
+                    model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice(),i.getAmount()});
+                }
+                x++;
+            }
+        }
+        System.out.println(x);
         table.setModel(model);
         model.fireTableDataChanged();
     }
@@ -193,7 +216,6 @@ public class OrderUpdatePanel extends JPanel {
                     updateOrder.setStatusId(status);
                     updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
                     updateOrder.setSupplier(m.getSupplier((String) box2.getSelectedItem()));
-                    updateOrder.SetFkey(m.getSupplier((String) box2.getSelectedItem()).getId());
                     updateOrder.setOrderRows(list);
                     for(OrderRow i : list) {
                         i.setOrder(updateOrder);
@@ -214,6 +236,7 @@ public class OrderUpdatePanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            /*
             Order updateOrder = m.getOrder(id);
             Ingredient checkIngredient = m.getIngredient((String) box3.getSelectedItem());
             int amount = Integer.parseInt(field4.getText());
@@ -227,6 +250,7 @@ public class OrderUpdatePanel extends JPanel {
                 list.add(orderRow);
             }
             refreshOrderRow();
+            */
         }
     }
 
