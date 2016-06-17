@@ -70,6 +70,16 @@ public class Manager {
         
         return loginDAO.checkLoginInfo(username, password);
     }
+    
+    public int getEmployeeFunctionId(String username, String password) {
+        
+        return loginDAO.getEmployeeFunctionId(username, password);
+    }
+    
+    public int getEmployeeFunctionId(int id) {
+        
+        return loginDAO.getEmployeeFunctionId(id);
+    }
 
     public int getNewId(String what){
         switch(what){

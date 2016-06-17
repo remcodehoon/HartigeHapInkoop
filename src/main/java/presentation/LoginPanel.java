@@ -1,7 +1,6 @@
 package presentation;
 
 import businesslogic.Manager;
-import domain.Employee;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,14 +62,18 @@ public class LoginPanel extends JPanel {
             String u = username.getText();
             
             if(m.checkLoginInfo(u, p)) {
-                //Employee emp = new Employee(m.getEmployeeId(u, p),u);
-                m.setEmployeeId(m.getEmployeeId(u, p));
-                notificationLabel.setText("Welkom");
-                controller.createFrames();
-                controller.makeVisible("Mainmenu");
-            } else {
+                if(m.getEmployeeFunctionId(u, p) == 7 || m.getEmployeeFunctionId(u, p) == 8){
+                    m.setEmployeeId(m.getEmployeeId(u, p));
+                    notificationLabel.setText("Welkom");
+                    controller.createFrames();
+                    controller.makeVisible("Mainmenu");
+                } else {
+                    notificationLabel.setText("U bent niet bevoegd om dit systeem te betreden");
+                }
+            } else 
                 notificationLabel.setText("Gebruiksnaam/wachtwoord combinatie onjuist");
             }
         }
     }
-}
+
+

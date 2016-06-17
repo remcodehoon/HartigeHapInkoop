@@ -24,7 +24,7 @@ public class LoginDAO {
         // Open connection
         connection.openConnection();
         // Query
-        String selectSQL = "SELECT id FROM employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\"";
+        String selectSQL = "SELECT id FROM employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\" LIMIT 1";
         
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
@@ -41,6 +41,56 @@ public class LoginDAO {
         }
         return false;
     }
+    
+    public int getEmployeeFunctionId(String username, String password) {
+        // Instantiate
+        DatabaseConnection connection = new DatabaseConnection();
+        // Open connection
+        connection.openConnection();
+        // Query
+        String selectSQL = "SELECT functionId FROM employee WHERE userName = \"" + username + "\" AND password = \"" + password + "\" AND (functionId = 7 OR functionId = 8) LIMIT 1";
+        
+        // Execute query
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            if (resultset.first()) {
+                return resultset.getInt("functionId");
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
+            return 0;
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return 0;
+    }
+    
+    public int getEmployeeFunctionId(int id) {
+        // Instantiate
+        DatabaseConnection connection = new DatabaseConnection();
+        // Open connection
+        connection.openConnection();
+        // Query
+        String selectSQL = "SELECT functionId FROM employee WHERE id = " + id + " AND (functionId = 7 OR functionId = 8) LIMIT 1";
+        
+        // Execute query
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            if (resultset.first()) {
+                return resultset.getInt("functionId");
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
+            return 0;
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return 0;
+    }
+    
+    
     
     public int getEmployeeId(String username, String password) {
         // Instantiate
