@@ -115,14 +115,14 @@ public class OrderAddPanel extends JPanel {
         // Breedte van de kolommen wordt gedefinieerd
         int[] colWidth = new int[4];
         colWidth[0] = 200;
-        colWidth[1] = 150;
-        colWidth[2] = 50;
-        colWidth[3] = 50;
+        colWidth[1] = 200;
+        colWidth[2] = 70;
+        colWidth[3] = 100;
 
         table = new JTable(model);
         //this.refreshTable();
         spTable = new JScrollPane(table);
-        spTable.setBounds(630, 140, 450, 345);
+        spTable.setBounds(630, 140, 570, 345);
         add(spTable);
 
         TableColumn column;
@@ -145,7 +145,7 @@ public class OrderAddPanel extends JPanel {
     public void makeListFromTable() {
         list.clear();
         Supplier sup = m.getSupplier((String) box2.getSelectedItem());
-        Order testOrder = new Order(0, "", 0, 0);
+        Order testOrder = new Order(0,"", "", 0, 0);
         for (int count = 0; count < model.getRowCount(); count++){
             OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
                     sup,Integer.parseInt(model.getValueAt(count, 3).toString()));
@@ -187,7 +187,7 @@ public class OrderAddPanel extends JPanel {
                     throw new Exception("Fout in Datum.");
                 Supplier sup = m.getSupplier((String) box2.getSelectedItem());
                 int empId = m.getEmployeeId();
-                Order newOrder = new Order(Integer.parseInt(string1), string2, status, empId);
+                Order newOrder = new Order(m.getNewId("Order"),string1, string2, status, empId);
                 makeListFromTable();
                 newOrder.setSupplier(sup);
                 newOrder.setOrderRows(list);

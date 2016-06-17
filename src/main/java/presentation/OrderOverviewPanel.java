@@ -53,20 +53,21 @@ public class OrderOverviewPanel extends JPanel {
         ;
         }; 
         // Kolommen voor het model worden aangemaakt
-        String[] colName = {"Bestelling nummer", "Datum", "Status", "Gebruiker nummer","Leverancier"};
+        String[] colName = {"Id","Bestelling nummer", "Datum", "Status", "Gebruiker nummer","Leverancier"};
         model.setColumnIdentifiers(colName);
         // Breedte van de kolommen wordt gedefinieerd
-        int[] colWidth = new int[5];
-        colWidth[0] = 130;
+        int[] colWidth = new int[6];
+        colWidth[0] = 50;
         colWidth[1] = 130;
         colWidth[2] = 130;
         colWidth[3] = 130;
         colWidth[4] = 130;
+        colWidth[5] = 130;
 
         table = new JTable(model);
         //this.refreshTable();
         spTable = new JScrollPane(table);
-        spTable.setBounds(25, 55, 750, 345);
+        spTable.setBounds(25, 55, 800, 345);
         add(spTable);
 
         TableColumn column;
@@ -124,9 +125,9 @@ public class OrderOverviewPanel extends JPanel {
         Set<Order> orderList = m.updateTableOrder();
         for(Order o : orderList) {
             if(o.getSupplier() != null)
-                model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
+                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
             else
-                model.addRow(new Object[]{o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
+                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
         }
         table.setModel(model);
         model.fireTableDataChanged();
@@ -151,7 +152,7 @@ public class OrderOverviewPanel extends JPanel {
                    label1.setText("Geaccepteerde orders kunnen niet gewijzigd worden"); 
                 } else {
                     int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                    Order sel = m.getOrder(index);
+                    Order sel = m.getOrderWithNr(index);
                     controller.makeVisible("Order_update", sel);
                 }
             } else {
@@ -167,7 +168,7 @@ public class OrderOverviewPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                Order selOrder = m.getOrder(index);
+                Order selOrder = m.getOrderWithNr(index);
                 controller.makeVisible("Order_delete", selOrder);
             }
             label1.setText("Selecteer eerst een order om te deleten!");

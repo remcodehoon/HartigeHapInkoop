@@ -118,18 +118,19 @@ public class OrderUpdatePanel extends JPanel {
         ;
         }; 
         // Kolommen voor het model worden aangemaakt
-        String[] colName = {"Ingrediënt", "Hoeveelheid", "prijs"};
+        String[] colName = {"Ingrediënt", "Per hoeveelheid", "prijs", "Aantal"};
         model.setColumnIdentifiers(colName);
         // Breedte van de kolommen wordt gedefinieerd
-        int[] colWidth = new int[3];
-        colWidth[0] = 120;
-        colWidth[1] = 100;
-        colWidth[2] = 50;
+        int[] colWidth = new int[4];
+        colWidth[0] = 200;
+        colWidth[1] = 200;
+        colWidth[2] = 70;
+        colWidth[3] = 100;
 
         table = new JTable(model);
         //this.refreshTable();
         spTable = new JScrollPane(table);
-        spTable.setBounds(850, 140, 270, 345);
+        spTable.setBounds(850, 140, 570, 345);
         add(spTable);
 
         TableColumn column;
@@ -157,10 +158,26 @@ public class OrderUpdatePanel extends JPanel {
         add(button3);
 
     }
+    
+    public void updateTable(Supplier sup){
+        Set<OrderRow> entireList = m.getAllOrderRows();
+        Set<SupplierIngredient> supIngList = sup.getIngredientList();
+        model.setRowCount(0);
+        for(OrderRow i : entireList){
+            for(SupplierIngredient o : supIngList) {
+                if(i.getIngredient().getId() == o.getIngredient().getId() && i.getSupplier().getId() == o.getSupplier().getId() 
+                        && i.getOrder().getId() == id){
+                    model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice(),i.getAmount()});
+                }
+            }
+        }
+        table.setModel(model);
+        model.fireTableDataChanged();
+    }
 
     public void setOrder(Order selOrder) {
-        id = selOrder.getNr();
-        field2.setText(String.valueOf(id));
+        id = selOrder.getId();
+        field2.setText(selOrder.getNr());
         field3.setText(String.valueOf(selOrder.getDate()));
         box1.setSelectedIndex(selOrder.getStatusId() - 1);
         
@@ -169,24 +186,19 @@ public class OrderUpdatePanel extends JPanel {
             label2.setText(selOrder.getSupplier().getName());
             box2.setSelectedItem(selOrder.getSupplier().getName());
         }
-        
-        list = m.getAllOrderRows();
-        Set<SupplierIngredient> supIngList = m.getSupplierIngredientList();
-        model.setRowCount(0);
-        int x = 0;
-        for(OrderRow i : list){
-            for(SupplierIngredient o : supIngList) {
-                if(i.getIngredient().getId() == o.getIngredient().getId() && i.getSupplier().getId() == o.getSupplier().getId()){
-                    model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice(),i.getAmount()});
-                }
-                x++;
-            }
-        }
-        System.out.println(x);
-        table.setModel(model);
-        model.fireTableDataChanged();
     }
 
+    public void makeListFromTable() {
+        list.clear();
+        Supplier sup = m.getSupplier((String) box2.getSelectedItem());
+        Order testOrder = new Order(0,"", "", 0, 0);
+        for (int count = 0; count < model.getRowCount(); count++){
+            OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
+                    sup,Integer.parseInt(model.getValueAt(count, 3).toString()));
+            list.add(newOrderRow);
+        }
+    }
+    
     private class ButtonHandler implements ActionListener {
 
         @Override
@@ -209,20 +221,19 @@ public class OrderUpdatePanel extends JPanel {
                     if(field5.getText().length() != 1 || !m.checkNumbers(field5.getText()))
                         throw new Exception("Fout in Medewerkernummer.");
                     
-                    Order updateOrder = m.getOrder(id);
-                    updateOrder.setNr(Integer.parseInt(field2.getText()));
+                    Order updateOrder = m.getOrderWithNr(id);
+                    updateOrder.setNr(field2.getText());
                     updateOrder.setDate(field3.getText());
                     int status = m.getOrderStatus((String) box1.getSelectedItem() + 1);
                     updateOrder.setStatusId(status);
                     updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
                     updateOrder.setSupplier(m.getSupplier((String) box2.getSelectedItem()));
-                    updateOrder.setOrderRows(list);
+                    updateOrder.setOrderRows( list);
                     for(OrderRow i : list) {
                         i.setOrder(updateOrder);
-                    }
-                    m.updateOrder(id, updateOrder);
+                    }                 
+                    m.updateOrder(id, updateOrder, list);
                     label1.setText("Bestelling is gewijzigd!");
-                    id = Integer.parseInt(field2.getText());
                 } catch (Exception ex) {
                     label1.setText("Error: " + ex.getMessage());
                 }

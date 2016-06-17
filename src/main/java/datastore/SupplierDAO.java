@@ -21,18 +21,18 @@ public class SupplierDAO {
         this.m = m;
     }
     
-    public int getMaxID() {        
+    public int getNextId() {            
         int ID = 0;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "SELECT id FROM supplier WHERE id = (SELECT max(id) FROM supplier)";
+        String selectSQL = "SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'supplier'";
 
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
         //System.out.println(resultset);
         try {
             if (resultset.first()) {
-                ID = resultset.getInt("id");
+                ID = resultset.getInt("auto_increment");
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -77,7 +77,7 @@ public class SupplierDAO {
         return supplier;
     }
     
-    public Set<Supplier> updateSuppliers() {
+    public Set<Supplier> getAllSuppliers() {
         Set<Supplier> list = new HashSet<>();
         Supplier sup;
         DatabaseConnection connection = new DatabaseConnection();
@@ -167,12 +167,16 @@ public class SupplierDAO {
         connection.closeConnection();
     }
     
-    public void addSupplierOrderList(Set<SupplierIngredient> list) {
+    public void addSupplierOrderList(Supplier sup) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
-        for(SupplierIngredient i : list){
-                selectSQL += "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
+        Set<SupplierIngredient> supList = sup.getIngredientList();
+        if(!supList.isEmpty()){
+            for(SupplierIngredient i : supList){
+                selectSQL = selectSQL + "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
+            }
+            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
         }
         selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
         connection.executeSQLInsertStatement(selectSQL);

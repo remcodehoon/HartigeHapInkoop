@@ -21,6 +21,28 @@ public class OrderDAO {
         this.m = m;
     }
     
+    public int getNextId() {        
+        int ID = 0;
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'stockorder'";
+
+        // Execute query
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        //System.out.println(resultset);
+        try {
+            if (resultset.first()) {
+                ID = resultset.getInt("auto_increment");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return ID;
+    }
+    
     public int getOrderId(int orderNo) {
         int order = 0;
         DatabaseConnection connection = new DatabaseConnection();
@@ -39,7 +61,7 @@ public class OrderDAO {
     }
     
     
-    public Order getOrder(int a) {
+    public Order getOrderWithNr(int a) {
         Order order = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -73,7 +95,7 @@ public class OrderDAO {
         return order;
     }
     
-    public Set<Order> updateOrders() {
+    public Set<Order> getAllOrders() {
         Set<Order> list = new HashSet<>();
         Order order;
         DatabaseConnection connection = new DatabaseConnection();
@@ -85,11 +107,12 @@ public class OrderDAO {
 
         try {
             while (resultset.next()) {
-                int nr = resultset.getInt("orderNo");
+                int id = resultset.getInt("id");
+                String nr = resultset.getString("orderNo");
                 String date = resultset.getString("orderDate");
                 int statusId = resultset.getInt("statusId");
                 int employeeId = resultset.getInt("employeeId");
-                order = new Order(nr, date, statusId, employeeId);
+                order = new Order(id, nr, date, statusId, employeeId);
                 list.add(order);
             }
         } catch (SQLException e) {
@@ -100,7 +123,7 @@ public class OrderDAO {
         return list;
     }
     
-    public Set<OrderRow> updateOrderRows() {
+    public Set<OrderRow> getAllOrderRows() {
         Set<OrderRow> list = new HashSet<>();
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -134,12 +157,13 @@ public class OrderDAO {
         Order order = null;
         try {
             // Get all data
-            int nr = resultset.getInt("orderNo");
+            int id = resultset.getInt("id");
+            String nr = resultset.getString("orderNo");
             String date = resultset.getString("orderDate");
             int statusId = resultset.getInt("statusId");
             int employeeId = resultset.getInt("employeeId");
             // Create product
-            order = new Order(nr, date, statusId, employeeId);
+            order = new Order(id,nr, date, statusId, employeeId);
 
         } catch (SQLException e) {
             log.log(Level.SEVERE, e.toString(), e);
@@ -150,15 +174,15 @@ public class OrderDAO {
     public void addOrder(Order order) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "INSERT INTO `23ivp4a`.`stockorder` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES("
-            + order.getNr() + ",'" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + ");";
+        String selectSQL = "INSERT INTO `23ivp4a`.`stockorder` (`orderNo`,`orderDate`, `statusId`, `employeeId`) VALUES('"
+            + order.getNr() + "','" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + ");";
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
         System.out.print(selectSQL);
     }
     
     public void addOrderRow(Order order) {
-        int id = getOrderId(order.getNr());
+        int id = order.getId();
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`,`stockorderId`, `supplierId`, `quantity`) VALUES ";
@@ -177,12 +201,26 @@ public class OrderDAO {
 
     public void updateOrder(Order order, int id) {
         DatabaseConnection connection = new DatabaseConnection();
-        int valueID = order.getNr();
         connection.openConnection();
         log.log(Level.SEVERE, "ID's match, query is executed");
-        String selectSQL = "UPDATE `23ivp4a`.`stockorder` SET `orderNo` =" + valueID
-            + ",`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
-            + ", `employeeId` = " + order.getEmployeeId() + " WHERE `stockorder`.`orderNo` = " + id;
+        String selectSQL = "UPDATE `23ivp4a`.`stockorder` SET `orderNo` ='" + order.getNr()
+            + "',`orderDate` = '" + order.getDate() + "', `statusId` = " + order.getStatusId()
+            + ", `employeeId` = " + order.getEmployeeId() + " WHERE `stockorder`.`id` = " + id;
+        connection.executeSQLInsertStatement(selectSQL);
+        connection.closeConnection();
+    }
+    public void updateOrderRow(Set<OrderRow> list, int id) {
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `stockorderId` = " + id;
+        System.out.println(selectSQL);
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`, `stockorderId`, `supplierId`, `quantity`) VALUES";
+        for(OrderRow i : list){
+                selectSQL += "(" + i.getSupplier().getId() + "," + i.getOrder().getId() + "," + i.getIngredient().getId() + "," + i.getAmount()+ "),";
+        }
+        selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+        System.out.println(selectSQL);
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
@@ -210,7 +248,10 @@ public class OrderDAO {
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder` WHERE `orderNo` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `stockorderId` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        
+        selectSQL = "DELETE FROM `23ivp4a`.`stockorder` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
@@ -267,12 +308,13 @@ public class OrderDAO {
         
         try {
             while(resultset.next()) {
-                int nr = resultset.getInt("orderNo");
+                int id = resultset.getInt("id");
+                String nr = resultset.getString("orderNo");
                 String date = resultset.getString("orderDate");
                 int statusId = resultset.getInt("statusId");
                 int employeeId = resultset.getInt("employeeId");
                 // Create product
-                order = new Order(nr, date, statusId, employeeId);
+                order = new Order(id, nr, date, statusId, employeeId);
                 orderList.add(order);
             }
         }

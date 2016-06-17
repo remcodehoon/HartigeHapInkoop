@@ -8,12 +8,13 @@ import java.util.Iterator;
  * @author Mart
  */
 public class Order {
-    private int nr, statusId, employeeId;
-    private String date;
+    private int id, statusId, employeeId;
+    private String nr,date;
     private Supplier supplier;
     private Set<OrderRow> orders;
 
-    public Order(int nr, String date, int statusId, int employeeId) {
+    public Order(int id, String nr, String date, int statusId, int employeeId) {
+        this.id = id;
         this.nr = nr;
         this.date = date;
         this.statusId = statusId;
@@ -22,7 +23,11 @@ public class Order {
         orders = new HashSet<>();
     }
 
-    public int getNr() {
+    public int getId(){
+        return id;
+    }
+    
+    public String getNr() {
         return nr;
     }
 
@@ -46,7 +51,11 @@ public class Order {
         return orders;
     }
 
-    public void setNr(int newnr) {
+    public void setId(int id){
+        this.id = id;
+    }
+    
+    public void setNr(String newnr) {
         nr = newnr;
     }
     

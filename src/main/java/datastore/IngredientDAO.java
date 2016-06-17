@@ -16,6 +16,28 @@ public class IngredientDAO {
         
     }
     
+    public int getNextId() {            
+        int ID = 0;
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'ingredient'";
+
+        // Execute query
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        //System.out.println(resultset);
+        try {
+            if (resultset.first()) {
+                ID = resultset.getInt("auto_increment");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return ID;
+    }
+    
     public Ingredient getIngredient(int a) {
         Ingredient ingredient = null;
         DatabaseConnection connection = new DatabaseConnection();
@@ -50,7 +72,7 @@ public class IngredientDAO {
         return ingredient;
     }
     
-    public Set<Ingredient> updateIngredients() {
+    public Set<Ingredient> getAllIngredients() {
         Set<Ingredient> list = new HashSet<>();
         Ingredient ingredient;
         DatabaseConnection connection = new DatabaseConnection();

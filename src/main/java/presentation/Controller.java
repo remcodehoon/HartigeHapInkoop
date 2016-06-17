@@ -32,6 +32,7 @@ public class Controller {
     OrderAddPanel panel51;
     OrderUpdatePanel panel52;
     OrderDeletePanel panel53;
+    OrderInventory panel54;
     
     Controller controller;
 
@@ -66,6 +67,7 @@ public class Controller {
         panel51 = new OrderAddPanel(controller,m);
         panel52 = new OrderUpdatePanel(controller,m);
         panel53 = new OrderDeletePanel(controller,m);
+        panel54 = new OrderInventory(controller,m);
     }
     
 // Maakt een bepaald frame zichtbaar
@@ -146,7 +148,7 @@ public class Controller {
     }
     
     private void showSupplierOverview() {
-        m.updateTables();
+        //m.updateTables();
         frame2.setContentPane(panel20);
         panel20.refreshTable();
         panel20.setVisible(true);
@@ -173,7 +175,7 @@ public class Controller {
     }
     
     private void showIngredientOverview() {
-        m.updateTables();
+        //m.updateTables();
         frame3.setContentPane(panel30);
         panel30.refreshTable();
         panel30.setVisible(true);
@@ -199,7 +201,7 @@ public class Controller {
     }
     
     private void showOrderOverview() {
-        m.updateTables();
+        //m.updateTables();
         frame5.setContentPane(panel50);
         panel50.refreshTable();
         panel50.setVisible(true);

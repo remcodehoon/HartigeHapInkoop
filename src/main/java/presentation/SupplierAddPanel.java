@@ -2,7 +2,6 @@ package presentation;
 
 import businesslogic.Manager;
 import domain.Ingredient;
-import domain.OrderRow;
 import domain.Supplier;
 import domain.SupplierIngredient;
 import java.awt.TextField;
@@ -11,8 +10,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -203,9 +200,10 @@ public class SupplierAddPanel extends JPanel {
                     throw new Exception("Fout in Email.");
                 if(string5.length() <= 0 || string5.length() > 14)
                     throw new Exception("Fout in Telefoonnummer.");
-                Supplier newSupplier = new Supplier(0, string2, string3, string4, string5, string6, string7);
+                Supplier newSupplier = new Supplier(m.getNewId("Supplier"), string2, string3, string4, string5, string6, string7);
+                newSupplier.setIngredientList(list);
                 m.addSupplier(newSupplier);
-                m.addSupplierRows(list);
+                m.addSupplierRows(newSupplier);
                 message = "Nieuwe leverancier is aangemaakt!";
             } catch (Exception f){
                 message = f.getMessage();  

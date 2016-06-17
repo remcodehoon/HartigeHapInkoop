@@ -95,7 +95,7 @@ public class IngredientAddPanel extends JPanel {
                     throw new Exception("Fout in Minimum Voorraad.");
                 if(string5.length() <= 0 || !m.checkNumbers(string5) || string5.length() > 11)
                     throw new Exception("Fout in Maximum Voorraad.");
-                        Ingredient newIngredient = new Ingredient(0, string2, Integer.parseInt(string3), Integer.parseInt(string4), Integer.parseInt(string5));
+                        Ingredient newIngredient = new Ingredient(m.getNewId("Ingredient"), string2, Integer.parseInt(string3), Integer.parseInt(string4), Integer.parseInt(string5));
                         m.addIngredient(newIngredient);
             } catch(NumberFormatException f) {
                 message = f.getMessage();

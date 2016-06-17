@@ -4,13 +4,11 @@ import datastore.IngredientDAO;
 import datastore.LoginDAO;
 import datastore.OrderDAO;
 import datastore.SupplierDAO;
-import domain.Employee;
 import domain.Ingredient;
 import domain.Order;
 import domain.OrderRow;
 import domain.Supplier;
 import domain.SupplierIngredient;
-import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,7 +18,6 @@ public class Manager {
     private static SupplierDAO supDAO;
     private static IngredientDAO ingDAO;
     private static OrderDAO orderDAO;
-    //private static OrderRowDAO orderRowDAO;
     private static LoginDAO loginDAO;
     private int employeeId;
     private Set<Supplier> supList;
@@ -33,7 +30,6 @@ public class Manager {
         supDAO = new SupplierDAO(this);
         ingDAO = new IngredientDAO();
         orderDAO = new OrderDAO(this);
-        //orderRowDAO = new OrderRowDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
         supList = new HashSet<>();
@@ -44,12 +40,13 @@ public class Manager {
     }
     
     public void updateTables(){
-        ingList = ingDAO.updateIngredients();
-        orderList = orderDAO.updateOrders();
-        supList = supDAO.updateSuppliers();
+        ingList = ingDAO.getAllIngredients();
+        orderList = orderDAO.getAllOrders();
+        supList = supDAO.getAllSuppliers();
         supIngList = supDAO.getAllSupplierIngredients();
-        orderRowList = orderDAO.updateOrderRows();
+        orderRowList = orderDAO.getAllOrderRows();
         updateSupplierIngredientList();
+        updateOrderRows();
     }
     
     public void setEmployeeId(int id) {
@@ -74,6 +71,21 @@ public class Manager {
         return loginDAO.checkLoginInfo(username, password);
     }
 
+    public int getNewId(String what){
+        switch(what){
+            default:
+                return 0;
+            
+            case "Supplier":
+                return supDAO.getNextId();
+                
+            case "Ingredient":
+                return ingDAO.getNextId();    
+                
+            case "Order":
+                return orderDAO.getNextId();    
+        }      
+    }
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
@@ -147,7 +159,7 @@ public class Manager {
      * @return Ingredient set
      */
     public Set<Ingredient> updateTableIng(){
-        ingList = ingDAO.updateIngredients();
+        ingList = ingDAO.getAllIngredients();
         return ingList;
     }
     
@@ -224,7 +236,7 @@ public class Manager {
                 return i;
             }
         }
-        System.out.println("DAO USED");
+        //System.out.println("DAO USED");
         return supDAO.getSupplier(a);  
     }
     
@@ -234,7 +246,7 @@ public class Manager {
                 return i;
             }
         }
-        System.out.println("DAO USED");
+        //System.out.println("DAO USED");
         return supDAO.getSupplier(name);
     }
     
@@ -250,16 +262,16 @@ public class Manager {
         
     }
     
-    public void addSupplierRows(Set<SupplierIngredient> orderList){
-        for(SupplierIngredient i : orderList){
-            Supplier sup = supDAO.getSupplier(supDAO.getMaxID());
-            i.setSupplier(sup);
+    public void addSupplierRows(Supplier newSupplier){
+        for(SupplierIngredient i : newSupplier.getIngredientList()){
+            
+            i.setSupplier(newSupplier);
         }
-        supDAO.addSupplierOrderList(orderList);
+        supDAO.addSupplierOrderList(newSupplier);
     }
 
     public int getSupplierMaxId(){
-        return supDAO.getMaxID();
+        return supDAO.getNextId();
     }
     
     /**
@@ -312,7 +324,7 @@ public class Manager {
      * @return Set of Suppliers
      */
     public Set<Supplier> updateTableSup(){
-        supList = supDAO.updateSuppliers();
+        supList = supDAO.getAllSuppliers();
         return supList;
     }
     
@@ -393,22 +405,34 @@ public class Manager {
             }
             i.setIngredientList(newlist);
         }
-        //System.out.println(getSupplier(5).getIngredientList().size());
+    }
+    
+    public void updateOrderRows(){
+        for(Order i : orderList){
+            Set<OrderRow> newlist = new HashSet<>();
+            for(OrderRow o : orderRowList){
+                if(i.getId() == o.getOrder().getId()){
+                    newlist.add(o);
+                    i.setSupplier(o.getSupplier());
+                }
+            }
+            i.setOrderRows(newlist);
+        }
     }
     
      //-------------------* Bestelling Info *------------------------------
-    public Order getOrder(int a) {
+    public Order getOrderWithNr(int a) {
         Order order = null;
         for(Order i : orderList){
-            if(i.getNr() == a){
-                order = new Order(i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
+            if(i.getId() == a){
+                order = new Order(i.getId(), i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
                 //order.setSupplier(i.get);
             }
         }
         if(order != null) {
             return order;
         } else {
-            return orderDAO.getOrder(a);
+            return orderDAO.getOrderWithNr(a);
         }
     }
 
@@ -428,10 +452,11 @@ public class Manager {
      *
      * @param id -> Naam
      * @param updateOrder
+     * @param list
      */
-    public void updateOrder(int id, Order updateOrder) {
+    public void updateOrder(int id, Order updateOrder, Set<OrderRow> list) {
         //orderDAO.updateOrderRow(updateOrder, id);
-        orderList.stream().filter((i) -> (i.getNr() == id)).map((i) -> {
+        orderList.stream().filter((i) -> (i.getId() == id)).map((i) -> {
             i.setNr(updateOrder.getNr());
             return i;
         }).map((i) -> {
@@ -443,6 +468,7 @@ public class Manager {
         }).forEach((i) -> {
             i.setEmployeeId(updateOrder.getEmployeeId());
         });
+        orderDAO.updateOrderRow(list, id);
         orderDAO.updateOrder(updateOrder, id);
     }
 
@@ -455,7 +481,7 @@ public class Manager {
         Iterator<Order> i = orderList.iterator();
         while(i.hasNext()) {
             Order o = i.next();
-            if(o.getNr()== id) {
+            if(o.getId() == id) {
                 i.remove();
                 //orderDAO.deleteOrderRow(id);
                 orderDAO.deleteOrder(id);
@@ -468,7 +494,7 @@ public class Manager {
     }
         
     public Set<Order> updateTableOrder(){
-        orderList = orderDAO.updateOrders();
+        //orderList = orderDAO.getAllOrders();
         return orderList;
     }
     
@@ -529,7 +555,7 @@ public class Manager {
     }
     //-------------------* Order Row Info *------------------------------
     public Set<OrderRow> getAllOrderRows(){
-        orderRowList = orderDAO.updateOrderRows();
+        orderRowList = orderDAO.getAllOrderRows();
         return orderRowList;
     }
     

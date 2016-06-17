@@ -70,8 +70,8 @@ public class OrderDeletePanel extends JPanel {
     }
 
     public void setOrder(Order selOrder) {
-        id = selOrder.getNr();
-        field2.setText(String.valueOf(id));
+        id = selOrder.getId();
+        field2.setText(selOrder.getNr());
         field3.setText(String.valueOf(selOrder.getDate()));
         field4.setText(String.valueOf(m.getOrderStatus(selOrder.getStatusId())));
         field6.setText(String.valueOf(selOrder.getEmployeeId()));
