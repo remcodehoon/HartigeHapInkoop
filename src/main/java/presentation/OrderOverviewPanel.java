@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 
 public class OrderOverviewPanel extends JPanel {
 
-    private final JButton button1, button2, button3, button4, button5;
+    private final JButton button1, button2, button3, button4, button5, button6;
     private final TextField field1;
     private final JComboBox box1;
     private JLabel label1;
@@ -113,7 +113,12 @@ public class OrderOverviewPanel extends JPanel {
         button5.addActionListener(kh5);
         button5.setBounds(500, 10, 90, 40);
         add(button5);
-
+        
+        button6 = new JButton("Inventaris overzicht");
+        ButtonHandler6 kh6 = new ButtonHandler6();
+        button6.addActionListener(kh6);
+        button6.setBounds(200, 500, 200, 50);
+        add(button6);
     }
 
     /**
@@ -205,6 +210,13 @@ public class OrderOverviewPanel extends JPanel {
             }
         }
     }
+    
+    private class ButtonHandler6 implements ActionListener {
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.makeVisible("Order_inventoryItems");
+        }
+    }
 }
 

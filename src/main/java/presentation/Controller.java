@@ -131,7 +131,11 @@ public class Controller {
 
             case "Order_delete":
                 showOrderDelete();
-                break;     
+                break;
+                
+            case "Order_inventoryItems":
+                showOrderInvItems();
+                break;   
                 
             case "Login":
                 showLogin();
@@ -224,6 +228,13 @@ public class Controller {
     private void showOrderDelete() {
         frame5.setContentPane(panel53);
         panel53.setVisible(true);
+        frame5.setVisible(true);
+    }
+    
+    private void showOrderInvItems() {
+        frame5.setContentPane(panel54);
+        panel54.makeTable();
+        panel54.setVisible(true);
         frame5.setVisible(true);
     }
     

@@ -1,10 +1,13 @@
 package businesslogic;
 
 import datastore.IngredientDAO;
+import datastore.InventoryItemDAO;
 import datastore.LoginDAO;
 import datastore.OrderDAO;
 import datastore.SupplierDAO;
 import domain.Ingredient;
+import domain.InventoryItem;
+import domain.IvItemTable;
 import domain.Order;
 import domain.OrderRow;
 import domain.Supplier;
@@ -19,17 +22,21 @@ public class Manager {
     private static IngredientDAO ingDAO;
     private static OrderDAO orderDAO;
     private static LoginDAO loginDAO;
+    private static InventoryItemDAO ivItemDAO;
     private int employeeId;
     private Set<Supplier> supList;
     private Set<SupplierIngredient> supIngList;
     private Set<Ingredient> ingList;
     private Set<Order> orderList;
     private Set<OrderRow> orderRowList;
+    private Set<InventoryItem> inventoryItemList;
+    private Set<IvItemTable> ivItemTableList;
    
     public Manager() {
         supDAO = new SupplierDAO(this);
         ingDAO = new IngredientDAO();
         orderDAO = new OrderDAO(this);
+        ivItemDAO = new InventoryItemDAO();
 	loginDAO = new LoginDAO();
         employeeId = 0;
         supList = new HashSet<>();
@@ -37,6 +44,8 @@ public class Manager {
         ingList = new HashSet<>();
         orderList = new HashSet<>();
         orderRowList = new HashSet<>();
+        inventoryItemList = new HashSet<>();
+        ivItemTableList = new HashSet<>();
     }
     
     public void updateTables(){
@@ -45,6 +54,8 @@ public class Manager {
         supList = supDAO.getAllSuppliers();
         supIngList = supDAO.getAllSupplierIngredients();
         orderRowList = orderDAO.getAllOrderRows();
+        inventoryItemList = ivItemDAO.getAllInventoryItems();
+        ivItemTableList = ivItemDAO.getInventoryItemTable();
         updateSupplierIngredientList();
         updateOrderRows();
     }
@@ -93,7 +104,10 @@ public class Manager {
                 return ingDAO.getNextId();    
                 
             case "Order":
-                return orderDAO.getNextId();    
+                return orderDAO.getNextId();  
+                
+            case "InventoryItem":
+                return ivItemDAO.getNextId();      
         }      
     }
 
@@ -589,4 +603,39 @@ public class Manager {
         }
         return list;
     }
+    
+    //--------------------------------- inventory items //////////////////////
+    public void addInventoryItem(InventoryItem item){
+        inventoryItemList.add(item);
+        ivItemDAO.addInventoryItem(item);
+    }
+    
+     public void deleteInventoryItem(InventoryItem item){
+        Iterator<InventoryItem> i = inventoryItemList.iterator();
+        while(i.hasNext()) {
+            InventoryItem o = i.next();
+            if(o.getName().equals(item.getName())) {
+                i.remove();
+                ivItemDAO.deleteInventoryItem(o.getId());
+            }
+        }   
+    }
+    
+    public Set<InventoryItem> getAllInventoryItems(){
+        return inventoryItemList;
+    }
+   
+    public ArrayList<String> getInventoryItemNames(){
+        ArrayList<String> names = new ArrayList<>();
+        for(InventoryItem i : inventoryItemList){
+            names.add(i.getName());
+        }
+        return names;
+    }
+    
+    public Set<IvItemTable> getInventoryTable(){
+        return ivItemTableList;
+    }
 }
+
+
