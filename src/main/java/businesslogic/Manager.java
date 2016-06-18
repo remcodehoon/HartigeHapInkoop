@@ -338,6 +338,7 @@ public class Manager {
             Supplier o = i.next();
             if(o.getId() == id) {
                 i.remove();
+                orderDAO.deleteOrderRow(id);
                 supDAO.deleteSupplier(id);
             }
         }   

@@ -256,6 +256,14 @@ public class OrderDAO {
         connection.closeConnection();
     }
     
+     public void deleteOrderRow(int id) {
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `supplierId` = " + id;
+        connection.executeSQLDeleteStatement(selectSQL);
+        connection.closeConnection();
+    }
+    
     /*
     public void deleteOrderRow(int id) {
         DatabaseConnection connection = new DatabaseConnection();
