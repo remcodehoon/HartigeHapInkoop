@@ -62,7 +62,7 @@ public class OrderAddPanel extends JPanel {
         field3 = new TextField();
         field3.setBounds(250, 180, 200, 30);
         add(field3);
-        String[] options = {"Aangemaakt", "Geaccepteerd", "Geleverd", "Afgerond"};
+        String[] options = {"Geplaatst", "Geaccepteerd", "Klaar voor bezorgen", "Bezorgd","Wacht op afrekenen","Betaald","Afwachten","Wacht op plaatsing"}; 
         box1 = new JComboBox(options);
         box1.setBounds(250, 220, 200, 30);
         add(box1);

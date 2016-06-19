@@ -157,7 +157,7 @@ public class OrderOverviewPanel extends JPanel {
                    label1.setText("Geaccepteerde orders kunnen niet gewijzigd worden"); 
                 } else {
                     int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                    Order sel = m.getOrderWithNr(index);
+                    Order sel = m.getOrderWithId(index);
                     controller.makeVisible("Order_update", sel);
                 }
             } else {
@@ -173,7 +173,7 @@ public class OrderOverviewPanel extends JPanel {
             int row = table.getSelectedRow();
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
-                Order selOrder = m.getOrderWithNr(index);
+                Order selOrder = m.getOrderWithId(index);
                 controller.makeVisible("Order_delete", selOrder);
             }
             label1.setText("Selecteer eerst een order om te deleten!");

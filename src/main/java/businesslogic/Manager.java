@@ -446,7 +446,22 @@ public class Manager {
     }
     
      //-------------------* Bestelling Info *------------------------------
-    public Order getOrderWithNr(int a) {
+    public Order getOrderWithNr(String a) {
+        Order order = null;
+        for(Order i : orderList){
+            if(i.getNr().equals(a)){
+                order = new Order(i.getId(), i.getNr(),i.getDate(),i.getStatusId(),i.getEmployeeId());
+                //order.setSupplier(i.get);
+            }
+        }
+        if(order != null) {
+            return order;
+        } else {
+            return orderDAO.getOrderWithNr(a);
+        }
+    }
+    
+    public Order getOrderWithId(int a) {
         Order order = null;
         for(Order i : orderList){
             if(i.getId() == a){
@@ -457,7 +472,7 @@ public class Manager {
         if(order != null) {
             return order;
         } else {
-            return orderDAO.getOrderWithNr(a);
+            return orderDAO.getOrderWithId(a);
         }
     }
 
@@ -493,8 +508,10 @@ public class Manager {
         }).forEach((i) -> {
             i.setEmployeeId(updateOrder.getEmployeeId());
         });
+
+
         orderDAO.updateOrderRow(list, id);
-        orderDAO.updateOrder(updateOrder, id);
+        //orderDAO.updateOrder(updateOrder, id);
     }
 
     /**
@@ -534,7 +551,7 @@ public class Manager {
                 returnstatus = 0;
                 break;    
                 
-            case "Aangemaakt":
+            case "Geplaatst":
                 returnstatus = 1;
                 break;
                     
@@ -542,12 +559,28 @@ public class Manager {
                 returnstatus = 2;
                 break;    
                     
-            case "Geleverd":
+            case "Klaar voor bezorgen":
                 returnstatus = 3;
                 break;    
                     
-            case "Afgerond":
+            case "Bezorgd":
                 returnstatus = 4;
+               break;
+               
+            case "Wacht op afrekenen":
+                returnstatus = 5;
+                break;
+                    
+            case "Betaald":
+                returnstatus = 6;
+                break;    
+                    
+            case "Afwachten":
+                returnstatus = 7;
+                break;    
+                    
+            case "Wacht op plaatsing":
+                returnstatus = 8;
                break;   
         }
         return returnstatus;
@@ -561,7 +594,7 @@ public class Manager {
                 break;
                 
             case 1:
-                returnstatus = "Aangemaakt";
+                returnstatus = "Geplaatst";
                 break;
                     
             case 2:
@@ -569,24 +602,38 @@ public class Manager {
                 break;    
                     
             case 3:
-                returnstatus = "Geleverd";
+                returnstatus = "Klaar voor bezorgen";
                 break;    
                     
             case 4:
-                returnstatus = "Afgerond";
-                break; 
+                returnstatus = "Bezorgd";
+               break;
+               
+            case 5:
+                returnstatus = "Wacht op afrekenen";
+                break;
+                    
+            case 6:
+                returnstatus = "Betaald";
+                break;    
+                    
+            case 7:
+                returnstatus = "Afwachten";
+                break;    
+                    
+            case 8:
+                returnstatus = "Wacht op plaatsing";
+                break;       
         }
         return returnstatus;
     }
     //-------------------* Order Row Info *------------------------------
     public Set<OrderRow> getAllOrderRows(){
-        orderRowList = orderDAO.getAllOrderRows();
         return orderRowList;
     }
     
     public void addOrderRow(OrderRow newOrderRow) {
         orderRowList.add(newOrderRow); 
-        //orderRowDAO.addOrder(newOrderRow);
     }
     
     public Set<SupplierIngredient> getSupplierIngredientList(){
@@ -596,9 +643,10 @@ public class Manager {
     
     public Set<SupplierIngredient> getSupplierIngredientList(Supplier sup){
         supIngList = supDAO.getAllSupplierIngredients();
+        int id = sup.getId();
         Set<SupplierIngredient> list = new HashSet<>();
         for(SupplierIngredient i : supIngList){
-            if(i.getSupplier().getId() == sup.getId()){
+            if(i.getSupplier().getId() == id){
                 list.add(i);
             }
         }

@@ -61,7 +61,7 @@ public class OrderDAO {
     }
     
     
-    public Order getOrderWithNr(int a) {
+    public Order getOrderWithNr(String a) {
         Order order = null;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
@@ -217,33 +217,13 @@ public class OrderDAO {
         connection.executeSQLDeleteStatement(selectSQL);
         selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`, `stockorderId`, `supplierId`, `quantity`) VALUES";
         for(OrderRow i : list){
-                selectSQL += "(" + i.getSupplier().getId() + "," + i.getOrder().getId() + "," + i.getIngredient().getId() + "," + i.getAmount()+ "),";
+                selectSQL += "(" + i.getIngredient().getId() + "," + i.getOrder().getId() + "," + i.getSupplier().getId() + "," + i.getAmount()+ "),";
         }
         selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
         System.out.println(selectSQL);
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
-    /*
-    public void updateOrderRow(Order order, int id) {
-        DatabaseConnection connection = new DatabaseConnection();
-        int valueID = order.getNr();
-        connection.openConnection();
-        String selectSQL = "DELETE from `23ivp4a`.`stockorder_ingredient` WHERE `stockorderId`=" + valueID;
-        connection.executeSQLInsertStatement(selectSQL);
-        selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`,`quantity`, `prize`, `orderNr`) VALUES ";
-        int orderNr = order.getNr();
-        Set<OrderRow> orderRowList = order.getOrderRows();
-        if(!orderRowList.isEmpty()){
-            for(OrderRow i : orderRowList){
-                selectSQL += "(" + i.getIngredient().getId() + "," + i.getAmount() + "," + i.getPrize() + "," + orderNr + "),";
-            }
-            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
-        }
-        connection.executeSQLInsertStatement(selectSQL);
-        connection.closeConnection();
-    }
-    */
     
     public void deleteOrder(int id) {
         DatabaseConnection connection = new DatabaseConnection();

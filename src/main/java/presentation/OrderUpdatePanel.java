@@ -24,23 +24,28 @@ import javax.swing.table.TableColumn;
 
 public class OrderUpdatePanel extends JPanel {
 
-    private final JLabel label1,label2;
-    private final TextField field2, field3, field4, field5;
-    private final JButton button1, button2,button3;
-    private final JComboBox box1,box2,box3;
+    private final JLabel label1;
+    private final TextField field2, field3, field5;
+    private final JButton button1, button2;
+    private final JComboBox box1,box2;
     Controller controller;
     Manager m;
     private int id = -1;
+    private Order updateOrder;
     private final JTable table;
     private final JScrollPane spTable;
     private final DefaultTableModel model;
-    private Set<OrderRow> list;
+    private Set<OrderRow> orderRowList;
+    private Set<SupplierIngredient> supIngList;
 
     public OrderUpdatePanel(Controller c, Manager m) {
         controller = c;
         this.m = m;
         setLayout(null);
-
+        
+        supIngList = new HashSet<>();
+        orderRowList = new HashSet<>();
+        updateOrder = null;
         add(c.createLabel("Bestelling nummer:", 25, 140, 200, 30, "right"));
         add(c.createLabel("Datum:", 25, 180, 200, 30, "right"));
         add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
@@ -52,26 +57,18 @@ public class OrderUpdatePanel extends JPanel {
         add(c.createLabel("[selecteer 1]", 460, 220, 120, 30, "left"));
         add(c.createLabel("[selecteer 1]", 460, 260, 120, 30, "left"));
         add(c.createLabel("[max 1 getal]", 460, 300, 200, 30, "left"));
-        
-        add(c.createLabel("Kies een ingrediënt", 630, 140, 100, 30, "left"));
-        add(c.createLabel("Aantal", 630, 220, 70, 30, "left"));
-        
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
         label1.setBounds(200, 450, 600, 30);
         add(label1);
-        label2 = new JLabel("");
-        label2.setHorizontalAlignment(SwingConstants.LEFT);
-        label2.setBounds(200, 290, 250, 9);
-        add(label2);
         field2 = new TextField();
         field2.setBounds(250, 140, 200, 30);
         add(field2);
         field3 = new TextField();
         field3.setBounds(250, 180, 200, 30);
         add(field3);
-        String[] options = {"Aangemaakt", "Geaccepteerd", "Geleverd", "Afgerond"};
+        String[] options = {"Geplaatst", "Geaccepteerd", "Klaar voor bezorgen", "Bezorgd","Wacht op afrekenen","Betaald","Afwachten","Wacht op plaatsing"}; 
         box1 = new JComboBox(options);
         box1.setBounds(250, 220, 200, 30);
         add(box1);
@@ -82,10 +79,10 @@ public class OrderUpdatePanel extends JPanel {
         box2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 JComboBox comboBox = (JComboBox) event.getSource();
-                //System.out.println(comboBox.getSelectedItem());
                 if(comboBox.getSelectedItem() != null ){
                     Supplier sup = m.getSupplier((String) comboBox.getSelectedItem());
                     updateTable(sup);
+                    fillTable(sup);
                 }
             }
         });
@@ -94,16 +91,6 @@ public class OrderUpdatePanel extends JPanel {
         field5.setBounds(250, 300, 200, 30);
         add(field5);
 
-        ArrayList<String> ingNames = m.getIngredientNames();
-        String[] ingredients = ingNames.stream().toArray(String[]::new);
-        box3 = new JComboBox(ingredients);
-        box3.setBounds(630, 180, 200, 30);
-        add(box3);
-        field4 = new TextField();
-        field4.setBounds(630, 260, 100, 30);
-        add(field4);
-        
-        list = new HashSet<>();
         model = new DefaultTableModel() {
             private static final long serialVersionUID = 1L;
 
@@ -150,52 +137,70 @@ public class OrderUpdatePanel extends JPanel {
         button2.addActionListener(kh2);
         button2.setBounds(25, 400, 200, 50);
         add(button2);
-        
-        button3 = new JButton("Voeg toe");
-        ButtonHandler3 kh3 = new ButtonHandler3();
-        button3.addActionListener(kh3);
-        button3.setBounds(630, 300, 100, 30);
-        add(button3);
-
     }
     
     public void updateTable(Supplier sup){
-        Set<OrderRow> entireList = m.getAllOrderRows();
-        Set<SupplierIngredient> supIngList = sup.getIngredientList();
+        
+        Set<SupplierIngredient> supIngList = m.getSupplierIngredientList(sup);
         model.setRowCount(0);
-        for(OrderRow i : entireList){
-            for(SupplierIngredient o : supIngList) {
-                if(i.getIngredient().getId() == o.getIngredient().getId() && i.getSupplier().getId() == o.getSupplier().getId() 
-                        && i.getOrder().getId() == id){
-                    model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice(),i.getAmount()});
+        int supId = sup.getId();
+        for(SupplierIngredient o : supIngList) {
+            if(supId == o.getSupplier().getId()){
+                model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice(),0});
+            }
+        }
+        
+        table.setModel(model);
+        model.fireTableDataChanged();
+    }
+    
+    public void fillTable(Supplier sup){
+        Set<OrderRow> entireList = orderRowList;
+        entireList.removeIf(o -> o.getOrder().getId() != id);
+        int supId = sup.getId();
+
+        for (int count = 0; count < model.getRowCount(); count++){
+            for(OrderRow i : entireList){
+                System.out.println(model.getValueAt(count, 0) + ":" + i.getIngredient().getName() + "\n") ;
+                if(i.getIngredient().getName().equals(model.getValueAt(count, 0))){
+                    model.setValueAt(i.getAmount(), count, 3);
+                    //entireList.remove(i);
                 }
             }
         }
-        table.setModel(model);
-        model.fireTableDataChanged();
     }
 
     public void setOrder(Order selOrder) {
         id = selOrder.getId();
+        updateOrder = m.getOrderWithId(id);
         field2.setText(selOrder.getNr());
         field3.setText(String.valueOf(selOrder.getDate()));
         box1.setSelectedIndex(selOrder.getStatusId() - 1);
-        
         field5.setText(String.valueOf(selOrder.getEmployeeId()));
-        if(selOrder.getSupplier() != null){
-            label2.setText(selOrder.getSupplier().getName());
-            box2.setSelectedItem(selOrder.getSupplier().getName());
+        orderRowList = m.getAllOrderRows();
+        orderRowList.removeIf(o -> o.getOrder().getId() != selOrder.getId());
+        
+        if(orderRowList.size() > 0){
+            OrderRow test = orderRowList.stream().findFirst().get();
+            updateOrder.setSupplier(test.getSupplier());
+            supIngList = m.getSupplierIngredientList(test.getSupplier());
+            selOrder.setSupplier(m.getOrderWithId(id).getSupplier());
+            box2.setSelectedItem(test.getSupplier().getName());
         }
+        
+
     }
 
     public void makeListFromTable() {
-        list.clear();
+        orderRowList.clear();
         Supplier sup = m.getSupplier((String) box2.getSelectedItem());
-        Order testOrder = new Order(0,"", "", 0, 0);
+        Order testOrder = m.getOrderWithId(id);
         for (int count = 0; count < model.getRowCount(); count++){
+            
             OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
                     sup,Integer.parseInt(model.getValueAt(count, 3).toString()));
-            list.add(newOrderRow);
+            if(newOrderRow.getAmount() > 0)
+                orderRowList.add(newOrderRow);
         }
     }
     
@@ -221,18 +226,19 @@ public class OrderUpdatePanel extends JPanel {
                     if(field5.getText().length() != 1 || !m.checkNumbers(field5.getText()))
                         throw new Exception("Fout in Medewerkernummer.");
                     
-                    Order updateOrder = m.getOrderWithNr(id);
                     updateOrder.setNr(field2.getText());
                     updateOrder.setDate(field3.getText());
                     int status = m.getOrderStatus((String) box1.getSelectedItem() + 1);
                     updateOrder.setStatusId(status);
                     updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
-                    updateOrder.setSupplier(m.getSupplier((String) box2.getSelectedItem()));
-                    updateOrder.setOrderRows( list);
-                    for(OrderRow i : list) {
+                    Supplier sup = m.getSupplier((String) box2.getSelectedItem());
+                    updateOrder.setSupplier(sup);
+                    updateOrder.setOrderRows( orderRowList);
+                    for(OrderRow i : orderRowList) {
                         i.setOrder(updateOrder);
-                    }                 
-                    m.updateOrder(id, updateOrder, list);
+                    }
+                    makeListFromTable();
+                    m.updateOrder(id, updateOrder, orderRowList);
                     label1.setText("Bestelling is gewijzigd!");
                 } catch (Exception ex) {
                     label1.setText("Error: " + ex.getMessage());
@@ -240,28 +246,6 @@ public class OrderUpdatePanel extends JPanel {
             } else {
                 label1.setText("Bestelling is niet geselecteerd, ga terug naar vorige scherm!");
             }
-        }
-    }
-    
-    private class ButtonHandler3 implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            /*
-            Order updateOrder = m.getOrder(id);
-            Ingredient checkIngredient = m.getIngredient((String) box3.getSelectedItem());
-            int amount = Integer.parseInt(field4.getText());
-            int added = (int) list.stream().filter(o -> o.getIngredient().getId() == checkIngredient.getId()).count();
-            list.stream().filter(o -> o.getIngredient().getId() == checkIngredient.getId()).forEach(
-                    o -> {
-                        o.setAmount(o.getAmount() + amount);
-                });
-            if(added == 0){
-                OrderRow orderRow = new OrderRow(checkIngredient,amount,19.95,updateOrder);
-                list.add(orderRow);
-            }
-            refreshOrderRow();
-            */
         }
     }
 

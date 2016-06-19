@@ -147,6 +147,8 @@ public class IngredientDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id;
+        
+        selectSQL += "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }

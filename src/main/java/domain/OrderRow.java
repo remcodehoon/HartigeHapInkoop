@@ -45,6 +45,11 @@ public class OrderRow {
     public void setAmount(int amount){
         this.amount = amount;
     }
+    
+    @Override
+    public String toString(){
+        return "Ingredientname: " + ingredient.getName() + ", ordernumber: " + order.getNr() + ", supplier: " + supplier.getName() + ", amount: " + amount;
+    }
 }
 
 
