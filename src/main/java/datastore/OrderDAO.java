@@ -29,7 +29,6 @@ public class OrderDAO {
 
         // Execute query
         ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
-        //System.out.println(resultset);
         try {
             if (resultset.first()) {
                 ID = resultset.getInt("auto_increment");
@@ -178,7 +177,6 @@ public class OrderDAO {
             + order.getNr() + "','" + order.getDate() + "'," + order.getStatusId() + "," + order.getEmployeeId() + ");";
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
-        System.out.print(selectSQL);
     }
     
     public void addOrderRow(Order order) {
@@ -195,7 +193,6 @@ public class OrderDAO {
         }
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
-        System.out.print(selectSQL);
     }
     
 
@@ -213,14 +210,12 @@ public class OrderDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `stockorderId` = " + id;
-        System.out.println(selectSQL);
         connection.executeSQLDeleteStatement(selectSQL);
         selectSQL = "INSERT INTO `23ivp4a`.`stockorder_ingredient` (`ingredientId`, `stockorderId`, `supplierId`, `quantity`) VALUES";
         for(OrderRow i : list){
                 selectSQL += "(" + i.getIngredient().getId() + "," + i.getOrder().getId() + "," + i.getSupplier().getId() + "," + i.getAmount()+ "),";
         }
         selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
-        System.out.println(selectSQL);
         connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }

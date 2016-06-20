@@ -5,10 +5,13 @@
  */
 package datastore;
 
+import domain.Employee;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -114,6 +117,29 @@ public class LoginDAO {
             connection.closeConnection();
         }
         return 0;
+    }
+    
+    public Set<Employee> getEmployees() {
+        Set<Employee> list = new HashSet<>();
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT id,userName,firstName FROM employee WHERE functionId = 7 OR functionId = 8";
+
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            while (resultset.next()) {
+                int id = resultset.getInt("id");
+                String userName = resultset.getString("userName");
+                String name = resultset.getString("firstName");
+                Employee emp = new Employee(id, userName, name);
+                list.add(emp);
+            }
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, e.toString(), e);
+        } finally {
+            connection.closeConnection();
+        }
+        return list;
     }
     
 }

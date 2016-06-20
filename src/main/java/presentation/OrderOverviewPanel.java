@@ -58,7 +58,7 @@ public class OrderOverviewPanel extends JPanel {
         ;
         }; 
         // Kolommen voor het model worden aangemaakt
-        String[] colName = {"Id","Bestelling nummer", "Datum", "Status", "Gebruiker nummer","Leverancier"};
+        String[] colName = {"Id","Bestelling nummer", "Datum", "Status", "Gebruiker","Leverancier"};
         model.setColumnIdentifiers(colName);
         // Breedte van de kolommen wordt gedefinieerd
         int[] colWidth = new int[6];
@@ -145,9 +145,9 @@ public class OrderOverviewPanel extends JPanel {
         Set<Order> orderList = m.updateTableOrder();
         for(Order o : orderList) {
             if(o.getSupplier() != null)
-                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
+                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), m.getEmployeeName(o.getEmployeeId()), o.getSupplier().getName()});
             else
-                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
+                model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), m.getEmployeeName(o.getEmployeeId()), ""});
         }
         table.setModel(model);
         model.fireTableDataChanged();
@@ -219,9 +219,9 @@ public class OrderOverviewPanel extends JPanel {
                     model.setRowCount(0);
                     for(Order o : orderList) {
                         if(o.getSupplier() != null)
-                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
+                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), m.getEmployeeName(o.getEmployeeId()), o.getSupplier().getName()});
                         else
-                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
+                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), m.getEmployeeName(o.getEmployeeId()), ""});
                     }
                     table.setModel(model);
                     model.fireTableDataChanged();

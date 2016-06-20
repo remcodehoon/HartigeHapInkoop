@@ -23,10 +23,10 @@ public class IngredientAddPanel extends JPanel {
         this.m = m;
         setLayout(null);
 
-        add(c.createLabel("Naam:", 25, 140, 200, 30, "right"));
-        add(c.createLabel("In voorraad:", 25, 180, 200, 30, "right"));
-        add(c.createLabel("Minimale voorraad:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Maximale voorraad:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Naam:*", 25, 140, 200, 30, "right"));
+        add(c.createLabel("In voorraad:*", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Minimale voorraad:*", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Maximale voorraad:*", 25, 260, 200, 30, "right"));
         add(c.createLabel("[max 45 char]", 460, 140, 200, 30, "left"));
         add(c.createLabel("[max 11 getallen]", 460, 180, 200, 30, "left"));
         add(c.createLabel("[max 11 getallen]", 460, 220, 200, 30, "left"));

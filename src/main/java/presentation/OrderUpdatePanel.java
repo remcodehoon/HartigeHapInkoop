@@ -1,7 +1,7 @@
 package presentation;
 
 import businesslogic.Manager;
-import domain.Ingredient;
+import domain.Employee;
 import domain.Order;
 import domain.OrderRow;
 import domain.Supplier;
@@ -25,9 +25,9 @@ import javax.swing.table.TableColumn;
 public class OrderUpdatePanel extends JPanel {
 
     private final JLabel label1;
-    private final TextField field2, field3, field5;
+    private final TextField field2, field3;
     private final JButton button1, button2;
-    private final JComboBox box1,box2;
+    private final JComboBox box1,box2,box3;
     Controller controller;
     Manager m;
     private int id = -1;
@@ -46,17 +46,17 @@ public class OrderUpdatePanel extends JPanel {
         supIngList = new HashSet<>();
         orderRowList = new HashSet<>();
         updateOrder = null;
-        add(c.createLabel("Bestelling nummer:", 25, 140, 200, 30, "right"));
-        add(c.createLabel("Datum:", 25, 180, 200, 30, "right"));
-        add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Leverancier:", 25, 260, 200, 30, "right"));
-        add(c.createLabel("Medewerker nummer:", 25, 300, 200, 30, "right"));
+        add(c.createLabel("Bestelling nummer:*", 25, 140, 200, 30, "right"));
+        add(c.createLabel("Datum:*", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Status:*", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Leverancier:*", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Medewerker nummer:*", 25, 300, 200, 30, "right"));
         
         add(c.createLabel("[max 11 char]", 460, 140, 200, 30, "left"));
         add(c.createLabel("[datum jjjj-mm-dd]", 460, 180, 200, 30, "left"));
         add(c.createLabel("[selecteer 1]", 460, 220, 120, 30, "left"));
         add(c.createLabel("[selecteer 1]", 460, 260, 120, 30, "left"));
-        add(c.createLabel("[max 1 getal]", 460, 300, 200, 30, "left"));
+        add(c.createLabel("[max 2 getallen]", 460, 300, 200, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -87,9 +87,11 @@ public class OrderUpdatePanel extends JPanel {
             }
         });
         add(box2);
-        field5 = new TextField();
-        field5.setBounds(250, 300, 200, 30);
-        add(field5);
+        
+        box3 = new JComboBox();
+        box3.setBounds(250, 300, 200, 30);
+        updateBox();
+        add(box3);
 
         model = new DefaultTableModel() {
             private static final long serialVersionUID = 1L;
@@ -139,6 +141,13 @@ public class OrderUpdatePanel extends JPanel {
         add(button2);
     }
     
+    public void updateBox(){
+        box3.removeAllItems();
+        for(Employee i : m.getEmployees()){
+            box3.addItem(i.getName());
+        }
+    }
+    
     public void updateTable(Supplier sup){
         
         Set<SupplierIngredient> supIngList = m.getSupplierIngredientList(sup);
@@ -169,24 +178,27 @@ public class OrderUpdatePanel extends JPanel {
     }
 
     public void setOrder(Order selOrder) {
+        
         id = selOrder.getId();
         updateOrder = m.getOrderWithId(id);
         field2.setText(selOrder.getNr());
         field3.setText(String.valueOf(selOrder.getDate()));
         box1.setSelectedIndex(selOrder.getStatusId() - 1);
-        field5.setText(String.valueOf(selOrder.getEmployeeId()));
         orderRowList = m.getAllOrderRows();
         orderRowList.removeIf(o -> o.getOrder().getId() != selOrder.getId());
-        
+                
         if(orderRowList.size() > 0){
             OrderRow test = orderRowList.stream().findFirst().get();
             updateOrder.setSupplier(test.getSupplier());
             supIngList = m.getSupplierIngredientList(test.getSupplier());
             selOrder.setSupplier(m.getOrderWithId(id).getSupplier());
             box2.setSelectedItem(test.getSupplier().getName());
+            updateTable(test.getSupplier());
+            fillTable(test.getSupplier());
         }
         
-
+        String empName = m.getEmployeeName(selOrder.getEmployeeId());
+        box3.setSelectedItem(empName);
     }
 
     public void makeListFromTable() {
@@ -221,14 +233,13 @@ public class OrderUpdatePanel extends JPanel {
                         throw new Exception("Fout in Bestellingnummer.");
                     if(!field3.getText().matches("([0-9]{4})-([0-9]{2})-([0-9]{2})"))
                         throw new Exception("Fout in Datum.");
-                    if(field5.getText().length() != 1 || !m.checkNumbers(field5.getText()))
-                        throw new Exception("Fout in Medewerkernummer.");
                     
                     updateOrder.setNr(field2.getText());
                     updateOrder.setDate(field3.getText());
-                    int status = m.getOrderStatus((String) box1.getSelectedItem() + 1);
+                    int status = m.getOrderStatus(String.valueOf(box1.getSelectedItem()));
                     updateOrder.setStatusId(status);
-                    updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
+                    int empId = m.getEmployeeId(String.valueOf(box3.getSelectedItem()));
+                    updateOrder.setEmployeeId(empId);
                     Supplier sup = m.getSupplier((String) box2.getSelectedItem());
                     updateOrder.setSupplier(sup);
                     makeListFromTable();
@@ -240,6 +251,7 @@ public class OrderUpdatePanel extends JPanel {
                         if(m.getEmployeeFunctionId(m.getEmployeeId()) != 8)
                             throw new Exception("Bestelling is te duur, log in als chefkok.");
                     m.updateOrder(id, updateOrder, orderRowList);
+                    m.updateSupplierIngredientList();
                     label1.setText("Bestelling is gewijzigd!");
                 } catch (Exception ex) {
                     label1.setText("Error: " + ex.getMessage());

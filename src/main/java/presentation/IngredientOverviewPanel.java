@@ -65,6 +65,7 @@ public class IngredientOverviewPanel extends JPanel {
 
         table = new JTable(model);
         table.setAutoCreateRowSorter(true);
+        
         this.refreshTable();
         spTable = new JScrollPane(table);
         spTable.setBounds(25, 55, 750, 345);

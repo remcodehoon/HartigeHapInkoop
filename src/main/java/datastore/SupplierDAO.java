@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import domain.Supplier;
 import domain.SupplierIngredient;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 public class SupplierDAO {
 
     private static final Logger log = Logger.getLogger(DatabaseConnection.class.getName());
-    private Manager m;
+    private final Manager m;
     
     public SupplierDAO(Manager m){
         this.m = m;

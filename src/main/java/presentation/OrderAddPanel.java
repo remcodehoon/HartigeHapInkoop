@@ -41,10 +41,10 @@ public class OrderAddPanel extends JPanel {
         this.m = m;
         setLayout(null);
 
-        add(c.createLabel("Bestellingnummer:", 25, 140, 200, 30, "right"));
-        add(c.createLabel("Datum:", 25, 180, 200, 30, "right"));
-        add(c.createLabel("Status:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Leverancier:", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Bestellingnummer:*", 25, 140, 200, 30, "right"));
+        add(c.createLabel("Datum:*", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Status:*", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Leverancier:*", 25, 260, 200, 30, "right"));
 
         add(c.createLabel("[max 20 char]", 460, 140, 200, 30, "left"));
         add(c.createLabel("[datum jjjj-mm-dd]", 460, 180, 200, 30, "left"));

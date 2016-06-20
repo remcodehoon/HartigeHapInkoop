@@ -72,7 +72,11 @@ class MainmenuPanel extends JPanel {
                 + "- Bestellingsoverzicht bekijken\n"
                 + "- Bestelling & Bestelregels toevoegen\n"
                 + "- Bestelling & Bestelregels updaten\n"
-                + "- Bestelling & Bestelregels verwijderen\n");
+                + "- Bestelling & Bestelregels verwijderen\n"
+                + "\n"
+                + "- Bestellijst inventaris maken\n"
+                + "- Bestellijst inventaris printen"
+                + "");
         add(field4);
 
         button1 = new JButton("Ingrediënten");

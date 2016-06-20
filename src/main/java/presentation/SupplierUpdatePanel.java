@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import javafx.scene.control.TableRow;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -41,12 +40,12 @@ public class SupplierUpdatePanel extends JPanel {
         this.m = m;
         setLayout(null);
 
-        add(c.createLabel("Naam:", 25, 140, 200, 30, "right"));
-        add(c.createLabel("Adres", 25, 180, 200, 30, "right"));
-        add(c.createLabel("Postcode:", 25, 220, 200, 30, "right"));
-        add(c.createLabel("Contactpersoon:", 25, 260, 200, 30, "right"));
-        add(c.createLabel("Emailadres:", 25, 300, 200, 30, "right"));
-        add(c.createLabel("Telefoonnummer:", 25, 340, 200, 30, "right"));
+        add(c.createLabel("Naam:*", 25, 140, 200, 30, "right"));
+        add(c.createLabel("Adres:*", 25, 180, 200, 30, "right"));
+        add(c.createLabel("Postcode:*", 25, 220, 200, 30, "right"));
+        add(c.createLabel("Contactpersoon:*", 25, 260, 200, 30, "right"));
+        add(c.createLabel("Emailadres:*", 25, 300, 200, 30, "right"));
+        add(c.createLabel("Telefoonnummer:*", 25, 340, 200, 30, "right"));
 
         add(c.createLabel("[max 45 char]", 460, 140, 160, 30, "left"));
         add(c.createLabel("[max 45 char]", 460, 180, 160, 30, "left"));
@@ -55,9 +54,9 @@ public class SupplierUpdatePanel extends JPanel {
         add(c.createLabel("[max 45 char]", 460, 300, 160, 30, "left"));
         add(c.createLabel("[max 14 getallen]", 460, 340, 160, 30, "left"));
         
-        add(c.createLabel("Kies een ingrediënt", 630, 140, 220, 30, "left"));
-        add(c.createLabel("Aantal [max 11 getallen]", 630, 220, 220, 30, "left"));
-        add(c.createLabel("Prijs [max 8 getallen]", 630, 300, 220, 30, "left"));
+        add(c.createLabel("Kies een ingrediënt*", 630, 140, 220, 30, "left"));
+        add(c.createLabel("Aantal* [max 11 getallen]", 630, 220, 220, 30, "left"));
+        add(c.createLabel("Prijs* [max 8 getallen]", 630, 300, 220, 30, "left"));
 
         label1 = new JLabel("");
         label1.setHorizontalAlignment(SwingConstants.LEFT);

@@ -5,6 +5,7 @@ import datastore.InventoryItemDAO;
 import datastore.LoginDAO;
 import datastore.OrderDAO;
 import datastore.SupplierDAO;
+import domain.Employee;
 import domain.Ingredient;
 import domain.InventoryItem;
 import domain.IvItemTable;
@@ -31,6 +32,7 @@ public class Manager {
     private Set<OrderRow> orderRowList;
     private Set<InventoryItem> inventoryItemList;
     private Set<IvItemTable> ivItemTableList;
+    private Set<Employee> empList;
    
     public Manager() {
         supDAO = new SupplierDAO(this);
@@ -46,6 +48,7 @@ public class Manager {
         orderRowList = new HashSet<>();
         inventoryItemList = new HashSet<>();
         ivItemTableList = new HashSet<>();
+        empList = new HashSet<>();
     }
     
     public void updateTables(){
@@ -70,6 +73,34 @@ public class Manager {
     
     public int getEmployeeId(String username, String password) {
         return loginDAO.getEmployeeId(username, password);
+    }
+    
+    public Set<Employee> getEmployees() {
+        empList = loginDAO.getEmployees();
+        return empList;
+    }
+    
+    public String getEmployeeName(int id){
+        for(Employee i : empList){
+            if(i.getId() == id){
+                return i.getName();
+            }
+        }
+        return "No name found!";
+    }
+    
+    public int getEmployeeId(String name){
+        for(Employee i : empList){
+            if(i.getName().equals(name)){
+                return i.getId();
+            }
+        }
+        for(Employee i : empList){
+            if(i.getUserName().equals(name)){
+                return i.getId();
+            }
+        }
+        return 0;
     }
     
     public Boolean checkNumbers(String invoer) {
@@ -511,7 +542,7 @@ public class Manager {
      * @param list
      */
     public void updateOrder(int id, Order updateOrder, Set<OrderRow> list) {
-        //orderDAO.updateOrderRow(updateOrder, id);
+        orderDAO.updateOrder(updateOrder, id);
         orderList.stream().filter((i) -> (i.getId() == id)).map((i) -> {
             i.setNr(updateOrder.getNr());
             return i;
@@ -525,9 +556,8 @@ public class Manager {
             i.setEmployeeId(updateOrder.getEmployeeId());
         });
 
-
-        orderDAO.updateOrderRow(list, id);
-        //orderDAO.updateOrder(updateOrder, id);
+        if(!list.isEmpty())
+            orderDAO.updateOrderRow(list, id);
     }
 
     /**
