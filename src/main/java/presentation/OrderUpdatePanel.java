@@ -206,11 +206,12 @@ public class OrderUpdatePanel extends JPanel {
         Supplier sup = m.getSupplier((String) box2.getSelectedItem());
         Order testOrder = m.getOrderWithId(id);
         for (int count = 0; count < model.getRowCount(); count++){
-            
+            if(!String.valueOf(model.getValueAt(count, 3)).equals("")){
             OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
                     sup,Integer.parseInt(model.getValueAt(count, 3).toString()));
             if(newOrderRow.getAmount() > 0)
                 orderRowList.add(newOrderRow);
+            }
         }
     }
     

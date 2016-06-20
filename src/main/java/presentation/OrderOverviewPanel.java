@@ -1,7 +1,6 @@
 package presentation;
 
 import businesslogic.Manager;
-import domain.Ingredient;
 import domain.Order;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;

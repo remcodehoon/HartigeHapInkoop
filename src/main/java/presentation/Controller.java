@@ -47,7 +47,7 @@ public class Controller {
     }
 
     public void createFrames() {
-        m.updateTables();
+        m.updateTables("all");
         frame1 = new Mainmenu(controller);
 
         frame2 = new SupplierFrame(controller);
@@ -152,7 +152,7 @@ public class Controller {
     }
     
     private void showSupplierOverview() {
-        //m.updateTables();
+        m.updateTables("Suppliers");
         frame2.setContentPane(panel20);
         panel20.refreshTable();
         panel20.setVisible(true);
@@ -179,7 +179,7 @@ public class Controller {
     }
     
     private void showIngredientOverview() {
-        //m.updateTables();
+        m.updateTables("Ingredients");
         frame3.setContentPane(panel30);
         panel30.refreshTable();
         panel30.setVisible(true);
@@ -205,7 +205,7 @@ public class Controller {
     }
     
     private void showOrderOverview() {
-        //m.updateTables();
+        m.updateTables("Orders");
         frame5.setContentPane(panel50);
         panel50.refreshTable();
         panel50.setVisible(true);
@@ -232,6 +232,7 @@ public class Controller {
     }
     
     private void showOrderInvItems() {
+        m.updateTables("InventoryItem");
         frame5.setContentPane(panel54);
         panel54.makeTable();
         panel54.setVisible(true);

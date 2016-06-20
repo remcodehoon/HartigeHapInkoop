@@ -147,9 +147,11 @@ public class OrderAddPanel extends JPanel {
         Supplier sup = m.getSupplier((String) box2.getSelectedItem());
         Order testOrder = new Order(0,"", "", 0, 0);
         for (int count = 0; count < model.getRowCount(); count++){
-            OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
+            if(!String.valueOf(model.getValueAt(count, 3)).equals("")){
+                OrderRow newOrderRow = new OrderRow(m.getIngredient(String.valueOf(model.getValueAt(count, 0))),testOrder,
                     sup,Integer.parseInt(model.getValueAt(count, 3).toString()));
-            list.add(newOrderRow);
+                list.add(newOrderRow);
+            }    
         }
     }
     
@@ -198,7 +200,7 @@ public class OrderAddPanel extends JPanel {
                     if(m.getEmployeeFunctionId(m.getEmployeeId()) != 8)
                         throw new Exception("Bestelling is te duur, log in als chefkok.");
                 m.addOrder(newOrder);
-                message = "Bestelleing toegevoegd.";
+                message = "Bestelling toegevoegd.";
             } catch (Exception f){
                 message = f.getMessage();
             } finally {

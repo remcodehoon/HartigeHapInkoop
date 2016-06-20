@@ -51,16 +51,41 @@ public class Manager {
         empList = new HashSet<>();
     }
     
-    public void updateTables(){
-        ingList = ingDAO.getAllIngredients();
-        orderList = orderDAO.getAllOrders();
-        supList = supDAO.getAllSuppliers();
-        supIngList = supDAO.getAllSupplierIngredients();
-        orderRowList = orderDAO.getAllOrderRows();
-        inventoryItemList = ivItemDAO.getAllInventoryItems();
-        ivItemTableList = ivItemDAO.getInventoryItemTable();
-        updateSupplierIngredientList();
-        updateOrderRows();
+    public void updateTables(String which){
+        switch(which){
+            default:
+                ingList = ingDAO.getAllIngredients();
+                orderList = orderDAO.getAllOrders();
+                supList = supDAO.getAllSuppliers();
+                supIngList = supDAO.getAllSupplierIngredients();
+                orderRowList = orderDAO.getAllOrderRows();
+                inventoryItemList = ivItemDAO.getAllInventoryItems();
+                ivItemTableList = ivItemDAO.getInventoryItemTable();
+                updateSupplierIngredientList();
+                updateOrderRows();
+                break;
+            
+            case "Ingredients":
+                ingList = ingDAO.getAllIngredients();
+                break;
+                
+            case "Suppliers":
+                supList = supDAO.getAllSuppliers();
+                supIngList = supDAO.getAllSupplierIngredients();
+                updateSupplierIngredientList();
+                break;
+                
+            case "Orders":
+                orderList = orderDAO.getAllOrders();
+                orderRowList = orderDAO.getAllOrderRows();
+                updateOrderRows();
+                break;
+            
+            case "InventoryItem":
+               inventoryItemList = ivItemDAO.getAllInventoryItems();
+                ivItemTableList = ivItemDAO.getInventoryItemTable();  
+                break;
+        }        
     }
     
     public void setEmployeeId(int id) {
