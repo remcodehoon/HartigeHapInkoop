@@ -143,6 +143,22 @@ public class InventoryItemDAO {
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
+    
+    public void setInventoryItemList(Set<IvItemTable> list) {
+        if(!list.isEmpty()) {
+            DatabaseConnection connection = new DatabaseConnection();
+            connection.openConnection();
+            String selectSQL = "DELETE FROM `23ivp4a`.`supplier_inventoryitem` WHERE 1";
+            connection.executeSQLDeleteStatement(selectSQL);
+            selectSQL = "INSERT INTO `23ivp4a`.`supplier_inventoryitem` (`supplierId`,`inventoryItemId`,`price`,`quantity`) VALUES";
+            for(IvItemTable i : list){
+                selectSQL += "(" + i.getSupId() + "," + i.getItemId() + "," + i.getPrice() + "," + i.getAmount() + "),";
+            }
+            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+            connection.executeSQLInsertStatement(selectSQL);
+            connection.closeConnection();
+        }
+    }
 
 
 

@@ -5,6 +5,7 @@ import domain.Ingredient;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLIntegrityConstraintViolationException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -87,8 +88,15 @@ public class IngredientDeletePanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (id > -1) {
-                label1.setText("'" + field2.getText() + "' verwijderd!");
-                m.deleteIngredient(id);
+                try {
+                    if(m.checkIngredientInDish(id)){
+                        throw new Exception("Ingrediënt wordt gebruikt in gerecht en kan niet worden verwijderd");
+                    }
+                    m.deleteIngredient(id);
+                    label1.setText("'" + field2.getText() + "' verwijderd!");
+                } catch (Exception ex){
+                    label1.setText(ex.getMessage());
+                }                
             } else {
                 label1.setText("Ingredient is niet geselecteerd, ga terug naar vorige scherm!");
             }

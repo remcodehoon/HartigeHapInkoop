@@ -8,10 +8,14 @@ package presentation;
 import businesslogic.Manager;
 import domain.InventoryItem;
 import domain.IvItemTable;
+import domain.Order;
+import domain.OrderRow;
 import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,9 +38,8 @@ import javax.swing.table.TableColumn;
 public class OrderInventory extends JPanel {
     private final JLabel label1;
     private final TextField field1;
-    private final JButton button1, button2, button3, button4;
+    private final JButton button1, button2, button3, button4, button5, button6, button7;
     private final JComboBox box1, box2;
-    private Set<InventoryItem> list;
     Controller c;
     Manager m;
     private final JTable table;
@@ -98,9 +101,9 @@ public class OrderInventory extends JPanel {
         colWidth[4] = 50;
 
         table = new JTable(model);
-        //this.refreshTable();
+        table.setAutoCreateRowSorter(true);
         spTable = new JScrollPane(table);
-        spTable.setBounds(400, 140, 600, 345);
+        spTable.setBounds(400, 140, 600, 410);
         add(spTable);
 
         TableColumn column;
@@ -114,14 +117,30 @@ public class OrderInventory extends JPanel {
         button3.addActionListener(kh3);
         button3.setBounds(150, 370, 95, 30);
         add(button3);
-        button4 = new JButton("Verwijder geselecteerde rij in tabel");
+        button4 = new JButton("Verwijder");
         ButtonHandler4 kh4 = new ButtonHandler4();
         button4.addActionListener(kh4);
         button4.setBounds(250, 370, 95, 30);
         add(button4);
+        button5 = new JButton("Terug");
+        ButtonHandler5 kh5 = new ButtonHandler5();
+        button5.addActionListener(kh5);
+        button5.setBounds(150, 440, 200, 30);
+        add(button5);
+        button7 = new JButton("Sla lijst op");
+        ButtonHandler7 kh7 = new ButtonHandler7();
+        button7.addActionListener(kh7);
+        button7.setBounds(150, 480, 200, 30);
+        add(button7);
+        button6 = new JButton("Print lijst");
+        ButtonHandler6 kh6 = new ButtonHandler6();
+        button6.addActionListener(kh6);
+        button6.setBounds(150, 520, 200, 30);
+        add(button6);
         
         label1 = new JLabel();
-        label1.setBounds(100, 410, 300, 30);
+        label1.setBounds(150, 570, 300, 30);
+        label1.setHorizontalAlignment(SwingConstants.LEFT);
         add(label1);
     }
     
@@ -133,11 +152,11 @@ public class OrderInventory extends JPanel {
             try{
                 String string1 = field1.getText();
                 if(string1.length() <= 0 || string1.length() > 45 )
-                    throw new Exception("Fout in Naam.");
+                    throw new Exception("Fout in Naam!");
                 InventoryItem newItem = new InventoryItem(m.getNewId("InventoryItem") ,string1);
                 m.addInventoryItem(newItem);
                 updateBox();
-                label1.setText("Inventaris Item toegevoegd");
+                label1.setText("Inventaris Item toegevoegd!");
             }   catch (Exception ex) {
                 label1.setText(ex.getMessage());
             }
@@ -151,11 +170,11 @@ public class OrderInventory extends JPanel {
             try{
                 String string1 = field1.getText();
                 if(string1.length() <= 0 || string1.length() > 45 )
-                    throw new Exception("Fout in Naam.");
+                    throw new Exception("Fout in Naam!");
                 InventoryItem newItem = new InventoryItem(0 ,string1);
                 m.deleteInventoryItem(newItem);
                 updateBox();
-                label1.setText("Inventaris Item verwijderd");
+                label1.setText("Inventaris Item verwijderd!");
             }   catch (Exception ex) {
                 label1.setText(ex.getMessage());
             }
@@ -168,12 +187,17 @@ public class OrderInventory extends JPanel {
         public void actionPerformed(ActionEvent e) {
             try{
                 String string1 = (String) box1.getSelectedItem();
-                String string2 = (String) box1.getSelectedItem();
+                String string2 = (String) box2.getSelectedItem();
+                for (int count = 0; count < model.getRowCount(); count++){
+                    if(string1.equals((String) model.getValueAt(count, 0)) && string2.equals((String) model.getValueAt(count, 1)))
+                        throw new Exception("Combinatie item/leverancier is al gedefinieerd!");
+                }
                 model.addRow(new Object[]{string1,string2, 0,0,0});
                 table.setModel(model);
                 model.fireTableDataChanged();
+                label1.setText("Bestelregel toegevoegd!");
             }   catch (Exception ex) {
-                Logger.getLogger(OrderInventory.class.getName()).log(Level.SEVERE, null, ex);
+                label1.setText(ex.getMessage());
             }
         }
     }
@@ -185,20 +209,53 @@ public class OrderInventory extends JPanel {
             try{
                 int row = table.getSelectedRow();
                 if (row != -1) {
-                    String index = table.getValueAt(row, 0).toString();
                     int[] selectedRows = table.getSelectedRows();
                     if (selectedRows.length > 0) {
                         for (int i = selectedRows.length - 1; i >= 0; i--) {
                             model.removeRow(selectedRows[i]);
                             model.fireTableDataChanged();
+                            label1.setText("Bestelregel verwijderd!");
                         }
                     }
                 } else {
-                    label1.setText("Selecteer eerst een regel!");
+                    label1.setText("Selecteer eerst een bestelregel!");
                 }
             }   catch (Exception ex) {
                 label1.setText(ex.getMessage());
             }
+        }
+    }
+        
+    private class ButtonHandler5 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            label1.setText("");
+            c.makeVisible("Supplier_overview");
+        }
+    }
+    
+    private class ButtonHandler6 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            label1.setText("Start printen!");
+            MessageFormat header = new MessageFormat("Inventaris bestellijst");
+            MessageFormat footer = new MessageFormat("Pagina{0,number,integer}");
+            
+            try {
+                table.print(JTable.PrintMode.FIT_WIDTH, header, footer);
+                label1.setText("Bestellijst geprinten!");
+            } catch (PrinterException ex) {
+                label1.setText("Printerror: " + ex.getMessage());
+            } 
+        }
+    }
+    
+    private class ButtonHandler7 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Set<IvItemTable> list = makeListFromTable();
+            m.setInventoryItemList(list);
+            label1.setText("Lijst is opgeslagen in de database!");
         }
     }
         
@@ -219,5 +276,19 @@ public class OrderInventory extends JPanel {
         model.fireTableDataChanged();
     }
 
-
+    private Set<IvItemTable> makeListFromTable(){
+        Set<IvItemTable> list = new HashSet<>();
+        for (int count = 0; count < model.getRowCount(); count++){
+            int a = m.getInventoryItemid(String.valueOf(model.getValueAt(count, 0)));
+            String e = String.valueOf(model.getValueAt(count, 1));
+            Supplier sup = m.getSupplier(e);
+            double f = Double.parseDouble(String.valueOf(model.getValueAt(count, 3)));
+            int c1 = Integer.parseInt(String.valueOf(model.getValueAt(count, 2)));
+            String d = String.valueOf(model.getValueAt(count, 0));
+            IvItemTable newItem = new IvItemTable(a,sup.getId(),f,c1,d);
+            if(newItem.getAmount() > 0)
+                list.add(newItem);
+        }
+        return list;
+    }
 }

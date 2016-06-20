@@ -62,4 +62,9 @@ public class IvItemTable {
     public void setName(String name){
         this.name = name;
     }
+    
+    @Override
+    public String toString(){
+        return "ItemNaam: " + name + ", ItemId: " + itemId + ", SupplierId: " + supId + ", Prijs: " + price + ", Hoeveelheid: " + amount;
+    }
 }

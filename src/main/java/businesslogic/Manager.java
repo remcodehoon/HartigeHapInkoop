@@ -110,6 +110,17 @@ public class Manager {
                 return ivItemDAO.getNextId();      
         }      
     }
+    
+    public double checkTotalPrice(Set<OrderRow> list){
+        double tp = 0;
+        if(!list.isEmpty()){
+            for(OrderRow o : list){
+                double price = getOrderRowPrice(o.getSupplier().getId(),o.getIngredient().getId());
+                tp = tp + (price * o.getAmount());
+            }
+        }
+        return tp;
+    }
 
 // ------------------------* Ingredient data *-----------------------  
     public Ingredient getIngredient(int a) {
@@ -252,6 +263,10 @@ public class Manager {
         return ingNames;
     }
     
+    public boolean checkIngredientInDish(int id){
+        return ingDAO.checkIngredientInDish(id);
+    }
+    
 
 // ------------------------* Leverancier data *-----------------------
     public Supplier getSupplier(int a) {
@@ -278,7 +293,6 @@ public class Manager {
      * voegt deze leverancier toe aan de database
      *
      * @param newSupplier
-     * @param orderList
      */
     public void addSupplier(Supplier newSupplier) {
         supList.add(newSupplier);
@@ -287,11 +301,13 @@ public class Manager {
     }
     
     public void addSupplierRows(Supplier newSupplier){
-        for(SupplierIngredient i : newSupplier.getIngredientList()){
+        if(!newSupplier.getIngredientList().isEmpty()){
+            for(SupplierIngredient i : newSupplier.getIngredientList()){
             
             i.setSupplier(newSupplier);
         }
         supDAO.addSupplierOrderList(newSupplier);
+        }
     }
 
     public int getSupplierMaxId(){
@@ -403,10 +419,10 @@ public class Manager {
             default:
                 break;
         }
-       if(!supSearchList.isEmpty()) {
+        if(!supSearchList.isEmpty()) {
             return supSearchList;
         } else {
-           supList = (Set<Supplier>) supDAO.getSearchedSuppliers(what, attribute);
+            supList = supDAO.getSearchedSuppliers(what, attribute);
             return supList;
         }
     }
@@ -532,7 +548,64 @@ public class Manager {
     }
     
     public Set<Order> getSearchedOrder(String what, String attribute){
-        return orderDAO.getSearchedOrders(what, attribute);
+        Set<Order> orderSearchList = new HashSet<>();
+        switch(attribute){  
+            case "ID":
+                orderList.stream().forEach((i) -> {
+                    String search = ""+ i.getId();
+                    if(search.matches(".*" + what +".*"))
+                        orderSearchList.add(i);
+                });
+                break;
+        
+            case "Bestelling nummer":
+                orderList.stream().filter((i) -> (i.getNr().matches(".*" + what +".*"))).forEach((i) -> {
+                    orderSearchList.add(i);
+                });
+                break;
+                
+            case "Datum":
+                orderList.stream().forEach((i) -> {
+                    String search = ""+ i.getDate();
+                    if(search.matches(".*" + what +".*"))
+                        orderSearchList.add(i);
+                });
+                break;
+            
+            case "Status":
+                orderList.stream().forEach((i) -> {
+                    String search = ""+ getOrderStatus(i.getStatusId());
+                    if(search.matches(".*" + what +".*"))
+                        orderSearchList.add(i);
+                });
+                break;
+                
+            case "Gebruiker nummer":
+                orderList.stream().forEach((i) -> {
+                    String search = ""+ i.getEmployeeId();
+                    if(search.matches(".*" + what +".*"))
+                        orderSearchList.add(i);
+                });
+                break;
+                
+            case "Leverancier":
+                orderList.stream().forEach((i) -> {
+                    if(i.getSupplier() != null){
+                        String search = ""+ i.getSupplier().getName();
+                        if(search.matches(".*" + what +".*"))
+                            orderSearchList.add(i);
+                    }
+                });
+                break;   
+                
+            default:
+                break;
+        }
+        if(!orderSearchList.isEmpty()) {
+            return orderSearchList;
+        } else {
+            return orderDAO.getSearchedOrders(what, attribute);
+        }
     }
         
     public Set<Order> updateTableOrder(){
@@ -653,6 +726,18 @@ public class Manager {
         return list;
     }
     
+    public double getOrderRowPrice(int supId, int ingId){
+        if(supIngList.isEmpty())
+        {
+            supIngList = supDAO.getAllSupplierIngredients();
+        }
+        for(SupplierIngredient i : supIngList){
+            if(i.getIngredient().getId() == ingId && i.getSupplier().getId() == supId)
+                return i.getPrice();
+        }
+        return 0.0;
+    }
+    
     //--------------------------------- inventory items //////////////////////
     public void addInventoryItem(InventoryItem item){
         inventoryItemList.add(item);
@@ -684,6 +769,28 @@ public class Manager {
     
     public Set<IvItemTable> getInventoryTable(){
         return ivItemTableList;
+    }
+    
+    public String getInventoryItemName(int id){
+        for(InventoryItem i : inventoryItemList){
+            if(i.getId() == id)
+                return i.getName();
+        }
+        return "";
+    }
+    
+    public int getInventoryItemid(String name){
+        int id = 0;
+        for(InventoryItem i : inventoryItemList){
+            if(i.getName().equals(name))
+                return i.getId();
+        }
+        return id;
+    }
+    
+    public void setInventoryItemList(Set<IvItemTable> list){
+        if(!list.isEmpty())
+            ivItemDAO.setInventoryItemList(list);
     }
 }
 

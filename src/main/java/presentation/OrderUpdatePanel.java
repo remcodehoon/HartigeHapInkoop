@@ -117,7 +117,7 @@ public class OrderUpdatePanel extends JPanel {
         table = new JTable(model);
         //this.refreshTable();
         spTable = new JScrollPane(table);
-        spTable.setBounds(850, 140, 570, 345);
+        spTable.setBounds(630, 140, 570, 345);
         add(spTable);
 
         TableColumn column;
@@ -161,10 +161,8 @@ public class OrderUpdatePanel extends JPanel {
 
         for (int count = 0; count < model.getRowCount(); count++){
             for(OrderRow i : entireList){
-                System.out.println(model.getValueAt(count, 0) + ":" + i.getIngredient().getName() + "\n") ;
                 if(i.getIngredient().getName().equals(model.getValueAt(count, 0))){
                     model.setValueAt(i.getAmount(), count, 3);
-                    //entireList.remove(i);
                 }
             }
         }
@@ -233,11 +231,14 @@ public class OrderUpdatePanel extends JPanel {
                     updateOrder.setEmployeeId(Integer.parseInt(field5.getText()));
                     Supplier sup = m.getSupplier((String) box2.getSelectedItem());
                     updateOrder.setSupplier(sup);
+                    makeListFromTable();
                     updateOrder.setOrderRows( orderRowList);
                     for(OrderRow i : orderRowList) {
                         i.setOrder(updateOrder);
                     }
-                    makeListFromTable();
+                    if(m.checkTotalPrice(orderRowList) > 1000)
+                        if(m.getEmployeeFunctionId(m.getEmployeeId()) != 8)
+                            throw new Exception("Bestelling is te duur, log in als chefkok.");
                     m.updateOrder(id, updateOrder, orderRowList);
                     label1.setText("Bestelling is gewijzigd!");
                 } catch (Exception ex) {

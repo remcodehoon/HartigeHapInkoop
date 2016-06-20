@@ -6,6 +6,7 @@ import domain.Order;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,8 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -65,7 +70,7 @@ public class OrderOverviewPanel extends JPanel {
         colWidth[5] = 130;
 
         table = new JTable(model);
-        //this.refreshTable();
+        table.setAutoCreateRowSorter(true);
         spTable = new JScrollPane(table);
         spTable.setBounds(25, 55, 800, 345);
         add(spTable);
@@ -119,6 +124,16 @@ public class OrderOverviewPanel extends JPanel {
         button6.addActionListener(kh6);
         button6.setBounds(200, 500, 200, 50);
         add(button6);
+        
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+        int columnIndexToSort = 1;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }
 
     /**
@@ -199,14 +214,22 @@ public class OrderOverviewPanel extends JPanel {
                 label1.setText("Vul een zoekwoord in!");
             } else {
                 label1.setText("");
-                model.setRowCount(0);
-                Set<Ingredient> ingredientList = m.getSearchedIng(what,attribute);
-                // Per ingredient: stop de waarden in een rij (row) van het model.
-                for(Ingredient i : ingredientList) {
-                   model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+                Set<Order> orderList = m.getSearchedOrder(what,attribute);
+                if(!orderList.isEmpty()){
+                    model.setRowCount(0);
+                    for(Order o : orderList) {
+                        if(o.getSupplier() != null)
+                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), o.getSupplier().getName()});
+                        else
+                            model.addRow(new Object[]{o.getId(),o.getNr(), o.getDate(), m.getOrderStatus(o.getStatusId()), o.getEmployeeId(), ""});
+                    }
+                    table.setModel(model);
+                    model.fireTableDataChanged();
+                    label1.setText("Gevonden zoekresultaten zijn weergegeven");
+                } else {
+                    refreshTable();
+                    label1.setText("Geen zoekresultaten gevonden");
                 }
-                table.setModel(model);
-                model.fireTableDataChanged();
             }
         }
     }

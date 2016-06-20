@@ -194,6 +194,9 @@ public class OrderAddPanel extends JPanel {
                 for(OrderRow i : list) {
                     i.setOrder(newOrder);
                 }
+                if(m.checkTotalPrice(list) > 1000)
+                    if(m.getEmployeeFunctionId(m.getEmployeeId()) != 8)
+                        throw new Exception("Bestelling is te duur, log in als chefkok.");
                 m.addOrder(newOrder);
                 message = "Bestelleing toegevoegd.";
             } catch (Exception f){

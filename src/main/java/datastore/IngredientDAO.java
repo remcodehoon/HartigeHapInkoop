@@ -146,9 +146,10 @@ public class IngredientDAO {
     public void deleteIngredient(int id) {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
-        String selectSQL = "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id;
-        
-        selectSQL += "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id;
+        String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `id` = " + id + ";";
+        selectSQL += "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `id` = " + id + ";";
+        selectSQL += "DELETE FROM `23ivp4a`.`ingredient` WHERE `id` = " + id + ";";
+        System.out.println(selectSQL);
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
@@ -207,5 +208,25 @@ public class IngredientDAO {
             connection.closeConnection();
         }
         return ingredientList;
+    }
+    
+    public boolean checkIngredientInDish(int id){
+        DatabaseConnection connection = new DatabaseConnection();
+        connection.openConnection();
+        String selectSQL = "SELECT * FROM dish_ingredient WHERE ingredientId = " + id + ";";
+        System.out.println(selectSQL);
+        ResultSet resultset = connection.executeSQLSelectStatement(selectSQL);
+        try {
+            if (resultset.first()) {
+               return true;
+            }
+        } catch (SQLException e) {
+            connection.closeConnection();
+            return false;
+        } finally {
+            // Close the connection to the database
+            connection.closeConnection();
+        }
+        return false;
     }
 }

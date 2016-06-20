@@ -6,6 +6,7 @@
 package presentation;
 
 import businesslogic.Manager;
+import domain.Order;
 import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -18,8 +19,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -70,6 +75,7 @@ public class SupplierOverviewPanel extends JPanel {
         colWidth[6] = 165;
 
         table = new JTable();
+        table.setAutoCreateRowSorter(true);
         this.refreshTable();
         TableColumn column = null;
         for (int i = 0; i < 7; i++) {
@@ -118,7 +124,18 @@ public class SupplierOverviewPanel extends JPanel {
         button5.addActionListener(kh5);
         button5.setBounds(500, 10, 90, 40);
         add(button5);
+        
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+
+        int columnIndexToSort = 1;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }
+    
 
     /**
      * Refreshes the JTable.
@@ -198,16 +215,21 @@ public class SupplierOverviewPanel extends JPanel {
                 label1.setText("Voer een waarde in");
             } else {
                 label1.setText("");
-                model.setRowCount(0);
-                Set<Supplier> ingredientList = m.getSearchedSup(what, attribute);
-                // Per ingredient: stop de waarden in een rij (row) van het model.
-                for(Supplier s : ingredientList) {
-                    model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
+                Set<Supplier> supList = m.getSearchedSup(what, attribute);
+                if(!supList.isEmpty()){
+                    label1.setText("");
+                    model.setRowCount(0);
+                    for(Supplier s : supList) {
+                        model.addRow(new Object[]{s.getId(), s.getName(), s.getPostalCode(), s.getAddress(), s.getPhoneNo(), s.getContactName(), s.getEmail()});
+                    }
+                    table.setModel(model);
+                    model.fireTableDataChanged();
+                    label1.setText("Gevonden zoekresultaten zijn weergegeven");
+                } else {
+                    refreshTable();
+                    label1.setText("Geen zoekresultaten gevonden");
                 }
-                table.setModel(model);
-                model.fireTableDataChanged();
             }
-            
         }
     }
 }

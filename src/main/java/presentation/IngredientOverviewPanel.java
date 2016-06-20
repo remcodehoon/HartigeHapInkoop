@@ -2,9 +2,11 @@ package presentation;
 
 import businesslogic.Manager;
 import domain.Ingredient;
+import java.awt.List;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,8 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class IngredientOverviewPanel extends JPanel {
 
@@ -58,6 +64,7 @@ public class IngredientOverviewPanel extends JPanel {
         colWidth[4] = 165;
 
         table = new JTable(model);
+        table.setAutoCreateRowSorter(true);
         this.refreshTable();
         spTable = new JScrollPane(table);
         spTable.setBounds(25, 55, 750, 345);
@@ -106,20 +113,26 @@ public class IngredientOverviewPanel extends JPanel {
         button5.addActionListener(kh5);
         button5.setBounds(500, 10, 90, 40);
         add(button5);
+        
+        //order the table with colomn name
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
 
+        int columnIndexToSort = 1;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }
 
     /**
      * Refreshes the JTable.
      */
     public void refreshTable() {
-        //refresh ook het label
         label1.setText("");
-        //zet het aantal rijen van de tabel op 0
         model.setRowCount(0);
-        // Een lijst van ingredienten worden via een DAO opgehaald.
         Set<Ingredient> ingredientList = m.updateTableIng();
-        // Per ingredient: stop de waarden in een rij (row) van het model.
         for(Ingredient i : ingredientList) {
             model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
         }
@@ -184,14 +197,22 @@ public class IngredientOverviewPanel extends JPanel {
                 label1.setText("Vul een zoekwoord in!");
             } else {
                 label1.setText("");
-                model.setRowCount(0);
+                
                 Set<Ingredient> ingredientList = m.getSearchedIng(what,attribute);
-                // Per ingredient: stop de waarden in een rij (row) van het model.
-                for(Ingredient i : ingredientList) {
-                   model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+                if(!ingredientList.isEmpty())
+                {
+                    model.setRowCount(0);
+                    for(Ingredient i : ingredientList) {
+                       model.addRow(new Object[]{i.getId(), i.getName(), i.getInStock(), i.getMinStock(), i.getMaxStock()});
+                    }
+                    table.setModel(model);
+                    model.fireTableDataChanged();
+                    label1.setText("Gevonden zoekresultaten zijn weergegeven");
                 }
-                table.setModel(model);
-                model.fireTableDataChanged();
+                else{
+                    refreshTable();
+                    label1.setText("Geen resultaat gevonden");
+                }
             }
         }
     }

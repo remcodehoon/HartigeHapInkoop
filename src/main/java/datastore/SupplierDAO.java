@@ -168,19 +168,18 @@ public class SupplierDAO {
     }
     
     public void addSupplierOrderList(Supplier sup) {
-        DatabaseConnection connection = new DatabaseConnection();
-        connection.openConnection();
-        String selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
         Set<SupplierIngredient> supList = sup.getIngredientList();
         if(!supList.isEmpty()){
+            DatabaseConnection connection = new DatabaseConnection();
+            connection.openConnection();
+            String selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
             for(SupplierIngredient i : supList){
                 selectSQL = selectSQL + "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
             }
             selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+            connection.executeSQLInsertStatement(selectSQL);
+            connection.closeConnection();
         }
-        selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
-        connection.executeSQLInsertStatement(selectSQL);
-        connection.closeConnection();
     }
 
     public void updateSupplier(Supplier sup, int id) {
@@ -202,12 +201,14 @@ public class SupplierDAO {
         connection.openConnection();
         String selectSQL = "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
-        selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
-        for(SupplierIngredient i : list){
-                selectSQL += "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
+        if(!list.isEmpty()){
+            selectSQL = "INSERT INTO `23ivp4a`.`supplier_ingredient` (`supplierId`, `ingredientId`, `price`, `quantity`) VALUES";
+            for(SupplierIngredient i : list){
+                    selectSQL += "(" + i.getSupplier().getId() + "," + i.getIngredient().getId() + "," + i.getPrice() + "," + i.getQuantity() + "),";
+            }
+            selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
+            connection.executeSQLInsertStatement(selectSQL);
         }
-        selectSQL = selectSQL.substring(0, selectSQL.length()-1) + ";";
-        connection.executeSQLInsertStatement(selectSQL);
         connection.closeConnection();
     }
 
@@ -218,14 +219,19 @@ public class SupplierDAO {
         selectSQL += "DELETE FROM `23ivp4a`.`stockorder_inventoryitem` WHERE `supplierId` = " + id + ";";
         selectSQL += "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id + ";";
         selectSQL += "DELETE FROM `23ivp4a`.`supplier_inventoryitem` WHERE `supplierId` = " + id + ";";
-        System.out.println(selectSQL);
         connection.executeSQLDeleteStatement(selectSQL);
         selectSQL = "DELETE FROM `23ivp4a`.`supplier` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);
         connection.closeConnection();
     }
     
-    public ArrayList<Supplier> getSearchedSuppliers(String what, String att) {
+    /**
+     *
+     * @param what
+     * @param att
+     * @return
+     */
+    public Set<Supplier> getSearchedSuppliers(String what, String att) {
         String selectSQL = "SELECT * FROM supplier WHERE ";
         switch(att){  
             case "ID":
@@ -260,7 +266,7 @@ public class SupplierDAO {
                 selectSQL += att + "=" + what;
                 break;
         }
-        ArrayList<Supplier> supplierList = new ArrayList<>();
+        Set<Supplier> supplierList = new HashSet<>();
         Supplier sup;
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
