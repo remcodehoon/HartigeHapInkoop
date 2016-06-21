@@ -2,6 +2,7 @@ package presentation;
 
 import businesslogic.Manager;
 import domain.Order;
+import domain.Supplier;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -188,6 +189,8 @@ public class OrderOverviewPanel extends JPanel {
             if (row != -1) {
                 int index = Integer.parseInt(table.getValueAt(row, 0).toString());
                 Order selOrder = m.getOrderWithId(index);
+                Supplier supplier = m.getSupplier(String.valueOf(table.getValueAt(row, 5)));
+                selOrder.setSupplier(supplier);
                 controller.makeVisible("Order_delete", selOrder);
             }
             label1.setText("Selecteer eerst een order om te deleten!");

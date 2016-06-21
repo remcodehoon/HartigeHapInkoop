@@ -226,7 +226,7 @@ public class OrderInventory extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             label1.setText("");
-            c.makeVisible("Supplier_overview");
+            c.makeVisible("Order_overview");
         }
     }
     

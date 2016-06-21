@@ -74,7 +74,7 @@ public class OrderDeletePanel extends JPanel {
         field2.setText(selOrder.getNr());
         field3.setText(String.valueOf(selOrder.getDate()));
         field4.setText(String.valueOf(m.getOrderStatus(selOrder.getStatusId())));
-        field6.setText(String.valueOf(selOrder.getEmployeeId()));
+        field6.setText(String.valueOf(m.getEmployeeName(selOrder.getEmployeeId())));
         if(selOrder.getSupplier() != null)
             field5.setText(String.valueOf(selOrder.getSupplier().getName()));
         else
