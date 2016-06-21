@@ -215,9 +215,12 @@ public class SupplierDAO {
         DatabaseConnection connection = new DatabaseConnection();
         connection.openConnection();
         String selectSQL = "DELETE FROM `23ivp4a`.`stockorder_ingredient` WHERE `supplierId` = " + id + ";";
-        selectSQL += "DELETE FROM `23ivp4a`.`stockorder_inventoryitem` WHERE `supplierId` = " + id + ";";
-        selectSQL += "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id + ";";
-        selectSQL += "DELETE FROM `23ivp4a`.`supplier_inventoryitem` WHERE `supplierId` = " + id + ";";
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "DELETE FROM `23ivp4a`.`stockorder_inventoryitem` WHERE `supplierId` = " + id + ";";
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "DELETE FROM `23ivp4a`.`supplier_ingredient` WHERE `supplierId` = " + id + ";";
+        connection.executeSQLDeleteStatement(selectSQL);
+        selectSQL = "DELETE FROM `23ivp4a`.`supplier_inventoryitem` WHERE `supplierId` = " + id + ";";
         connection.executeSQLDeleteStatement(selectSQL);
         selectSQL = "DELETE FROM `23ivp4a`.`supplier` WHERE `id` = " + id;
         connection.executeSQLDeleteStatement(selectSQL);

@@ -250,13 +250,9 @@ public class SupplierAddPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int row = table.getSelectedRow();
             if (row != -1) {
-                String index = table.getValueAt(row, 0).toString();
-                int[] selectedRows = table.getSelectedRows();
-                if (selectedRows.length > 0) {
-                    for (int i = selectedRows.length - 1; i >= 0; i--) {
-                        model.removeRow(selectedRows[i]);
-                    }
-                }
+                String index = String.valueOf(table.getValueAt(row, 0));
+                int selectedRows = table.getSelectedRow();
+                model.removeRow(selectedRows);
                 list.stream().forEach((i) -> {
                     if(i.getIngredient().getName().equals(index)){
                         list.remove(i);

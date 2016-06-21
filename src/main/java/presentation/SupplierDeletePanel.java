@@ -123,7 +123,6 @@ public class SupplierDeletePanel extends JPanel {
         for(SupplierIngredient o : selSup.getIngredientList()) {
             model.addRow(new Object[]{o.getIngredient().getName(), o.getQuantity(), o.getPrice()});
         }
-        System.out.println(selSup.getIngredientList().size());
         table.setModel(model);
         model.fireTableDataChanged();
         id = selSup.getId();
